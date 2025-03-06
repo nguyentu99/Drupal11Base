@@ -1,0 +1,12 @@
+services:
+  cassiopeia.CassiopeiaRenderTemplate:
+    class: Drupal\cassiopeia\Service\CassiopeiaRenderTemplate
+    arguments: []
+  cassiopeia.route_subscriber:
+    class: Drupal\cassiopeia\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  cassiopeia.twig.extension:
+    class: Drupal\cassiopeia\TwigExtension\CassiopeiaTwigExtension
+    tags:
+      - { name: twig.extension }

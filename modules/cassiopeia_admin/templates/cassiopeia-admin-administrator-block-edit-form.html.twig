@@ -1,0 +1,9 @@
+{{form.addBlock.name}}
+{{form.addBlock.icon}}
+{{form.addBlock.position}}
+<div class="mb3">
+  {{form.addBlock.submit}}
+</div>
+<div>
+  {{ form|without('addBlock', 'new_state', 'revision_log', 'submit') }}
+</div>

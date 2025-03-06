@@ -1,0 +1,82 @@
+cassiopeia_admin.administrator:
+  path: '/admin/cassiopeia/administrator'
+  defaults:
+    _controller: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorController::content'
+    _title: 'Manager admin blocks'
+  requirements:
+    _permission: 'cassiopeia admin block manager'
+
+cassiopeia_admin.administrator_block:
+  path: '/admin/cassiopeia/administrator/blocks'
+  defaults:
+    _controller: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorBlocksController::content'
+    _title: 'Manager admin blocks'
+  requirements:
+    _permission: 'cassiopeia admin block manager'
+
+cassiopeia_admin.administrator_block_delete:
+  path: '/admin/cassiopeia/administrator/block/{administrator_block}/delete'
+  defaults:
+    _controller: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorBlockDeleteController::content'
+    _title_callback: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorBlockDeleteController::titleCallback'
+    _title: 'Delete admin block'
+  requirements:
+    _permission: 'cassiopeia admin block manager'
+  options:
+    parameters:
+      administrator_block:
+        type: administrator_block
+
+cassiopeia_admin.administrator_block_edit:
+  path: '/admin/cassiopeia/administrator/block/{administrator_block}/edit'
+  defaults:
+    _controller: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorBlockEditController::content'
+    _title: 'Edit admin blocks'
+  requirements:
+    _permission: 'cassiopeia admin block manager'
+  options:
+    parameters:
+      administrator_block:
+        type: administrator_block
+
+cassiopeia_admin.administrator_block_items:
+  path: '/admin/cassiopeia/administrator/block/{administrator_block}/items'
+  defaults:
+    _controller: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorBlockItemsController::content'
+    _title: 'Admin block items'
+  requirements:
+    _permission: 'cassiopeia admin block manager'
+  options:
+    parameters:
+      administrator_block:
+        type: administrator_block
+
+cassiopeia_admin.administrator_block_item_delete:
+  path: 'admin/cassiopeia/administrator/block/{administrator_block}/item/{administrator_block_item}/delete'
+  defaults:
+    _controller: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorBlockItemDeleteController::content'
+    _title: 'Admin block item delete'
+  requirements:
+    _permission: 'cassiopeia admin block manager'
+  options:
+    parameters:
+      administrator_block:
+        type: administrator_block
+      cassiopeia_admin_block_item:
+        type: administrator_block_item
+
+cassiopeia_admin.administrator_block_item_edit:
+  path: 'admin/cassiopeia/administrator/block/{administrator_block}/item/{administrator_block_item}/edit'
+  defaults:
+    _controller: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorBlockItemEditController::content'
+    _title: 'Admin block item edit'
+  requirements:
+    _permission: 'cassiopeia admin block manager'
+  options:
+    parameters:
+      cassiopeia_admin_block:
+        type: administrator_block
+      cassiopeia_admin_block_item:
+        type: administrator_block_item
+
+

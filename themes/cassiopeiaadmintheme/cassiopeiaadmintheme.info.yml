@@ -1,0 +1,27 @@
+name: Cassiopeia admin theme
+type: theme
+description: 'Cassiopeia admin theme base on top  booststrap theme.'
+core_version_requirement: ^10.3 || ^11.0
+base theme: bootstrap
+
+regions:
+  breadcrumbs: Breadcrumbs
+  status_messages: 'Status messages'
+#  navbar_right: 'Navbar right'
+  content: Content
+  footer: Footer
+#  header: 'Top Bar'
+  highlighted: 'Highlighted'
+#  help: 'Help'
+#  sidebar_first: 'Primary'
+#  sidebar_second: 'Secondary'
+
+libraries:
+  - cassiopeiaadmintheme/overlayscrollbars
+  - cassiopeiaadmintheme/global-styling
+
+version: '5.0.1'
+#project: 'cassiopeia'
+datestamp: 1726511779
+
+

@@ -1,0 +1,20 @@
+form.CassiopeiaAdminAdministratorBlockAddForm:
+  version: VERSION
+  js:
+    js/CassiopeiaAdminAdministratorBlockAddForm.js: {}
+form.CassiopeiaAdminAdministratorBlockEditForm:
+  version: VERSION
+  js:
+    js/CassiopeiaAdminAdministratorBlockEditForm.js: {}
+form.CassiopeiaAdminAdministratorBlocksForm:
+  version: VERSION
+  js:
+    js/CassiopeiaAdminAdministratorBlocksForm.js: {}
+form.CassiopeiaAdminAdministratorBlockItemAddForm:
+  version: VERSION
+  js:
+    js/CassiopeiaAdminAdministratorBlockItemAddForm.js: {}
+form.CassiopeiaAdminAdministratorBlockItemEditForm:
+  version: VERSION
+  js:
+    js/CassiopeiaAdminAdministratorBlockItemEditForm.js: {}

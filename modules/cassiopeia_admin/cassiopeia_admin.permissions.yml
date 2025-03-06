@@ -1,0 +1,10 @@
+cassiopeia admin content manager:
+  title: 'Cassiopeia admin content manager'
+  description: 'Cassiopeia admin content manager.'
+  restrict access: true
+
+cassiopeia admin block manager:
+  title: 'Cassiopeia admin block manager'
+  description: 'Cassiopeia admin block manager.'
+  restrict access: true
+

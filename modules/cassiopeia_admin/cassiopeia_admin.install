@@ -1,0 +1,89 @@
+<?php
+
+function cassiopeia_admin_install() {
+  $path[] = 'administrator';
+  $path[] = 'admin';
+  $path[] = 'admin/*';
+  $path[] = 'manager';
+  $path[] = 'manager/*';
+  $path[] = 'user';
+  $path[] = 'user/*';
+  \Drupal::state()->set('admin_theme_path', implode("\n", $path));
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function cassiopeia_admin_schema() {
+  $schema['administrator_blocks'] = array(
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'icon' => array(
+        'type' => 'varchar',
+        'length' => '50',
+        'not null' => TRUE,
+      ),
+      'position' => array(
+        'type' => 'float',
+        'size' => 'normal',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  $schema['administrator_block_items'] = array(
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'bid' => array(
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'link' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'icon' => array(
+        'type' => 'varchar',
+        'length' => '50',
+        'not null' => TRUE,
+      ),
+      'position' => array(
+        'type' => 'float',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'size' => 'normal',
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+  return $schema;
+}
+
+/**
+ * Implementation of hook_uninstall()
+ */
+function cassiopeia_admin_uninstall() {
+  \Drupal::state()->delete('admin_theme_path');
+}

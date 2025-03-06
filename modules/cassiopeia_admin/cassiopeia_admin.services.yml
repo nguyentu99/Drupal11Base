@@ -1,0 +1,4 @@
+services:
+  cassiopeia_admin.administrator:
+    class: Drupal\cassiopeia_admin\Service\CassiopeiaAdminAdministrator
+    arguments: []

@@ -1,0 +1,19 @@
+name: Cassiopeia theme
+type: theme
+description: 'Cassiopeia theme base on top  booststrap theme.'
+core_version_requirement: ^10.3 || ^11.0
+base theme: bootstrap
+
+libraries:
+  - cassiopeiatheme/jquery-legacy
+  - bootstrap/global-styling
+  - cassiopeiatheme/global-styling
+  - cassiopeiatheme/custom-toolbar
+
+version: '5.0.1'
+#project: 'cassiopeia'
+datestamp: 1726511779
+
+
+
+

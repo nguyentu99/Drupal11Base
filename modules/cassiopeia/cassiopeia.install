@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function cassiopeia_schema() {
+  $schema =  array(
+    'test' => array(
+      'fields' => array(
+        'id' => array(
+          'type' => 'serial',
+          'not null' => TRUE,
+        ),
+        'name' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ),
+      ),
+      'primary key' => array(
+        'id',
+      ),
+    )
+  );
+
+  return $schema;
+}
+

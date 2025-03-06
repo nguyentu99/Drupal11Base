@@ -1,0 +1,39 @@
+global-styling:
+  version: VERSION
+  js:
+    js/lib/OwlCarousel2-2.3.4/dist/owl.carousel.min.js: {}
+    js/app.js: {}
+    js/scripts.js: {}
+  css:
+    component:
+      js/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.css: { weight: 100 }
+      js/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css: { weight: 100 }
+#      js/lib/lightslider-master/dist/css/lightslider.css: { weight: 100 }
+#      js/lib/lightslider-master/dist/css/lightgallery.css: { weight: 100 }
+      css/style.css: { weight: 100 }
+bootstrap:
+  js:
+    /libraries/popper.js/dist/umd/popper.min.js: { weight: -19 }
+    /libraries/bootstrap/dist/js/bootstrap.min.js: { weight: -20 }
+  css:
+    component:
+      /libraries/bootstrap/dist/css/bootstrap.min.css: {}
+  dependencies:
+    - core/popperjs
+color.preview:
+  version: VERSION
+  css:
+    theme:
+      color/preview.css: {}
+  js:
+    color/preview.js: {}
+  dependencies:
+    - color/drupal.color
+
+jquery-legacy:
+  js:
+    https://code.jquery.com/jquery-3.4.1.min.js: { type: external, minified: true }
+#  dependencies:
+#    - core/jquery
+
+

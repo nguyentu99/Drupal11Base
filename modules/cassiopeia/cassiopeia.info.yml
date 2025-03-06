@@ -1,0 +1,10 @@
+name: Cassiopeia
+description: Cassiopeia module.
+package: Cassiopeia
+type: module
+core_version_requirement: ^9.5 || ^10 || ^11
+
+# Information added by Drupal.org packaging script on 2024-10-31
+version: '9.x-1.01'
+project: 'cassiopeia'
+datestamp: 1730409975

@@ -1,0 +1,8 @@
+.app-page-highlighted {
+  position: relative;
+}
+.app-page-highlighted .block-local-actions-block{
+  position: absolute;
+  right: -5px;
+  top: -6px;
+}
