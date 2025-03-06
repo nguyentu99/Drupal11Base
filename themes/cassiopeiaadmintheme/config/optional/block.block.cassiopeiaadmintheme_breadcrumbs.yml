@@ -7,7 +7,7 @@ dependencies:
     - cassiopeiaadmintheme
 id: cassiopeiaadmintheme_breadcrumbs
 theme: cassiopeiaadmintheme
-region: breadcrumb
+region: breadcrumbs
 weight: 0
 provider: null
 plugin: system_breadcrumb_block

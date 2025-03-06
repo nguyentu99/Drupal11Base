@@ -13,6 +13,9 @@ use Drupal\Component\Utility\Xss;
 use Drupal\node\Entity\Node;
 use Drupal\Component\Render\MarkupInterface;
 
+
+use Drupal\Component\Uuid\Uuid;
+
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
  *
@@ -47,6 +50,24 @@ function cassiopeiaadmintheme_preprocess_page(&$variables) {
     $administrator_menu = \Drupal::service('cassiopeia_admin.administrator')->cassiopeia_admin_get_administrator_menu();
     $variables['administrator_menu'] = $administrator_menu;
   }
+//  $user = \Drupal\user\Entity\User::load(1);
+//  dump($user->toArray());
+//  dump($user->get('user_picture')->entity->getFileUri());
+//  $node = \Drupal\node\Entity\Node::load(1);
+//  dump($node->get('field_image')->entity->getFileUri());
+
+//  $user_picture = $user->user_picture->entity->getFileUri();
+//  print_r($user_picture);
+//  $file = \Drupal\file\Entity\File::load(2);
+//  dump($file->getFileUri());
+//  getFileUri
+
+//  Todo
+//  $styles = \Drupal\image\Entity\ImageStyle::loadMultiple();
+//  $styles = \Drupal::entityTypeManager()->getStorage('image_style')->loadMultiple();
+//  dump($styles);
+
+//  End todo
 
 }
 
@@ -132,7 +153,7 @@ function cassiopeiaadmintheme_theme_suggestions_menu_alter(array &$suggestions, 
  * Implements hook_preprocess_HOOK() for menu-local-action.html.twig.
  */
 function cassiopeiaadmintheme_preprocess_menu_local_action(&$variables) {
-
+  $variables['link']['#options']['attributes']['class'][] = 'btn-sm';
 }
 
 /**

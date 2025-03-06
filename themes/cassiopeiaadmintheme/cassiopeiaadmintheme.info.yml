@@ -3,7 +3,9 @@ type: theme
 description: 'Cassiopeia admin theme base on top  booststrap theme.'
 core_version_requirement: ^10.3 || ^11.0
 base theme: bootstrap
-
+dependencies:
+  - cassiopeia:cassiopeia
+  - cassiopeia_admin:cassiopeia_admin
 regions:
   breadcrumbs: Breadcrumbs
   status_messages: 'Status messages'

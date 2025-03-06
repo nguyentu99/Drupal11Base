@@ -1,12 +1,5 @@
 <?php
 use Drupal\Core\Render\Markup;
-function MODULE_NAME_theme() {
-
-  $themes['THEME_NAME'] = ['render element' => 'form'];
-
-  return $themes;
-
-}
 
 /**
  * Implements hook_theme().
@@ -14,19 +7,7 @@ function MODULE_NAME_theme() {
 function cassiopeia_theme($existing, $type, $theme, $path) {
   $themes['test_form'] = [
     'template' => 'test_form',
-    'render element' => 'form'
+    'render element' => 'form',
   ];
   return $themes;
 }
-
-function _cassiopeia_render_template_(string $type, string $name, string $path, mixed $variables = null) {
-  $modulePath = \Drupal::service('extension.path.resolver')->getPath($type, $name);
-  $path = $modulePath . $path;
-  $template = \Drupal::service('twig')->load($path);
-  $rendered = $template->render([
-    'variables' => $variables
-  ]);
-  $rendered = Markup::create($rendered);
-  return $rendered;
-}
-

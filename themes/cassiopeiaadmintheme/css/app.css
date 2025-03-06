@@ -1,8 +1,59 @@
+.ui-widget-overlay {
+  z-index: 1259;
+}
+
+.ui-dialog {
+  z-index: 1260;
+}
+.js td .dropbutton-multiple .dropbutton-widget {
+  border-radius: 0.375rem;
+}
+.js .dropbutton-multiple .dropbutton-widget .dropbutton-action a {
+  text-decoration: none;
+}
+.views-display-top {
+  display: flex;
+}
+.views-display-top .dropbutton-wrapper {
+  position: absolute;
+}
+.js .views-edit-view .dropbutton-wrapper .dropbutton .dropbutton-action > * {
+  font-size: 12px;
+  text-decoration: none;
+}
+.js .views-edit-view .dropbutton-wrapper.dropbutton-multiple .dropbutton .dropbutton-action > * {
+  padding-left: 12px;
+}
+
+.views-ui-display-tab-bucket .dropbutton-wrapper {
+  position: absolute !important;
+  top: 4px;
+  right: 5px;
+}
+.views-displays .tabs .action-list input.form-submit {
+  color: inherit;
+}
+#views-display-menu-tabs {
+  list-style: none;
+}
+small .admin-link::before {
+  content: "";
+}
+
+small .admin-link::after {
+  content: "";
+}
+
+.input-group-text button.link{
+  margin-left: 5px;
+}
+
 .app-page-highlighted {
   position: relative;
+  min-height: 41px;
 }
 .app-page-highlighted .block-local-actions-block{
   position: absolute;
   right: -5px;
-  top: -6px;
+  top: -2px;
 }

@@ -81,7 +81,7 @@ color-picker:
   version: VERSION
   css:
     component:
-      css/components/color-picker.css: {}components/breadcrumb
+      css/components/color-picker.css: {}
   js:
     js/color-picker.js: {}
   dependencies:

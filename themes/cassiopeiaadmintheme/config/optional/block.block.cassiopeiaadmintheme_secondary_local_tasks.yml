@@ -5,7 +5,7 @@ dependencies:
     - cassiopeiaadmintheme
 id: cassiopeiaadmintheme_secondary_local_tasks
 theme: cassiopeiaadmintheme
-region: content
+region: highlighted
 weight: -4
 provider: null
 plugin: local_tasks_block

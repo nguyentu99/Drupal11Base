@@ -5,11 +5,3 @@ cassiopeia.test:
     _title: 'Test'
   requirements:
     _permission: 'access content'
-
-cassiopeia.tin_tuc:
-  path: '/news'
-  defaults:
-    _controller: '\Drupal\cassiopeia\Controller\CassiopeiaController::pageNews'
-    _title: 'Tin tức'
-  requirements:
-    _permission: 'access content'

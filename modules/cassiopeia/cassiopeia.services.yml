@@ -6,7 +6,7 @@ services:
     class: Drupal\cassiopeia\Routing\RouteSubscriber
     tags:
       - { name: event_subscriber }
-  cassiopeia.twig.extension:
+  cassiopeia.twig_extension:
     class: Drupal\cassiopeia\TwigExtension\CassiopeiaTwigExtension
     tags:
       - { name: twig.extension }

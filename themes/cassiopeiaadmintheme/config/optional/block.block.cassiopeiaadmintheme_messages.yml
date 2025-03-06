@@ -7,7 +7,7 @@ dependencies:
     - cassiopeiaadmintheme
 id: cassiopeiaadmintheme_messages
 theme: cassiopeiaadmintheme
-region: highlighted
+region: status_messages
 weight: -6
 provider: null
 plugin: system_messages_block

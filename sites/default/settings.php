@@ -88,16 +88,7 @@
  * ];
  * @endcode
  */
-$databases['default']['default'] = [
-  'database' => 'iris_2',
-  'username' => 'root',
-  'password' => '',
-  'host' => 'localhost',
-  'port' => '3306',
-  'driver' => 'mysql',
-  'prefix' => '',
-  'collation' => 'utf8mb4_general_ci',
-];
+$databases = [];
 
 /**
  * Customizing database settings.

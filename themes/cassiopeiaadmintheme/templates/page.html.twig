@@ -1,9 +1,26 @@
+{#{{ cassiopeia_user_load(1).get('user_picture').entity.getFileUri() }}#}
+{#{{ cassiopeia_image_style('medium',10,'public://default.png', {'class': ['item-1', 'item-2']}) }}#}
+
+{#{{ cassiopeia_breadcrumb() }}#}
+
+{#{% set link_test %}{{ cassiopeia_link('Test link', '/admin/cassiopeia/administrator/blocks') }}{% endset %}#}
+
+{#{{link_test}}#}
+
+{#{% set form_id %}{{ "Drupal\\cassiopeia_admin\\Form\\CassiopeiaAdminAdministratorBlockAddForm" }}{% endset %}#}
+{#{{ cassiopeia_form(form_id) }}#}
+
+{#{{ cassiopeia_menu("admin",1,10,true) }}#}
+
+{% set account = cassiopeia_user_load(user.account.id()) %}
+{#{{ dump(account.getRoles()) }}#}
+{#{{ user.account.id() }}#}
 <div id="app-wrapper" class="app-wrapper">
   <!--begin::Header-->
-  {{ include('@cassiopeiaadmintheme/templates/header.html.twig',{'test': 'test data'}) }}
+  {{ include('@cassiopeiaadmintheme/templates/header.html.twig',{'account': account}) }}
   <!--end::Header-->
   <!--begin::App sidebar-->
-  {{ include('@cassiopeiaadmintheme/templates/appsidebar.html.twig',{'administrator_menu': administrator_menu}) }}
+  {{ include('@cassiopeiaadmintheme/templates/appsidebar.html.twig',{'administrator_menu': administrator_menu, 'account': account}) }}
   <!--end::App sidebar-->
   <!--begin::App Main-->
 
@@ -41,11 +58,16 @@
 {#          <div class="test-breadcrumb">{{ page.navbar_branding.cassiopeiaadmintheme_main_menu }}</div>#}
 {#          <div class="test-breadcrumb">{{ page.navbar_branding}}</div>#}
           <div class="app-page-status-messages">{{ page.status_messages }}</div>
-          <div class="app-page-highlighted">{{ page.highlighted }}</div>
+          {% set page_highlighted %}{% apply spaceless %}
+            {{ page.highlighted }}
+          {% endapply %}{% endset %}
+          {%  if page_highlighted|trim|striptags('<!-- -->')  %}
+            <div class="app-page-highlighted">{{ page.highlighted }}</div>
+          {% endif %}
 {#          <div class="test-help">{{ page.help }}</div>#}
           <div class="app-page-content">{{ page.content }}</div>
-
 {#          <div class="test-page">{{ page }}</div>#}
+          {{ dump() }}
         </div>
 {#        <div class="row"> <!--begin::Col-->#}
 {#          <div class="col-lg-3 col-6"> <!--begin::Small Box Widget 1-->#}
@@ -259,9 +281,3 @@
   {{ include('@cassiopeiaadmintheme/templates/controlsidebar.html.twig',{'test': 'test data'}) }}
   <!--end::Control sidebar-->
 </div>
-
-
-
-
-
-

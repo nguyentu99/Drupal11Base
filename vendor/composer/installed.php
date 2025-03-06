@@ -1,13 +1,13 @@
 <?php return array(
     'root' => array(
         'name' => 'drupal/legacy-project',
-        'pretty_version' => '11.0.5',
-        'version' => '11.0.5.0',
-        'reference' => '58f2ca0dd3c2763a4db5975c060fc4de6dff3988',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => 'e2f8637e384aab5edcc627afc32c94f6433f7114',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'dev' => false,
+        'dev' => true,
     ),
     'versions' => array(
         'asm89/stack-cors' => array(
@@ -254,9 +254,9 @@
             ),
         ),
         'drupal/legacy-project' => array(
-            'pretty_version' => '11.0.5',
-            'version' => '11.0.5.0',
-            'reference' => '58f2ca0dd3c2763a4db5975c060fc4de6dff3988',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'e2f8637e384aab5edcc627afc32c94f6433f7114',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -349,6 +349,15 @@
             'reference' => 'b14fbe2ddb0b9f94f5b24cf08783d599f776fff0',
             'type' => 'class',
             'install_path' => __DIR__ . '/../pear/pear_exception',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'phpmailer/phpmailer' => array(
+            'pretty_version' => 'v6.1.7',
+            'version' => '6.1.7.0',
+            'reference' => '2c2370ba3df7034f9eb7b8f387c97b52b2ba5ad0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpmailer/phpmailer',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
