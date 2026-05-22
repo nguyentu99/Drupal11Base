@@ -9,7 +9,7 @@ dependencies:
     - cassiopeiaadmintheme
 id: cassiopeiaadmintheme_account_menu
 theme: cassiopeiaadmintheme
-region: secondary_menu
+region: header_account
 weight: -7
 provider: null
 plugin: 'system_menu_block:account'

@@ -1,298 +1,92 @@
 <?php
 
+/**
+ * @file
+ * Cassiopeia admin module hooks and legacy procedural wrappers.
+ */
+
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
- * Implements hook_permission().
+ * Returns the administrator storage service.
  */
-//function cassiopeia_admin_permission() {
-//  return  array (
-//    'cassiopeia admin content' => array(
-//      'title' => t('Administrator content manager'),
-//      'description' => t('cassiopeia admin content'),
-//    ),
-//    'cassiopeia admin block manager' => array(
-//      'title' => t('Administrator block Manager'),
-//      'description' => t('cassiopeia admin block manager'),
-//    ),
-//  );
-//}
+function cassiopeia_admin_storage(): \Drupal\cassiopeia_admin\Storage\AdministratorStorage {
+  return \Drupal::service('cassiopeia_admin.storage');
+}
 
 /**
- * Implementation of hook_menu
- *
- * @return unknown
+ * Loads an administrator block.
  */
-//function cassiopeia_admin_menu() {
-//
-//
-//  //block
-//  $items['admin/cassiopeia/administrator'] = array(
-//    'type' => MENU_NORMAL_ITEM,
-//    'page callback' => 'cassiopeia_admin_administrator_page_block',
-//    'title' => t('Manager'),
-//    'access arguments' => array('cassiopeia admin block manager'),
-//    'weight' => -99,
-//    'file' => 'cassiopeia_admin.admin.inc',
-//  );
-//
-//  $items['admin/cassiopeia/administrator/block'] = array(
-//    'type' => MENU_NORMAL_ITEM,
-//    'page callback' => 'cassiopeia_admin_administrator_page_block',
-//    'title' => t('Manager blocks'),
-//    'access arguments' => array('cassiopeia admin block manager'),
-//    'weight' => 1,
-//    'file' => 'cassiopeia_admin.admin.inc',
-//  );
-//  $items['admin/cassiopeia/administrator/block/%cassiopeia_admin_block/delete'] = array(
-//    'page callback' => 'cassiopeia_admin_administrator_page_block_delete',
-//    'page arguments' => array(4),
-//    'title' => t('Delete block'),
-//    'access arguments' => array('cassiopeia admin block manager'),
-//    'file' => 'cassiopeia_admin.admin.inc',
-//  );
-//  $items['admin/cassiopeia/administrator/block/%cassiopeia_admin_block/edit'] = array(
-//    'page callback' => 'cassiopeia_admin_administrator_page_block_edit',
-//    'page arguments' => array(4),
-//    'title' => t('Edit block'),
-//    'access arguments' => array('cassiopeia admin block manager'),
-//    'file' => 'cassiopeia_admin.admin.inc',
-//  );
-//  $items['admin/cassiopeia/administrator/block/%cassiopeia_admin_block/items'] = array(
-//    'page callback' => 'cassiopeia_admin_administrator_page_block_items',
-//    'page arguments' => array(4),
-//    'title' => t('Icon'),
-//    'access arguments' => array('cassiopeia admin block manager'),
-//    'file' => 'cassiopeia_admin.admin.inc',
-//  );
-//  $items['admin/cassiopeia/administrator/block/%cassiopeia_admin_block/items/%cassiopeia_admin_block_items/delete'] = array(
-//    'page callback' => 'cassiopeia_admin_administrator_page_block_items_delete',
-//    'page arguments' => array(4, 6),
-//    'title' => t('Delete icon'),
-//    'access arguments' => array('cassiopeia admin block manager'),
-//    'file' => 'cassiopeia_admin.admin.inc',
-//  );
-//  $items['admin/cassiopeia/administrator/block/%cassiopeia_admin_block/items/%cassiopeia_admin_block_items/edit'] = array(
-//    'page callback' => 'cassiopeia_admin_administrator_page_block_items_edit',
-//    'page arguments' => array(4, 6),
-//    'title' => t('Edit icon'),
-//    'access arguments' => array('cassiopeia admin block manager'),
-//    'file' => 'cassiopeia_admin.admin.inc',
-//  );
-//
-//  return $items;
-//}
-
-//function cassiopeia_admin_block_item_load($id) {
-//  $sql = "SELECT id, name, link, icon, position FROM cassiopeia_admin_items WHERE id = :id";
-//  $result = db_query($sql, array(":id" => $id))->fetchAll();
-//  if (!empty($result[0])) {
-//    return $result[0];
-//  }
-//  return FALSE;
-//}
-//
-//function cassiopeia_admin_block_load($id) {
-//  $sql = "SELECT id, name, icon, position FROM cassiopeia_admin_block WHERE id = :id";
-//  $result = db_query($sql, array(":id" => $id))->fetchAll();
-//  if (!empty($result[0])) {
-//    return $result[0];
-//  }
-//  return FALSE;
-//}
-
-//function cassiopeia_admin_administrator_page_content() {
-//  include_once 'cassiopeia_admin.admin.inc';
-//  return cassiopeia_admin_administrator_page();
-//}
-//
-//
-///**
-// * Implementation of hook_menu_alter
-// *
-// * @param unknown_type $items
-// */
-//function cassiopeia_admin_menu_alter(&$items) {
-//  $items['node']['access callback'] = FALSE;
-////  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name']['access callback'] = 'cassiopeia_admin_taxonomy_term_edit_access';
-////  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name']['access arguments'] = array(3);
-////  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/add']['access callback'] = 'cassiopeia_admin_taxonomy_term_edit_access';
-////  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/add']['access arguments'] = array(3);
-////  $items['user']['page callback'] = 'cassiopeia_admin_user_page';
-////  $items['user/%user']['access callback'] = FALSE;
-////  $items['user/%user/view']['access callback'] = FALSE;
-//}
-//
-//
-//
-//function cassiopeia_admin_taxonomy_term_edit_access($voca) {
-//  return user_access("edit terms in $voca->vid") || user_access('administer taxonomy');
-//}
-//
-//function cassiopeia_admin_form_alter(&$form, &$form_state, $form_id) {
-//  if ($form_id == 'user_login') {
-//    if (user_access('cassiopeia admin content')) {
-//      $form['#submit'] = array('cassiopeia_admin_custom_login');
-//    }
-//  }
-//  elseif ($form_id == 'system_cron_settings') {
-//    $form['cron']['cron_safe_threshold']['#options'][1800] = "30 min";
-//    $form['cron']['cron_safe_threshold']['#options'][300] = "5 min";
-//  }
-//  if (strpos($form_id, "node_form") !== FALSE) {
-//    $form['domain']['#group'] = 'additional_settings';
-//  }
-//}
-//
-//function cassiopeia_admin_custom_login($form, &$form_state) {
-//  global $user;
-//  $user = user_load($form_state['uid']);
-//  $form_state['redirect'] = 'administrator';
-//  user_login_finalize($form_state);
-//}
-//
-//function _cassiopeia_admin_block_add($name, $icon, $position) {
-//  db_insert('cassiopeia_admin_block')
-//    ->fields(array(
-//      'name' => $name,
-//      'icon' => $icon,
-//      'position' => $position,
-//    ))
-//    ->execute();
-//}
-
-//function cassiopeia_admin_block_add($name, $icon, $position) {
-//  db_insert('cassiopeia_admin_block')
-//    ->fields(array(
-//      'name' => $name,
-//      'icon' => $icon,
-//      'position' => $position,
-//    ))
-//    ->execute();
-//}
-
-
 function administrator_block_load($id) {
-  $block = NULL;
-  try {
-    $block = \Drupal::database()->select('administrator_blocks', 'c')
-      ->fields('c', ['id', 'name', 'icon', 'position'])
-      ->condition('c.id', $id)
-      ->execute()->fetchObject();
-  }
-  catch (Exception $e) {
-  }
-  return $block;
+  return cassiopeia_admin_storage()->loadBlock($id);
 }
 
+/**
+ * Saves an administrator block.
+ */
 function administrator_block_save($block = NULL) {
-  try {
-    if (!empty($block)) {
-      if (is_array($block)) {
-        $block = (object) $block;
-      }
-
-      if (empty($block->id)) {
-        $_fields_ = (array) (clone $block);
-        unset($_fields_['id']);
-        \Drupal::database()->insert('administrator_blocks')
-          ->fields($_fields_)
-          ->execute();
-      }
-      else {
-        $_fields_ = (array) (clone $block);
-        unset($_fields_['id']);
-        \Drupal::database()->update('administrator_blocks')
-          ->fields($_fields_)
-          ->condition('id', $block->id, '=')
-          ->execute();
-      }
-    }
-  }
-  catch (Exception $e) {
+  if (!empty($block)) {
+    cassiopeia_admin_storage()->saveBlock($block);
+    cassiopeia_admin_invalidate_menu_cache();
   }
 }
 
+/**
+ * Updates block position.
+ */
 function administrator_block_position_update($id, $position) {
-  try {
-    \Drupal::database()->update('administrator_blocks')
-      ->fields([
-        'position' => $position,
-      ])
-      ->condition('id', $id, '=')
-      ->execute();
-  }
-  catch (Exception $e) {
-  }
+  cassiopeia_admin_storage()->updateBlockPosition($id, $position);
+  cassiopeia_admin_invalidate_menu_cache();
 }
 
+/**
+ * Deletes an administrator block and its items.
+ */
 function administrator_block_delete($id) {
-  try {
-    if (!empty($id) && is_numeric($id)) {
-      \Drupal::database()->delete('administrator_blocks')
-        ->condition('id', $id)
-        ->execute();
-    }
-  }
-  catch (Exception $e) {
-  }
+  cassiopeia_admin_storage()->deleteBlock($id);
+  cassiopeia_admin_invalidate_menu_cache();
 }
 
+/**
+ * Saves an administrator block item.
+ */
 function administrator_block_item_save($blockItem) {
-  try {
-    if (!empty($blockItem)) {
-      if (is_array($blockItem)) {
-        $blockItem = (object) $blockItem;
-      }
-      if (empty($blockItem->id)) {
-        $_fields_ = (array) (clone $blockItem);
-        unset($_fields_['id']);
-        \Drupal::database()->insert('administrator_block_items')
-          ->fields($_fields_)
-          ->execute();
-      }
-      else {
-        $_fields_ = (array) (clone $blockItem);
-        unset($_fields_['id']);
-        \Drupal::database()->update('administrator_block_items')
-          ->fields($_fields_)
-          ->condition('id', $blockItem->id, '=')
-          ->execute();
-      }
-    }
-  }
-  catch (Exception $e) {
-
+  if (!empty($blockItem)) {
+    cassiopeia_admin_storage()->saveBlockItem($blockItem);
+    cassiopeia_admin_invalidate_menu_cache();
   }
 }
 
+/**
+ * Updates block item position.
+ */
 function administrator_block_item_position_update($id, $position) {
-  try {
-    \Drupal::database()->update('administrator_block_items')
-      ->fields([
-        'position' => $position,
-      ])
-      ->condition('id', $id, '=')
-      ->execute();
-  }
-  catch (Exception $e) {
-  }
+  cassiopeia_admin_storage()->updateBlockItemPosition($id, $position);
+  cassiopeia_admin_invalidate_menu_cache();
 }
 
+/**
+ * Loads an administrator block item.
+ */
 function administrator_block_item_load($id) {
-  $block_item = NULL;
-  try {
-    $block_item = \Drupal::database()->select('administrator_block_items', 'c')
-      ->fields('c')
-      ->condition('id', $id, '=')
-      ->execute()->fetchObject();
-  }
-  catch (Exception $e) {
-  }
-  return $block_item;
+  return cassiopeia_admin_storage()->loadBlockItem($id);
 }
 
+/**
+ * Deletes an administrator block item.
+ */
+function administrator_block_item_delete($id) {
+  cassiopeia_admin_storage()->deleteBlockItem($id);
+  cassiopeia_admin_invalidate_menu_cache();
+}
+
+/**
+ * Invalidates cached administrator menu renderings.
+ */
+function cassiopeia_admin_invalidate_menu_cache(): void {
+  \Drupal::service('cache_tags.invalidator')->invalidateTags(['cassiopeia_admin_menu']);
+}
 
 /**
  * Implements hook_theme().
@@ -315,12 +109,10 @@ function cassiopeia_admin_theme($existing, $type, $theme, $path) {
         'cassiopeiaAdminAdministratorBlockDeleteForm' => NULL,
       ],
     ],
-
     'cassiopeia_admin_administrator_blocks_form' => [
       'render element' => 'form',
       'file' => 'cassiopeia_admin.theme.inc',
     ],
-
     'cassiopeia_admin_administrator_block_add_form' => [
       'render element' => 'form',
     ],
@@ -330,7 +122,6 @@ function cassiopeia_admin_theme($existing, $type, $theme, $path) {
     'cassiopeia_admin_administrator_block_delete_form' => [
       'render element' => 'form',
     ],
-
     'cassiopeia_admin_administrator_block_items_page' => [
       'variables' => [
         'cassiopeiaAdminAdministratorBlockItemAddForm' => NULL,
@@ -341,7 +132,6 @@ function cassiopeia_admin_theme($existing, $type, $theme, $path) {
       'render element' => 'form',
       'file' => 'cassiopeia_admin.theme.inc',
     ],
-
     'cassiopeia_admin_administrator_block_item_edit_page' => [
       'variables' => [
         'cassiopeiaAdminAdministratorBlockItemEditForm' => NULL,
@@ -349,7 +139,6 @@ function cassiopeia_admin_theme($existing, $type, $theme, $path) {
     ],
     'cassiopeia_admin_administrator_block_item_edit_form' => [
       'render element' => 'form',
-
     ],
     'cassiopeia_admin_administrator_block_item_delete_page' => [
       'variables' => [
@@ -360,204 +149,54 @@ function cassiopeia_admin_theme($existing, $type, $theme, $path) {
       'render element' => 'form',
     ],
     'cassiopeia_admin_administrator_icon' => [
-      'variables' =>  ['icon' => NULL ],
-      'file' => 'cassiopeia_admin.theme.inc'
+      'variables' => ['icon' => NULL],
+      'file' => 'cassiopeia_admin.theme.inc',
     ],
-    'cassiopeia_admin_administrator_menu' => array(
-      'variables' =>  ['items' => NULL],
-      'file' => 'cassiopeia_admin.theme.inc'
-    ),
+    'cassiopeia_admin_administrator_menu' => [
+      'variables' => ['items' => NULL],
+      'file' => 'cassiopeia_admin.theme.inc',
+    ],
   ];
 }
 
-
-
-//function cassiopeia_admin_theme($existing, $type, $theme, $path) {
-//  return array(
-//    'cassiopeia_admin_administrator_page_block_load_all' => array(
-//      'render element' => 'form',
-//      'file' => 'cassiopeia_admin.theme.inc'
-//    ),
-//    'cassiopeia_admin_administrator_page_block_load_items' => array(
-//      'render element' => 'form',
-//      'file' => 'cassiopeia_admin.theme.inc'
-//    ),
-//    'cassiopeia_admin_administrator_icon' => array(
-//      'variables' => array('icon' => NULL),
-//      'file' => 'cassiopeia_admin.theme.inc'
-//    ),
-//    'cassiopeia_admin_get_menu_left' => array(
-//      'variables' => array('items' => NULL),
-//      'file' => 'cassiopeia_admin.theme.inc'
-//    ),
-//    'cassiopeia_admin_get_menu_left_cassiopeia_admin_theme' => array(
-//      'variables' => array('items' => NULL),
-//      'file' => 'cassiopeia_admin.theme.inc'
-//    ),
-//  );
-//}
-//
-//function cassiopeia_admin_get_icon() {
-//  $sql = "SELECT icon FROM cassiopeia_admin_items WHERE link = :link";
-//  $result = db_query($sql, array(':link' => $_GET['q']))->fetchAll();
-//  if (!empty($result[0])) {
-//    return 'c3s-icon c3s-icon-' . $result[0]->icon;
-//  }
-//  elseif (arg(0) == 'user') {
-//    return 'c3s-icon c3s-icon-nguoidung2';
-//  }
-//  return FALSE;
-//}
-//
-//function cassiopeia_admin_get_items_all() {
-//  $sql = "SELECT b.id, b.name as name, b.position, b.icon, i.id as item_id, i.name as item_name, i.link, i.icon as item_icon, i.position as item_position
-//  FROM {cassiopeia_admin_block} b JOIN {cassiopeia_admin_items} i ON b.id = i.bid ORDER BY b.position, i.position";
-//  $result = db_query($sql)->fetchAll();
-//  return $result;
-//}
-//
-
-function  cassiopeia_admin_get_administrator_menu($theme = '') {
-  //  //if(!user_access('cassiopeia admin content')) return '';
-  //  $result = cassiopeia_admin_get_items_all();
-  //  //todo
-  //  $list = array();
-  //  foreach ($result as $item) {
-  //    if (empty($list[$item->id])) {
-  //      $list[$item->id] = array(
-  //        '#title' => theme('cassiopeia_admin_administrator_icon', array('icon' => $item->icon)) . '<span>' . $item->name . '</span>',
-  //        '#href' => $_GET['q'],
-  //        '#attributes' => array(),
-  //        '#localized_options' => array('html' => TRUE, 'fragment' => 'top'),
-  //      );
-  //    }
-  //    if (!empty($list[$item->id])) {
-  //      $argument = explode('?', $item->link);
-  //      if (drupal_valid_path($argument[0])) {
-  //        $args = array();
-  //        if (count($argument) == 2) {
-  //          $ex = explode('&', $argument[1]);
-  //          foreach ($ex as $part) {
-  //            $ex1 = explode('=', $part);
-  //            if (count($ex1) == 2) {
-  //              $args[$ex1[0]] = $ex1[1];
-  //            }
-  //          }
-  //        }
-  //        $list[$item->id]['#below'][$item->item_id] = array(
-  //          '#title' => theme('cassiopeia_admin_administrator_icon', array('icon' => $item->item_icon)) . '<span>' . $item->item_name . '</span>',
-  //          '#href' => $argument[0],
-  //          '#attributes' => array(),
-  //          '#localized_options' => array('html' => TRUE, 'query' => $args),
-  //        );
-  //      }
-  //    }
-  //  }
-  //  drupal_alter('cassiopeia_admin_get_menu_left', $list);
-  //  if ($theme) {
-  //    return theme($theme, array('items' => $list));
-  //  }
-  //  return theme('cassiopeia_admin_get_menu_left', array('items' => $list));
-}
-
-//function cassiopeia_admin_get_menu_left($theme = '') {
-//  //if(!user_access('cassiopeia admin content')) return '';
-//  $result = cassiopeia_admin_get_items_all();
-//  //todo
-//  $list = array();
-//  foreach ($result as $item) {
-//    if (empty($list[$item->id])) {
-//      $list[$item->id] = array(
-//        '#title' => theme('cassiopeia_admin_administrator_icon', array('icon' => $item->icon)) . '<span>' . $item->name . '</span>',
-//        '#href' => $_GET['q'],
-//        '#attributes' => array(),
-//        '#localized_options' => array('html' => TRUE, 'fragment' => 'top'),
-//      );
-//    }
-//    if (!empty($list[$item->id])) {
-//      $argument = explode('?', $item->link);
-//      if (drupal_valid_path($argument[0])) {
-//        $args = array();
-//        if (count($argument) == 2) {
-//          $ex = explode('&', $argument[1]);
-//          foreach ($ex as $part) {
-//            $ex1 = explode('=', $part);
-//            if (count($ex1) == 2) {
-//              $args[$ex1[0]] = $ex1[1];
-//            }
-//          }
-//        }
-//        $list[$item->id]['#below'][$item->item_id] = array(
-//          '#title' => theme('cassiopeia_admin_administrator_icon', array('icon' => $item->item_icon)) . '<span>' . $item->item_name . '</span>',
-//          '#href' => $argument[0],
-//          '#attributes' => array(),
-//          '#localized_options' => array('html' => TRUE, 'query' => $args),
-//        );
-//      }
-//    }
-//  }
-//  drupal_alter('cassiopeia_admin_get_menu_left', $list);
-//  if ($theme) {
-//    return theme($theme, array('items' => $list));
-//  }
-//  return theme('cassiopeia_admin_get_menu_left', array('items' => $list));
-//}
-//
 /**
  * Implements hook_page_bottom().
  */
 function cassiopeia_admin_page_bottom(array &$page_bottom) {
   $user = \Drupal::currentUser();
-  //$theme = \Drupal::service('theme.manager')->getActiveTheme();
-  //  $route = \Drupal::routeMatch()->getRouteObject();
-  $admin_context = \Drupal::service('router.admin_context');
-  $is_admin_route = FALSE;
-  if ($admin_context->isAdminRoute()) {
-    $is_admin_route = TRUE;
-  }
-  if (($user->hasPermission('cassiopeia admin content') || $user->hasPermission('c3s quantri access theme')) && !$is_admin_route) {
-    $page_bottom['cassiopeia_admin_menu'] = [
-      '#markup' => '<div style="position: fixed; bottom: 30px; left: 10px; background: #ccc; border-radius: 5px; padding: 5px; z-index: 999;">' . Link::fromTextAndUrl('Quản trị', Url::fromUri('internal:/' . ($user->hasPermission('cassiopeia admin content') ? 'admin' : 'manager')), [])
-          ->toString() . '</div>',
-    ];
-  }
-}
+  $is_admin_route = \Drupal::service('router.admin_context')->isAdminRoute();
 
-//function cassiopeia_admin_page_build(&$page) {
-//  global $user, $theme_key;
-//  //todo
-//  if ((user_access('cassiopeia admin content') || user_access('c3s quantri access theme')) && $theme_key == 'my_theme') {
-//    $page['page_bottom']['cassiopeia_admin_menu'] = array(
-//      '#markup' => '<div style="position: fixed; bottom: 30px; left: 10px; background: #ccc; border-radius: 5px; padding: 5px; z-index: 999;">' . l('Quản trị', user_access('cassiopeia admin content') ? 'administrator' : 'manager') . '</div>'
-//    );
-//  }
-//}
-//
-//function cassiopeia_admin_taxonomy_menu_insert(&$item) {
-//  $item = _cassiopeia_admin_taxonomy_menu_item($item);
-//}
-//
-//function cassiopeia_admin_taxonomy_menu_update(&$item) {
-//  $item = _cassiopeia_admin_taxonomy_menu_item($item);
-//}
-//
-//function _cassiopeia_admin_taxonomy_menu_item($item) {
-//  $mlid = _taxonomy_menu_get_mlid($item['tid'], $item['vid']);
-//  if ($link = menu_link_load($mlid)) {
-//    if ($link['depth'] == 1) {
-//      $item['weight'] = $link['weight'];
-//    }
-//  }
-//  return $item;
-//}
-//
-//
-//function cassiopeia_admin_get_function() {
-//  $args = func_get_args();
-//  $func = $args[0];
-//  if (!function_exists($func)) {
-//    return FALSE;
-//  }
-//  unset($args[0]);
-//  return call_user_func_array($func, $args);
-//}
+  if ($is_admin_route) {
+    return;
+  }
+
+  $can_access = $user->hasPermission('cassiopeia admin content')
+    || $user->hasPermission('cassiopeia admin content manager')
+    || $user->hasPermission('c3s quantri access theme');
+
+  if (!$can_access) {
+    return;
+  }
+
+  $destination = $user->hasPermission('cassiopeia admin content')
+    || $user->hasPermission('cassiopeia admin content manager')
+    ? 'admin'
+    : 'manager';
+
+  $page_bottom['cassiopeia_admin_menu'] = [
+    '#type' => 'container',
+    '#attributes' => [
+      'class' => ['cassiopeia-admin-floating-link'],
+      'role' => 'navigation',
+      'aria-label' => t('Administration shortcut'),
+    ],
+    '#attached' => [
+      'library' => ['cassiopeia_admin/floating-admin-link'],
+    ],
+    'link' => [
+      '#type' => 'link',
+      '#title' => t('Quản trị'),
+      '#url' => Url::fromUserInput('/' . $destination),
+    ],
+  ];
+}

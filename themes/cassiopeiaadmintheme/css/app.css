@@ -6,3 +6,38 @@
   right: -5px;
   top: -6px;
 }
+
+/* Account menu in header (AdminLTE user dropdown). */
+.app-header .user-menu .user-image {
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+}
+.app-header .user-menu .user-header {
+  padding: 1rem;
+  text-align: center;
+}
+.app-header .user-menu .user-header img {
+  width: 4.5rem;
+  height: 4.5rem;
+  object-fit: cover;
+}
+.app-header .user-menu .user-body {
+  padding: 0.5rem 0;
+}
+.app-header .account-menu-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.app-header .account-menu-link {
+  display: block;
+  padding: 0.5rem 1.25rem;
+  color: var(--bs-body-color);
+  text-decoration: none;
+}
+.app-header .account-menu-link:hover,
+.app-header .account-menu-link:focus {
+  background-color: var(--bs-tertiary-bg);
+  color: var(--bs-emphasis-color);
+}

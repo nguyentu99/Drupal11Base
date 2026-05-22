@@ -2,19 +2,35 @@ form.CassiopeiaAdminAdministratorBlockAddForm:
   version: VERSION
   js:
     js/CassiopeiaAdminAdministratorBlockAddForm.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
 form.CassiopeiaAdminAdministratorBlockEditForm:
   version: VERSION
   js:
     js/CassiopeiaAdminAdministratorBlockEditForm.js: {}
-form.CassiopeiaAdminAdministratorBlocksForm:
-  version: VERSION
-  js:
-    js/CassiopeiaAdminAdministratorBlocksForm.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
 form.CassiopeiaAdminAdministratorBlockItemAddForm:
   version: VERSION
   js:
     js/CassiopeiaAdminAdministratorBlockItemAddForm.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+floating-admin-link:
+  version: VERSION
+  css:
+    theme:
+      css/cassiopeia-admin.css: {}
+  dependencies:
+    - core/drupal
+
 form.CassiopeiaAdminAdministratorBlockItemEditForm:
   version: VERSION
   js:
     js/CassiopeiaAdminAdministratorBlockItemEditForm.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal

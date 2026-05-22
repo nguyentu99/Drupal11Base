@@ -63,28 +63,29 @@ class CassiopeiaAdminAdministratorBlockItemAddForm extends FormBase {
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $form_state_values = $form_state->getValues();
-    if (!is_numeric($form_state_values['position'])) {
-      $form_state->setErrorByName('position', t('Position must be an integer'));
+    $values = $form_state->getValue('item') ?? [];
+    if (!is_numeric($values['position'] ?? '')) {
+      $form_state->setErrorByName('item][position', $this->t('Position must be an integer'));
     }
-    if (!\Drupal::service('path.validator')->isValid($form_state_values['link'])) {
-      $form_state->setErrorByName('link', t('Incorrect link'));
+    if (!\Drupal::service('path.validator')->isValid($values['link'] ?? '')) {
+      $form_state->setErrorByName('item][link', $this->t('Incorrect link'));
     }
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // TODO: Implement submitForm() method.
     $item = new \stdClass();
-    $block = $form_state->get('#block');
-    $form_state_values = $form_state->getValues();
+    $block = $form['#block'];
+    $values = $form_state->getValue('item');
     $item->bid = $block->id;
-    $item->name = trim($form_state_values['name']);
-    $item->link = trim($form_state_values['link']);
-    $item->icon = trim($form_state_values['icon']);
-    $item->position = $form_state_values['position'];
+    $item->name = trim($values['name']);
+    $item->link = trim($values['link']);
+    $item->icon = trim($values['icon']);
+    $item->position = $values['position'];
     administrator_block_item_save($item);
-    \Drupal::messenger()->addMessage(t('Added new @name symbol', array('@name'=> $form_state_values['name'])));
-
+    $this->messenger()->addStatus($this->t('Added new @name symbol', ['@name' => $values['name']]));
+    $form_state->setRedirect('cassiopeia_admin.administrator_block_items', [
+      'administrator_block' => $block->id,
+    ]);
   }
 
 }

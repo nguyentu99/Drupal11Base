@@ -5,9 +5,9 @@ core_version_requirement: ^10.3 || ^11.0
 base theme: bootstrap
 
 regions:
+  header_account: 'Header user menu'
   breadcrumbs: Breadcrumbs
   status_messages: 'Status messages'
-#  navbar_right: 'Navbar right'
   content: Content
   footer: Footer
 #  header: 'Top Bar'

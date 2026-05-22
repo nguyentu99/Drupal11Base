@@ -2,93 +2,72 @@
 
 namespace Drupal\cassiopeia_admin\Service;
 
-use Drupal\Core\Render\Markup;
-use Drupal\Core\Link;
-use Drupal\Core\Url;
-use Drupal\Component\Utility\UrlHelper;
+use Drupal\Component\Utility\Html;
+use Drupal\cassiopeia_admin\Storage\AdministratorStorage;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Path\CurrentPathStack;
+use Drupal\Core\Path\PathValidatorInterface;
 
+/**
+ * Builds the custom administrator sidebar menu.
+ */
 class CassiopeiaAdminAdministrator {
 
-  public function cassiopeia_admin_get_items_all() {
-    $sql = "SELECT b.id, b.name as name, b.position, b.icon, i.id as item_id, i.name as item_name, i.link, i.icon as item_icon, i.position as item_position
-      FROM {administrator_blocks} b JOIN {administrator_block_items} i ON b.id = i.bid ORDER BY b.position, i.position";
-    $result = \Drupal::database()->query($sql)->fetchAll();
-    return $result;
-  }
+  public function __construct(
+    protected AdministratorStorage $storage,
+    protected CurrentPathStack $currentPath,
+    protected PathValidatorInterface $pathValidator,
+    protected ModuleHandlerInterface $moduleHandler,
+  ) {}
 
   /**
-   * Does something.
-   *
-   * @return string
-   *   Some value.
+   * Builds render array for the administrator sidebar menu.
    */
-  public function cassiopeia_admin_get_administrator_menu($theme = '') {
-    $current_path = \Drupal::service('path.current')->getPath();
+  public function cassiopeia_admin_get_administrator_menu(): array {
     $current_route_name = \Drupal::routeMatch()->getRouteName();
-    $result = $this->cassiopeia_admin_get_items_all();
+    $result = $this->storage->loadBlocksWithItems();
     $list = [];
+
     foreach ($result as $item) {
       if (empty($list[$item->id])) {
-        //        $test_build = [
-        //          '#theme' => 'cassiopeia_admin_administrator_icon',
-        //          '#icon' => $item->icon,
-        //        ];
-        //        $test = \Drupal::service('renderer')->renderPlain($test_build);
-        //        print_r($test);
         $list[$item->id] = [
-          //            '#title' => theme('cassiopeia_admin_administrator_icon', array('icon' => $item->icon)) . '<span>' . $item->name . '</span>',
-          '#title' => '<i class="' . $item->icon . '"></i> <p>' . $item->name . ' <i class="nav-arrow bi bi-chevron-right"></i></p>',
-          //          '#title' => \Drupal::service('renderer')->renderPlain([
-          //            '#theme' => 'cassiopeia_admin_administrator_icon',
-          //            '#icon' => $item->icon,
-          //          ]) . '<span>'.$item->name.'</span>',
-          '#href' => $_GET['q'],
+          '#title' => '<i class="' . Html::escape($item->icon) . '"></i> <p>' . Html::escape($item->name) . ' <i class="nav-arrow bi bi-chevron-right"></i></p>',
+          '#href' => '#',
           '#attributes' => ['class' => ['nav-link']],
-          '#localized_options' => ['html' => TRUE, 'fragment' => 'top'],
+          '#localized_options' => ['html' => TRUE],
+          '#below' => [],
         ];
       }
-      if (!empty($list[$item->id])) {
-        $argument = explode('?', $item->link);
-        $url = \Drupal::service('path.validator')->getUrlIfValid($item->link);
-        if ($url) {
-          $args = [];
-          if (count($argument) == 2) {
-            $ex = explode('&', $argument[1]);
-            foreach ($ex as $part) {
-              $ex1 = explode('=', $part);
-              if (count($ex1) == 2) {
-                $args[$ex1[0]] = $ex1[1];
-              }
-            }
-          }
-          $attributes = [];
-          $attributes['class'] = ['nav-link'];
-          if ($current_route_name == $url->getRouteName()) {
-            $attributes['class'][] = 'active';
-          }
 
-          $list[$item->id]['#below'][$item->item_id] = [
-            //              '#title' => theme('cassiopeia_admin_administrator_icon', array('icon' => $item->item_icon)) . '<span>' . $item->item_name . '</span>',
-            '#title' => '<i class="' . $item->item_icon . '"></i> <p>' . $item->item_name . '</p>',
-            //            '#title' => \Drupal::service('renderer')->renderPlain([
-            //                '#theme' => 'cassiopeia_admin_administrator_icon',
-            //                '#icon' => $item->icon,
-            //              ]) . '<span>'.$item->name.'</span>',
-            '#href' => $argument[0],
-            '#path' => $argument[0],
-            '#url' => $url,
-            '#attributes' => $attributes,
-            '#localized_options' => ['html' => TRUE, 'query' => $args],
-          ];
-        }
+      $url = $this->pathValidator->getUrlIfValid($item->link);
+      if (!$url) {
+        continue;
       }
+
+      $query = [];
+      $path_parts = explode('?', $item->link, 2);
+      if (count($path_parts) === 2) {
+        parse_str($path_parts[1], $query);
+      }
+
+      $attributes = ['class' => ['nav-link']];
+      if ($current_route_name === $url->getRouteName()) {
+        $attributes['class'][] = 'active';
+      }
+
+      $list[$item->id]['#below'][$item->item_id] = [
+        '#title' => '<i class="' . Html::escape($item->item_icon) . '"></i> <p>' . Html::escape($item->item_name) . '</p>',
+        '#url' => $url,
+        '#attributes' => $attributes,
+        '#localized_options' => ['html' => TRUE, 'query' => $query],
+      ];
     }
 
     foreach ($list as $block_key => $block_value) {
       $active = FALSE;
       if (!empty($block_value['#below'])) {
-        foreach ($block_value['#below'] as $item) {
-          if (!empty($item['#attributes']['class']) && in_array('active',$item['#attributes']['class'])) {
+        foreach ($block_value['#below'] as $menu_item) {
+          if (!empty($menu_item['#attributes']['class']) && in_array('active', $menu_item['#attributes']['class'], TRUE)) {
             $active = TRUE;
             break;
           }
@@ -96,15 +75,19 @@ class CassiopeiaAdminAdministrator {
       }
       if ($active) {
         $list[$block_key]['#attributes']['class'][] = 'active';
+        $list[$block_key]['#attributes']['class'][] = 'menu-open';
       }
     }
 
-    \Drupal::moduleHandler()
-      ->alter('cassiopeia_admin_administrator_menu', $list);
-    //    print_r($list);
+    $this->moduleHandler->alter('cassiopeia_admin_administrator_menu', $list);
+
     return [
       '#theme' => 'cassiopeia_admin_administrator_menu',
       '#items' => $list,
+      '#cache' => [
+        'tags' => ['cassiopeia_admin_menu'],
+        'contexts' => ['route'],
+      ],
     ];
   }
 

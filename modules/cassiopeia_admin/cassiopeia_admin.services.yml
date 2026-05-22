@@ -1,4 +1,7 @@
 services:
+  cassiopeia_admin.storage:
+    class: Drupal\cassiopeia_admin\Storage\AdministratorStorage
+    arguments: ['@database']
   cassiopeia_admin.administrator:
     class: Drupal\cassiopeia_admin\Service\CassiopeiaAdminAdministrator
-    arguments: []
+    arguments: ['@cassiopeia_admin.storage', '@path.current', '@path.validator', '@module_handler']

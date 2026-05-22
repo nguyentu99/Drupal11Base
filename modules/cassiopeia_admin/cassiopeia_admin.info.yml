@@ -5,7 +5,6 @@ package: Cassiopeia
 core_version_requirement: ^10 || ^11
 dependencies:
   - drupal:user
-  - drupal:views
 # Information added by Drupal.org packaging script on 2024-10-31
 version: '11.x-1.01'
 datestamp: 1730409975

@@ -1,20 +1,21 @@
-<!--begin::Sidebar-->
-<aside class="app-sidebar sidebar-dark-primary bg-body-secondary shadow" data-bs-theme="dark"> <!--begin::Sidebar Brand-->
-  <div class="sidebar-brand"> <!--begin::Brand Link--> <a href="./index.html" class="brand-link"> <!--begin::Brand Image--> <img src="/themes/cassiopeiaadmintheme/images/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> <!--end::Brand Image--> <!--begin::Brand Text--> <span class="brand-text fw-light">AdminLTE 4</span> <!--end::Brand Text--> </a> <!--end::Brand Link--> </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
-  <div class="sidebar-wrapper"> <!-- Sidebar user (optional) -->
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="image"> <img src="/themes/cassiopeiaadmintheme/images/user2-160x160.jpg" alt="User Image" class="img-fluid rounded-circle"> </div>
-      <div class="info"> <a href="#" class="d-block">Alexander Pierce</a> </div>
-    </div> <!-- SidebarSearch Form -->
-    <div class="form-inline">
-      <div class="input-group" data-widget="sidebar-search"> <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-        <div class="input-group-append"> <button class="btn btn-outline"> <i class="bi bi-search"></i> </button> </div>
+{# Sidebar: dynamic admin menu from cassiopeia_admin. #}
+<aside class="app-sidebar sidebar-dark-primary bg-body-secondary shadow" data-bs-theme="dark">
+  <div class="sidebar-brand">
+    <a href="{{ path('<front>') }}" class="brand-link">
+      <img src="{{ base_path }}{{ directory }}/images/AdminLTELogo.png" alt="{{ 'Admin logo'|t }}" class="brand-image opacity-75 shadow">
+      <span class="brand-text fw-light">{{ 'Admin'|t }}</span>
+    </a>
+  </div>
+  <div class="sidebar-wrapper">
+    {% if current_user_display_name %}
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="info">
+          <span class="d-block">{{ current_user_display_name }}</span>
+        </div>
       </div>
-    </div>
-    <nav class="mt-2"> <!--begin::Sidebar Menu-->
-      {{  administrator_menu }}
-
+    {% endif %}
+    <nav class="mt-2">
+      {{ administrator_menu }}
     </nav>
-  </div> <!--end::Sidebar Wrapper-->
+  </div>
 </aside>
-<!--end::Sidebar-->

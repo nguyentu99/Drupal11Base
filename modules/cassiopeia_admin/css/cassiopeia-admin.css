@@ -1,0 +1,49 @@
+/**
+ * Floating "Quản trị" shortcut on non-admin pages.
+ */
+.cassiopeia-admin-floating-link {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 0.75rem;
+  z-index: 1050;
+  padding: 0.5rem 0.85rem;
+  background: var(--bs-primary, #0d6efd);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cassiopeia-admin-floating-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.35rem 1rem rgba(0, 0, 0, 0.25);
+}
+
+.cassiopeia-admin-floating-link a {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cassiopeia-admin-floating-link a::before {
+  content: "\2699";
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.cassiopeia-admin-floating-link a:hover,
+.cassiopeia-admin-floating-link a:focus {
+  color: #fff;
+  text-decoration: underline;
+}
+
+@media (max-width: 576px) {
+  .cassiopeia-admin-floating-link {
+    bottom: 1rem;
+    left: 0.5rem;
+    padding: 0.4rem 0.65rem;
+    font-size: 0.875rem;
+  }
+}

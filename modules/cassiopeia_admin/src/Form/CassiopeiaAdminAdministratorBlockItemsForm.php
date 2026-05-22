@@ -64,8 +64,7 @@ class CassiopeiaAdminAdministratorBlockItemsForm extends FormBase {
     else {
       $form['#block'] = $form_state->get('#block');
     }
-    $sql = "SELECT id, name, link, icon, position FROM administrator_block_items WHERE bid = :bid ORDER BY position ASC";
-    $result = \Drupal::database()->query($sql, array(':bid' => $form['#block']->id))->fetchAll();
+    $result = cassiopeia_admin_storage()->loadBlockItemsByBlock($form['#block']->id);
 
     $rows = array();
     $form['items'] = array();

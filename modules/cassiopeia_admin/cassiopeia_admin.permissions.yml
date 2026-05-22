@@ -1,10 +1,14 @@
+cassiopeia admin content:
+  title: 'Cassiopeia admin content'
+  description: 'Access administrator content areas and floating admin link.'
+  restrict access: true
+
 cassiopeia admin content manager:
   title: 'Cassiopeia admin content manager'
-  description: 'Cassiopeia admin content manager.'
+  description: 'Alias for Cassiopeia admin content access.'
   restrict access: true
 
 cassiopeia admin block manager:
   title: 'Cassiopeia admin block manager'
-  description: 'Cassiopeia admin block manager.'
+  description: 'Manage administrator blocks and menu items.'
   restrict access: true
-

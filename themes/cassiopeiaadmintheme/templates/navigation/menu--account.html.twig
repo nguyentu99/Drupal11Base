@@ -1,0 +1,33 @@
+{#
+/**
+ * @file
+ * Account menu styled as AdminLTE user dropdown.
+ */
+#}
+{% if items %}
+  <li class="nav-item dropdown user-menu">
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" id="account-menu-toggle">
+      <img src="{{ base_path }}{{ directory }}/images/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="{{ 'User picture'|t }}">
+      {% if current_user_display_name %}
+        <span class="d-none d-md-inline">{{ current_user_display_name }}</span>
+      {% endif %}
+    </a>
+    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end" aria-labelledby="account-menu-toggle">
+      {% if current_user_display_name %}
+        <li class="user-header text-bg-primary">
+          <img src="{{ base_path }}{{ directory }}/images/user2-160x160.jpg" class="rounded-circle shadow" alt="">
+          <p class="mb-0">{{ current_user_display_name }}</p>
+        </li>
+      {% endif %}
+      <li class="user-body">
+        <ul class="nav flex-column account-menu-links">
+          {% for item in items %}
+            <li{{ item.attributes.addClass('nav-item', 'w-100') }}>
+              {{ link(item.title, item.url, item.attributes.addClass(['nav-link', 'account-menu-link'])) }}
+            </li>
+          {% endfor %}
+        </ul>
+      </li>
+    </ul>
+  </li>
+{% endif %}
