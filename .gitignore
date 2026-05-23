@@ -1,0 +1,68 @@
+# Drupal 11 base — see also example.gitignore (from core scaffold).
+
+# Composer dependencies (root only; do not ignore vendor inside contrib modules).
+/vendor/
+
+# Site settings and services (may contain DB credentials, salts, keys).
+sites/*/settings*.php
+sites/*/services*.yml
+
+# User-generated and runtime files (uploads, cache, config export under files/, etc.).
+sites/*/files
+sites/*/private
+
+# Simpletest / functional test artifacts.
+sites/simpletest
+
+# Local overrides (uncomment if you use these files).
+# sites/*/settings.local.php
+# sites/*/services.local.yml
+
+# Environment and secrets.
+.env
+.env.*
+!.env.example
+
+# IDE and editor.
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.project
+.buildpath
+.settings/
+*.swp
+*~
+
+# OS.
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# PHP / PHPUnit / coverage.
+.phpunit.result.cache
+phpunit.xml
+/coverage/
+
+# Node (theme/tooling front-end builds).
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Drush backups and database dumps.
+*.sql
+*.sql.gz
+*.mysql
+drush-backups/
+
+# Logs and temp.
+*.log
+*.tmp
+*.temp
+.cache/
+
+# Patch artifacts (keep .patch files you apply via composer; ignore local rejects).
+*.rej
