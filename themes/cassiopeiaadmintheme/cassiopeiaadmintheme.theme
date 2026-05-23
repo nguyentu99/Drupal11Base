@@ -28,18 +28,6 @@ function cassiopeiaadmintheme_preprocess_html(&$variables) {
   else {
     $variables['attributes']['class'] = ['layout-fixed', 'sidebar-expand-lg', 'bg-body-tertiary'];
   }
-
-  $font_href = base_path() . 'libraries/bootstrap-icons/font/fonts/bootstrap-icons.woff2';
-  $variables['#attached']['html_head_link'][] = [
-    [
-      'rel' => 'preload',
-      'href' => $font_href,
-      'as' => 'font',
-      'type' => 'font/woff2',
-      'crossorigin' => 'anonymous',
-    ],
-    TRUE,
-  ];
 }
 
 /**

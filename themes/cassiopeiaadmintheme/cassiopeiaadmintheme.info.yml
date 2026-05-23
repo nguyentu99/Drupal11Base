@@ -22,8 +22,9 @@ libraries:
   - cassiopeiaadmintheme/overlayscrollbars
   - cassiopeiaadmintheme/global-styling
 
-# Do not load the full bootstrap-icons package (84 KB); admin theme uses a subset.
+# AdminLTE ships layout CSS; load vendor Bootstrap grid/reboot via cassiopeiaadmintheme/bootstrap.
 libraries-override:
+  bootstrap/global-styling: false
   bootstrap/bootstrap-icons:
     css:
       component:
