@@ -1,0 +1,85 @@
+﻿/*!
+ * Bootstrap Icons subset for Cassiopeia admin theme (v1.11.3 glyph codes).
+ * Replaces bootstrap/bootstrap-icons (84 KB) on admin pages only.
+ */
+@font-face {
+  font-display: block;
+  font-family: bootstrap-icons;
+  src:
+    url(/libraries/bootstrap-icons/font/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6) format("woff2"),
+    url(/libraries/bootstrap-icons/font/fonts/bootstrap-icons.woff?dd67030699838ea613ee6dbda90effa6) format("woff");
+}
+
+.bi::before,
+[class*=" bi-"]::before,
+[class^="bi-"]::before {
+  display: inline-block;
+  font-family: bootstrap-icons !important;
+  font-style: normal;
+  font-weight: 400 !important;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  vertical-align: -0.125em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bi-list::before { content: "\f479"; }
+.bi-search::before { content: "\f52a"; }
+.bi-arrows-fullscreen::before { content: "\f14d"; }
+.bi-fullscreen-exit::before { content: "\f3de"; }
+.bi-grid-fill::before { content: "\f3fb"; }
+.bi-grid::before { content: "\f3fc"; }
+.bi-chevron-right::before { content: "\f285"; }
+.bi-chevron-down::before { content: "\f282"; }
+.bi-chevron-left::before { content: "\f284"; }
+.bi-speedometer::before { content: "\f57f"; }
+.bi-speedometer2::before { content: "\f580"; }
+.bi-gear::before { content: "\f3e5"; }
+.bi-gear-fill::before { content: "\f3e2"; }
+.bi-house::before { content: "\f425"; }
+.bi-house-door::before { content: "\f423"; }
+.bi-pencil::before { content: "\f4cb"; }
+.bi-pencil-square::before { content: "\f4ca"; }
+.bi-trash::before { content: "\f5de"; }
+.bi-trash-fill::before { content: "\f5dd"; }
+.bi-plus::before { content: "\f4fe"; }
+.bi-plus-circle::before { content: "\f4fa"; }
+.bi-dash-lg::before { content: "\f63b"; }
+.bi-x-lg::before { content: "\f659"; }
+.bi-x::before { content: "\f62a"; }
+.bi-box-arrow-right::before { content: "\f1c3"; }
+.bi-folder::before { content: "\f3d7"; }
+.bi-people::before { content: "\f4d0"; }
+.bi-person::before { content: "\f4e1"; }
+.bi-bell::before { content: "\f18a"; }
+.bi-envelope::before { content: "\f32f"; }
+.bi-file-earmark::before { content: "\f392"; }
+.bi-database::before { content: "\f8c4"; }
+.bi-shield::before { content: "\f53f"; }
+.bi-lock::before { content: "\f47b"; }
+.bi-unlock::before { content: "\f600"; }
+.bi-eye::before { content: "\f341"; }
+.bi-bookmark::before { content: "\f1a2"; }
+.bi-star::before { content: "\f588"; }
+.bi-circle::before { content: "\f28a"; }
+.bi-check::before { content: "\f26e"; }
+.bi-arrow-repeat::before { content: "\f130"; }
+.bi-box::before { content: "\f1c8"; }
+.bi-diagram-3::before { content: "\f2ee"; }
+.bi-layout-sidebar::before { content: "\f45f"; }
+.bi-display::before { content: "\f302"; }
+.bi-cpu::before { content: "\f2d6"; }
+.bi-cloud::before { content: "\f2c1"; }
+.bi-calendar::before { content: "\f1f6"; }
+.bi-cart::before { content: "\f242"; }
+.bi-tag::before { content: "\f5b0"; }
+.bi-link::before { content: "\f471"; }
+.bi-globe::before { content: "\f3ee"; }
+.bi-info-circle::before { content: "\f431"; }
+.bi-question-circle::before { content: "\f505"; }
+.bi-exclamation-triangle::before { content: "\f33b"; }
+.bi-sliders::before { content: "\f56b"; }
+.bi-wrench::before { content: "\f621"; }
+.bi-three-dots::before { content: "\f5d4"; }

@@ -1,10 +1,14 @@
 cassiopeia admin content manager:
   title: 'Cassiopeia admin content manager'
-  description: 'Cassiopeia admin content manager.'
+  description: 'Shows the floating “Quản trị” link to /admin on non-admin routes.'
   restrict access: true
 
 cassiopeia admin block manager:
   title: 'Cassiopeia admin block manager'
-  description: 'Cassiopeia admin block manager.'
+  description: 'Manage administrator sidebar blocks and menu items.'
   restrict access: true
 
+c3s quantri access theme:
+  title: 'Cassiopeia manager theme access (legacy)'
+  description: 'Legacy permission for the floating “Quản trị” link to /manager. Prefer “Cassiopeia admin content manager” for new roles.'
+  restrict access: true

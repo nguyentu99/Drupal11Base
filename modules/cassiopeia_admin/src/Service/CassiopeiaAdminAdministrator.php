@@ -2,223 +2,142 @@
 
 namespace Drupal\cassiopeia_admin\Service;
 
+use Drupal\cassiopeia_admin\Repository\AdministratorMenuRepository;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Render\Markup;
-use Drupal\Core\Link;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
-use Drupal\Core\Url;
-use Drupal\Component\Utility\UrlHelper;
 
-class CassiopeiaAdminAdministrator implements TrustedCallbackInterface{
+/**
+ * Builds the Cassiopeia administrator sidebar menu.
+ */
+class CassiopeiaAdminAdministrator implements TrustedCallbackInterface {
 
-  public function cassiopeia_admin_get_items_all() {
-    $sql = "SELECT b.id, b.name as name, b.position, b.icon, i.id as item_id, i.name as item_name, i.link, i.icon as item_icon, i.position as item_position
-      FROM {administrator_blocks} b JOIN {administrator_block_items} i ON b.id = i.bid ORDER BY b.position, i.position";
-    $result = \Drupal::database()->query($sql)->fetchAll();
-    return $result;
+  /**
+   * Cache tag for the administrator menu render cache.
+   */
+  public const MENU_CACHE_TAG = 'cassiopeia_admin_menu:list';
+
+  /**
+   * Default max-age for menu render cache (1 hour).
+   */
+  private const MENU_CACHE_MAX_AGE = 3600;
+
+  public function __construct(
+    protected AdministratorMenuRepository $menuRepository,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected RouteMatchInterface $routeMatch,
+  ) {}
+
+  /**
+   * @deprecated in cassiopeia_admin:8.x-1.x and is no longer used.
+   *   Use AdministratorMenuRepository::loadMenuTreeRows() instead.
+   */
+  public static function resetMenuRowsCache(): void {
+    \Drupal::service('cassiopeia_admin.menu_repository')->resetRequestCache();
   }
 
   /**
-   * Does something.
-   *
-   * @return string
-   *   Some value.
+   * Loads all block/item rows (delegates to repository).
    */
-  public function cassiopeia_admin_get_administrator_menu($theme = '') {
-//    $current_path = \Drupal::service('path.current')->getPath();
-//    $current_route_name = \Drupal::routeMatch()->getRouteName();
-//    $result = $this->cassiopeia_admin_get_items_all();
-//    $list = [];
-//    foreach ($result as $item) {
-//      if (empty($list[$item->id])) {
-//        //        $test_build = [
-//        //          '#theme' => 'cassiopeia_admin_administrator_icon',
-//        //          '#icon' => $item->icon,
-//        //        ];
-//        //        $test = \Drupal::service('renderer')->renderPlain($test_build);
-//        //        print_r($test);
-//        $list[$item->id] = [
-//          //            '#title' => theme('cassiopeia_admin_administrator_icon', array('icon' => $item->icon)) . '<span>' . $item->name . '</span>',
-//          '#title' => '<i class="' . $item->icon . '"></i> <p>' . $item->name . ' <i class="nav-arrow bi bi-chevron-right"></i></p>',
-//          //          '#title' => \Drupal::service('renderer')->renderPlain([
-//          //            '#theme' => 'cassiopeia_admin_administrator_icon',
-//          //            '#icon' => $item->icon,
-//          //          ]) . '<span>'.$item->name.'</span>',
-//          '#href' => '#',
-//          '#attributes' => ['class' => ['nav-link']],
-//          '#localized_options' => ['html' => TRUE, 'fragment' => 'top'],
-//        ];
-//      }
-//      if (!empty($list[$item->id])) {
-//        $argument = explode('?', $item->link);
-//        $url = \Drupal::service('path.validator')->getUrlIfValid($item->link);
-//        if ($url) {
-//          $args = [];
-//          if (count($argument) == 2) {
-//            $ex = explode('&', $argument[1]);
-//            foreach ($ex as $part) {
-//              $ex1 = explode('=', $part);
-//              if (count($ex1) == 2) {
-//                $args[$ex1[0]] = $ex1[1];
-//              }
-//            }
-//          }
-//          $attributes = [];
-//          $attributes['class'] = ['nav-link'];
-//          if ($current_route_name == $url->getRouteName()) {
-//            $attributes['class'][] = 'active';
-//          }
-//
-//          $list[$item->id]['#below'][$item->item_id] = [
-//            //              '#title' => theme('cassiopeia_admin_administrator_icon', array('icon' => $item->item_icon)) . '<span>' . $item->item_name . '</span>',
-//            '#title' => '<i class="' . $item->item_icon . '"></i> <p>' . $item->item_name . '</p>',
-//            //            '#title' => \Drupal::service('renderer')->renderPlain([
-//            //                '#theme' => 'cassiopeia_admin_administrator_icon',
-//            //                '#icon' => $item->icon,
-//            //              ]) . '<span>'.$item->name.'</span>',
-//            '#href' => $argument[0],
-//            '#path' => $argument[0],
-//            '#url' => $url,
-//            '#attributes' => $attributes,
-//            '#localized_options' => ['html' => TRUE, 'query' => $args],
-//          ];
-//        }
-//      }
-//    }
-//
-//    foreach ($list as $block_key => $block_value) {
-//      $active = FALSE;
-//      if (!empty($block_value['#below'])) {
-//        foreach ($block_value['#below'] as $item) {
-//          if (!empty($item['#attributes']['class']) && in_array('active',$item['#attributes']['class'])) {
-//            $active = TRUE;
-//            break;
-//          }
-//        }
-//      }
-//      if ($active) {
-//        $list[$block_key]['#attributes']['class'][] = 'active';
-//      }
-//    }
-
-//    \Drupal::moduleHandler()
-//      ->alter('cassiopeia_admin_administrator_menu', $list);
-    //    print_r($list);
-//    return [
-//      '#theme' => 'cassiopeia_admin_administrator_menu',
-//      '#items' => $list,
-//    ];
-
-    $build = [];
-    $build['administrator_menu'] = [
-      '#lazy_builder' => [
-        self::class . '::lazyBuilder', [null]
-      ],
-      '#create_placeholder' => TRUE,
-    ];
-    return $build;
+  public function cassiopeia_admin_get_items_all(): array {
+    return $this->menuRepository->loadMenuTreeRows();
   }
 
-  public function lazyBuilder($data) {
-    $current_path = \Drupal::service('path.current')->getPath();
-    $current_route_name = \Drupal::routeMatch()->getRouteName();
-    $result = $this->cassiopeia_admin_get_items_all();
-    $list = [];
-    foreach ($result as $item) {
-      if (empty($list[$item->id])) {
-        //        $test_build = [
-        //          '#theme' => 'cassiopeia_admin_administrator_icon',
-        //          '#icon' => $item->icon,
-        //        ];
-        //        $test = \Drupal::service('renderer')->renderPlain($test_build);
-        //        print_r($test);
-        $list[$item->id] = [
-          //            '#title' => theme('cassiopeia_admin_administrator_icon', array('icon' => $item->icon)) . '<span>' . $item->name . '</span>',
-          '#title' => '<i class="' . $item->icon . '"></i> <p>' . $item->name . ' <i class="nav-arrow bi bi-chevron-right"></i></p>',
-          //          '#title' => \Drupal::service('renderer')->renderPlain([
-          //            '#theme' => 'cassiopeia_admin_administrator_icon',
-          //            '#icon' => $item->icon,
-          //          ]) . '<span>'.$item->name.'</span>',
-          '#href' => '#',
-          '#attributes' => ['class' => ['nav-link']],
-          '#localized_options' => ['html' => TRUE, 'fragment' => 'top'],
+  /**
+   * Builds the lazy-loaded administrator menu render array.
+   */
+  public function cassiopeia_admin_get_administrator_menu(string $theme = ''): array {
+    return [
+      'administrator_menu' => [
+        '#lazy_builder' => ['cassiopeia_admin.administrator:lazyBuilder', []],
+        '#create_placeholder' => TRUE,
+      ],
+      '#cache' => [
+        'keys' => ['cassiopeia_admin', 'menu', 'wrapper'],
+        'tags' => [self::MENU_CACHE_TAG],
+        'contexts' => ['user.permissions', 'languages:language_interface'],
+        'max-age' => self::MENU_CACHE_MAX_AGE,
+      ],
+    ];
+  }
+
+  /**
+   * Lazy builder callback for the administrator sidebar menu.
+   */
+  public function lazyBuilder(): array {
+    $current_route_name = $this->routeMatch->getRouteName();
+    $blocks = [];
+    $block_index = [];
+
+    foreach ($this->menuRepository->loadMenuTreeRows() as $row) {
+      if (!isset($block_index[$row->id])) {
+        $block_index[$row->id] = count($blocks);
+        $blocks[] = [
+          'label' => $row->name,
+          'icon_class' => self::sanitizeIconClass($row->icon),
+          'open' => FALSE,
+          'links' => [],
         ];
       }
-      if (!empty($list[$item->id])) {
-        $argument = explode('?', $item->link);
-        $url = \Drupal::service('path.validator')->getUrlIfValid($item->link);
-        if ($url) {
-          $args = [];
-          if (count($argument) == 2) {
-            $ex = explode('&', $argument[1]);
-            foreach ($ex as $part) {
-              $ex1 = explode('=', $part);
-              if (count($ex1) == 2) {
-                $args[$ex1[0]] = $ex1[1];
-              }
-            }
-          }
-          $attributes = [];
-          $attributes['class'] = ['nav-link'];
-          if ($current_route_name == $url->getRouteName()) {
-            $attributes['class'][] = 'active';
-          }
 
-          $list[$item->id]['#below'][$item->item_id] = [
-            //              '#title' => theme('cassiopeia_admin_administrator_icon', array('icon' => $item->item_icon)) . '<span>' . $item->item_name . '</span>',
-            '#title' => '<i class="' . $item->item_icon . '"></i> <p>' . $item->item_name . '</p>',
-            //            '#title' => \Drupal::service('renderer')->renderPlain([
-            //                '#theme' => 'cassiopeia_admin_administrator_icon',
-            //                '#icon' => $item->icon,
-            //              ]) . '<span>'.$item->name.'</span>',
-            '#href' => $argument[0],
-            '#path' => $argument[0],
-            '#url' => $url,
-            '#attributes' => $attributes,
-            '#localized_options' => ['html' => TRUE, 'query' => $args],
-          ];
-        }
+      $url = AdministratorLinkMetadata::toUrl($row->url_meta ?? NULL, $row->link);
+      if (!$url) {
+        continue;
       }
+
+      $link_classes = ['nav-link'];
+      if ($current_route_name && $current_route_name === $url->getRouteName()) {
+        $link_classes[] = 'active';
+        $blocks[$block_index[$row->id]]['open'] = TRUE;
+      }
+
+      $icon_class = self::sanitizeIconClass($row->item_icon);
+      $blocks[$block_index[$row->id]]['links'][] = [
+        '#type' => 'link',
+        '#title' => $row->item_name,
+        '#url' => $url,
+        '#attributes' => ['class' => $link_classes],
+        '#prefix' => $icon_class !== '' ? Markup::create('<i class="' . Html::escape($icon_class) . '"></i> ') : '',
+      ];
     }
 
-    foreach ($list as $block_key => $block_value) {
-      $active = FALSE;
-      if (!empty($block_value['#below'])) {
-        foreach ($block_value['#below'] as $item) {
-          if (!empty($item['#attributes']['class']) && in_array('active',$item['#attributes']['class'])) {
-            $active = TRUE;
-            break;
-          }
-        }
-      }
-      if ($active) {
-        $list[$block_key]['#attributes']['class'][] = 'active';
-      }
-    }
+    $this->moduleHandler->alter('cassiopeia_admin_menu_blocks', $blocks);
+    // @deprecated in cassiopeia_admin:8.x-1.x — use hook_cassiopeia_admin_menu_blocks_alter().
+    $this->moduleHandler->alter('cassiopeia_admin_menu', $blocks);
 
-
-    $build = [];
-    $build['administrator_menu'] = [
-            '#theme' => 'cassiopeia_admin_administrator_menu',
-            '#items' => $list,
-      '#cache' => [
-        'max-age' => 0,
+    return [
+      'administrator_menu' => [
+        '#theme' => 'cassiopeia_admin_administrator_menu',
+        '#blocks' => $blocks,
+        '#cache' => [
+          'keys' => ['cassiopeia_admin', 'menu', 'tree'],
+          'tags' => [self::MENU_CACHE_TAG],
+          'contexts' => ['route', 'user.permissions', 'languages:language_interface'],
+          'max-age' => self::MENU_CACHE_MAX_AGE,
+        ],
       ],
     ];
-
-    return $build;
-
-//     return [
-//       '#theme' => 'cassiopeia_admin_administrator_menu',
-//       '#items' => $list,
-//     ];
   }
 
-  public static function trustedCallbacks() {
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks(): array {
     return [
-      'lazyBuilder'
+      'lazyBuilder',
     ];
   }
 
-
+  /**
+   * Restricts icon field values to safe CSS class characters.
+   */
+  public static function sanitizeIconClass(?string $icon): string {
+    if ($icon === NULL || $icon === '') {
+      return '';
+    }
+    return preg_replace('/[^a-zA-Z0-9_\- ]/', '', $icon) ?? '';
+  }
 
 }

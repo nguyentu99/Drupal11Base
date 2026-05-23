@@ -9,76 +9,121 @@ function cassiopeia_admin_install() {
   $path[] = 'user';
   $path[] = 'user/*';
   \Drupal::state()->set('admin_theme_path', implode("\n", $path));
+  cassiopeia_admin_sync_admin_theme_paths();
 }
 
 /**
- * Implementation of hook_schema().
+ * Implements hook_schema().
+ *
+ * Legacy SQL tables were removed in favor of config entities (see update 11003).
  */
 function cassiopeia_admin_schema() {
-  $schema['administrator_blocks'] = array(
-    'fields' => array(
-      'id' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => '255',
-        'not null' => TRUE,
-      ),
-      'icon' => array(
-        'type' => 'varchar',
-        'length' => '50',
-        'not null' => TRUE,
-      ),
-      'position' => array(
-        'type' => 'float',
-        'size' => 'normal',
-        'unsigned' => FALSE,
-        'not null' => TRUE,
-      ),
-    ),
-    'primary key' => array('id'),
-  );
+  return [];
+}
 
-  $schema['administrator_block_items'] = array(
-    'fields' => array(
-      'id' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'bid' => array(
-        'type' => 'int',
-        'unsigned' => FALSE,
-        'not null' => TRUE,
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => '255',
-        'not null' => TRUE,
-      ),
-      'link' => array(
-        'type' => 'varchar',
-        'length' => '255',
-        'not null' => TRUE,
-      ),
-      'icon' => array(
-        'type' => 'varchar',
-        'length' => '50',
-        'not null' => TRUE,
-      ),
-      'position' => array(
-        'type' => 'float',
-        'unsigned' => FALSE,
-        'not null' => TRUE,
-        'size' => 'normal',
-      ),
-    ),
-    'primary key' => array('id'),
-  );
-  return $schema;
+/**
+ * Adds url_meta column and backfills route metadata for menu items.
+ */
+function cassiopeia_admin_update_11001(): void {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->fieldExists('administrator_block_items', 'url_meta')) {
+    $schema->addField('administrator_block_items', 'url_meta', [
+      'type' => 'text',
+      'size' => 'big',
+      'not null' => FALSE,
+    ]);
+  }
+  if (!$schema->indexExists('administrator_block_items', 'bid')) {
+    $schema->addIndex('administrator_block_items', 'bid', ['bid']);
+  }
+
+  $items = \Drupal::database()->select('administrator_block_items', 'i')
+    ->fields('i', ['id', 'link'])
+    ->execute();
+  foreach ($items as $item) {
+    \Drupal::database()->update('administrator_block_items')
+      ->fields([
+        'url_meta' => \Drupal\cassiopeia_admin\Service\AdministratorLinkMetadata::encodeStorage($item->link),
+      ])
+      ->condition('id', $item->id)
+      ->execute();
+  }
+
+  cassiopeia_admin_invalidate_menu_cache();
+}
+
+/**
+ * Syncs admin theme paths from state into admin_theme module config.
+ */
+function cassiopeia_admin_update_11002(): void {
+  cassiopeia_admin_sync_admin_theme_paths();
+}
+
+/**
+ * Migrates administrator blocks/items from SQL tables to config entities.
+ */
+function cassiopeia_admin_update_11003(): string {
+  $connection = \Drupal::database();
+  $schema = $connection->schema();
+  if (!$schema->tableExists('administrator_blocks')) {
+    return (string) t('Legacy tables not found; skipping migration.');
+  }
+
+  $block_storage = \Drupal::entityTypeManager()->getStorage('administrator_block');
+  $item_storage = \Drupal::entityTypeManager()->getStorage('administrator_block_item');
+
+  $blocks = $connection->select('administrator_blocks', 'b')
+    ->fields('b')
+    ->execute()
+    ->fetchAll();
+  foreach ($blocks as $row) {
+    if (!$block_storage->load((string) $row->id)) {
+      $block_storage->create([
+        'id' => (string) $row->id,
+        'name' => $row->name,
+        'icon' => $row->icon,
+        'position' => (float) $row->position,
+      ])->save();
+    }
+  }
+
+  $items = $connection->select('administrator_block_items', 'i')
+    ->fields('i')
+    ->execute()
+    ->fetchAll();
+  foreach ($items as $row) {
+    if (!$item_storage->load((string) $row->id)) {
+      $item_storage->create([
+        'id' => (string) $row->id,
+        'block_id' => (string) $row->bid,
+        'name' => $row->name,
+        'link' => $row->link,
+        'icon' => $row->icon,
+        'position' => (float) $row->position,
+        'url_meta' => $row->url_meta ?? NULL,
+      ])->save();
+    }
+  }
+
+  \Drupal::state()->set('cassiopeia_admin.legacy_migrated', TRUE);
+  cassiopeia_admin_invalidate_menu_cache();
+
+  return (string) t('Migrated @blocks administrator blocks and @items menu items to configuration.', [
+    '@blocks' => count($blocks),
+    '@items' => count($items),
+  ]);
+}
+
+/**
+ * Drops legacy SQL tables after config migration.
+ */
+function cassiopeia_admin_update_11004(): void {
+  $schema = \Drupal::database()->schema();
+  foreach (['administrator_block_items', 'administrator_blocks'] as $table) {
+    if ($schema->tableExists($table)) {
+      $schema->dropTable($table);
+    }
+  }
 }
 
 /**
@@ -86,4 +131,11 @@ function cassiopeia_admin_schema() {
  */
 function cassiopeia_admin_uninstall() {
   \Drupal::state()->delete('admin_theme_path');
+  \Drupal::state()->delete('cassiopeia_admin.legacy_migrated');
+  $schema = \Drupal::database()->schema();
+  foreach (['administrator_block_items', 'administrator_blocks'] as $table) {
+    if ($schema->tableExists($table)) {
+      $schema->dropTable($table);
+    }
+  }
 }

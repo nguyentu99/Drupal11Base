@@ -22,6 +22,14 @@ libraries:
   - cassiopeiaadmintheme/overlayscrollbars
   - cassiopeiaadmintheme/global-styling
 
+# Do not load the full bootstrap-icons package (84 KB); admin theme uses a subset.
+libraries-override:
+  bootstrap/bootstrap-icons:
+    css:
+      component:
+        /libraries/bootstrap-icons/font/bootstrap-icons.min.css: false
+        css/components/bootstrap-icons.css: false
+
 version: '5.0.1'
 #project: 'cassiopeia'
 datestamp: 1726511779

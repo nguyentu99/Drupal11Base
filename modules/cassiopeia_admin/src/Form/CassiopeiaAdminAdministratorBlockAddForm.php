@@ -2,88 +2,79 @@
 
 namespace Drupal\cassiopeia_admin\Form;
 
+use Drupal\cassiopeia_admin\Utility\AdministratorFieldHelper;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
-
 class CassiopeiaAdminAdministratorBlockAddForm extends FormBase {
 
-  public function getFormId() {
-    // TODO: Implement getFormId() method.
-    return 'cassiopeia_admin_administrator_block_add_form';
+  use AdministratorFormTrait;
 
+  public function getFormId() {
+    return 'cassiopeia_admin_administrator_block_add_form';
   }
 
   public function buildForm(array $form, FormStateInterface $form_state, $block = NULL) {
-    // TODO: Implement buildForm() method.
     $form['#attached']['library'][] = 'cassiopeia_admin/form.CassiopeiaAdminAdministratorBlockAddForm';
-    if (!$form_state->has('#block')) {
-      $form['#block'] = $block;
-      $form_state->setFormState(array('#block', $block));
-    }else {
-      $form['#block'] = $form_state->get('#block');
-    }
+    $this->initBlockFormState($form_state, $block, $form);
+    $block_obj = $form['#block'] ?? NULL;
+    $icon = $block_obj->icon ?? NULL;
 
-    $form['addBlock'] = array(
+    $form['addBlock'] = [
       '#type' => 'container',
-    );
-    $form['addBlock']['name'] = array(
+    ];
+    $form['addBlock']['name'] = [
       '#type' => 'textfield',
-      '#title' => 'Tên khối',
+      '#title' => $this->t('Block name'),
       '#required' => TRUE,
-      '#default_value' => empty($form['#block']) ? '' : $form['#block']->name,
-    );
-    $form['addBlock']['icon'] = array(
+      '#default_value' => $block_obj->name ?? '',
+    ];
+    $form['addBlock']['icon'] = [
       '#type' => 'textfield',
-      '#title' => 'Icon',
+      '#title' => $this->t('Icon'),
       '#prefix' => '<div id="select-icon">',
-      '#suffix' => '<div id="icon-demo"><i class="fa ' . (empty($form['#block']) ? '' : 'customer-icon-' . $form['#block']->icon) . '"></i></div></div>',
+      '#suffix' => AdministratorFieldHelper::iconPreviewSuffix($icon),
       '#required' => TRUE,
-      '#default_value' => empty($form['#block']) ? '' : $form['#block']->icon,
-    );
-    $form['addBlock']['position'] = array(
+      '#default_value' => $icon ?? '',
+    ];
+    $form['addBlock']['position'] = [
       '#type' => 'textfield',
-      '#title' => 'Vị trí',
+      '#title' => $this->t('Position'),
       '#required' => TRUE,
-      '#default_value' => empty($form['#block']) ? 0 : $form['#block']->position,
-    );
-    $form['addBlock']['submit'] = array(
+      '#default_value' => $block_obj->position ?? 0,
+    ];
+    $form['addBlock']['submit'] = [
       '#type' => 'submit',
-      '#value' => empty($form['#block']) ? t('Add new') : t('Update')
-    );
+      '#value' => empty($block_obj->id) ? $this->t('Add new') : $this->t('Update'),
+    ];
     return $form;
-
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $form_state_values = $form_state->getValues();
-    if (!is_numeric($form_state_values['position'])) {
-      $form_state->setErrorByName('position', t('Position must be an integer'));
+    $values = $form_state->getValue('addBlock') ?? [];
+    if (!isset($values['position']) || !is_numeric($values['position'])) {
+      $form_state->setErrorByName('position', $this->t('Position must be an integer'));
     }
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // TODO: Implement submitForm() method.
-    $is_new = TRUE;
+    $values = $form_state->getValue('addBlock');
     $block = new \stdClass();
-    $form_state_values = $form_state->getValues();
-    if ($form_state->has('#block') && !empty($form_state->get('#block'))){
-      $block = clone ((object)$form_state->get('#block'));
+    $stored = $this->getBlockFromFormState($form_state);
+    if ($stored !== NULL) {
+      $block = clone $stored;
     }
-    if (!empty($block->id)) {
-      $is_new = FALSE;
-    }
-    $block->name = trim($form_state_values['name']);
-    $block->icon = trim($form_state_values['icon']);
-    $block->position = $form_state_values['position'];
+    $is_new = empty($block->id);
+    $block->name = trim($values['name']);
+    $block->icon = AdministratorFieldHelper::sanitizeIcon($values['icon']);
+    $block->position = $values['position'];
     administrator_block_save($block);
     if ($is_new) {
-      \Drupal::messenger()->addMessage(t('Added new @name block', array('@name' => $form_state_values['name'])));
+      $this->messenger()->addMessage($this->t('Added new @name block', ['@name' => $values['name']]));
     }
     else {
-      \Drupal::messenger()->addMessage(t('Updated @name block', array('@name' => $form_state_values['name'])));
-      $form_state->setRedirect('admin/cassiopeia/administrator/block');
-
+      $this->messenger()->addMessage($this->t('Updated @name block', ['@name' => $values['name']]));
+      $form_state->setRedirect('cassiopeia_admin.administrator_block');
     }
   }
 

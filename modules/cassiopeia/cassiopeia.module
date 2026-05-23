@@ -1,5 +1,17 @@
 <?php
+
 use Drupal\Core\Render\Markup;
+
+/**
+ * Renders a Twig template from an extension (legacy procedural helper).
+ *
+ * @deprecated in cassiopeia:8.x-1.x
+ *   Prefer \Drupal::service('cassiopeia.CassiopeiaRenderTemplate')->render() or
+ *   the cassiopeia_render_template Twig function.
+ */
+function _cassiopeia_render_template_(string $type, string $name, string $path, mixed $variables = NULL): Markup {
+  return \Drupal::service('cassiopeia.CassiopeiaRenderTemplate')->render($type, $name, $path, $variables);
+}
 
 /**
  * Implements hook_theme().

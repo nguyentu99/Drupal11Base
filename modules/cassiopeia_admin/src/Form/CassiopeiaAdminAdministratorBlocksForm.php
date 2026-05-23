@@ -2,6 +2,7 @@
 
 namespace Drupal\cassiopeia_admin\Form;
 
+use Drupal\cassiopeia_admin\Utility\AdministratorFieldHelper;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -9,99 +10,74 @@ use Drupal\Core\Url;
 class CassiopeiaAdminAdministratorBlocksForm extends FormBase {
 
   public function getFormId() {
-    // TODO: Implement getFormId() method.
     return 'cassiopeia_admin_administrator_blocks_form';
-
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $result = \Drupal::service('cassiopeia_admin.menu_repository')->loadAllBlocks();
 
-    $query = \Drupal::database()->select('administrator_blocks', 'c');
-    $query->fields('c', ['id', 'name', 'icon', 'position']);
-    $query->distinct();
-    $result = $query->execute()->fetchAll();
-
-
-    $form['blocks'] = array();
+    $form['blocks'] = [];
     $form['#tree'] = TRUE;
-    $weight_delta = round(count($result) / 2);
+    $weight_delta = max(1, (int) round(count($result) / 2));
     foreach ($result as $item) {
-      $form['blocks'][$item->id]['name'] = array(
+      $form['blocks'][$item->id]['name'] = [
         '#type' => 'markup',
-        '#markup' => $item->name,
-      );
-      $form['blocks'][$item->id]['icon'] = array(
+        '#markup' => AdministratorFieldHelper::escapeText($item->name),
+      ];
+      $form['blocks'][$item->id]['icon'] = [
         '#type' => 'markup',
-        '#markup' => '<i class="fa '.$item->icon.'"></i>',
-      );
-      $form['blocks'][$item->id]['position'] = array(
+        '#markup' => AdministratorFieldHelper::iconMarkup($item->icon),
+      ];
+      $form['blocks'][$item->id]['position'] = [
         '#type' => 'weight',
         '#default_value' => $item->position,
         '#delta' => $weight_delta,
         '#title_display' => 'invisible',
-        '#attributes' => array('class' => array('block-weight')),
-      );
-      $form['blocks'][$item->id]['delete'] = array(
+        '#attributes' => ['class' => ['block-weight']],
+      ];
+      $form['blocks'][$item->id]['delete'] = [
         '#type' => 'link',
-        '#title' => 'Xóa',
-        '#url' => Url::fromRoute('cassiopeia_admin.administrator_block_delete', ['administrator_block'=>$item->id], [
+        '#title' => $this->t('Delete'),
+        '#url' => Url::fromRoute('cassiopeia_admin.administrator_block_delete', ['administrator_block' => $item->id], [
           'attributes' => [
-            'class' => [
-              'btn',
-              'btn-danger'
-            ],
-            'alt' => t('Remove this item'),
-            'title' => t('Remove this item'),
+            'class' => ['btn', 'btn-danger'],
+            'alt' => $this->t('Remove this item'),
+            'title' => $this->t('Remove this item'),
           ],
         ]),
-      );
-      $form['blocks'][$item->id]['edit'] = array(
+      ];
+      $form['blocks'][$item->id]['edit'] = [
         '#type' => 'link',
-        '#title' => t('Edit'),
-//        '#href' => 'admin/cassiopeia/administrator/block/' . $item->id . '/edit',
-        '#url' => Url::fromRoute('cassiopeia_admin.administrator_block_edit', ['administrator_block'=>$item->id], [
+        '#title' => $this->t('Edit'),
+        '#url' => Url::fromRoute('cassiopeia_admin.administrator_block_edit', ['administrator_block' => $item->id], [
           'attributes' => [
-            'class' => [
-              'btn',
-              'btn-primary',
-            ],
-            'alt' => t('Edit this item'),
-            'title' => t('Edit this item'),
+            'class' => ['btn', 'btn-primary'],
+            'alt' => $this->t('Edit this item'),
+            'title' => $this->t('Edit this item'),
           ],
         ]),
-      );
-      $form['blocks'][$item->id]['items'] = array(
+      ];
+      $form['blocks'][$item->id]['items'] = [
         '#type' => 'link',
-        '#title' => t('List'),
-//        '#href' => 'admin/cassiopeia/administrator/block/' . $item->id . '/items',
-        '#url' => Url::fromRoute('cassiopeia_admin.administrator_block_items', ['administrator_block'=>$item->id], [
+        '#title' => $this->t('List'),
+        '#url' => Url::fromRoute('cassiopeia_admin.administrator_block_items', ['administrator_block' => $item->id], [
           'attributes' => [
-            'class' => [
-              'btn',
-              'btn-info',
-            ],
-            'alt' => t('List of this item'),
-            'title' => t('List of this item'),
+            'class' => ['btn', 'btn-info'],
+            'alt' => $this->t('List of this item'),
+            'title' => $this->t('List of this item'),
           ],
         ]),
-      );
+      ];
     }
-    $form['submit'] = array(
+    $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Save changes'),
-    );
+      '#value' => $this->t('Save changes'),
+    ];
     return $form;
   }
 
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    // TODO: Implement validateForm() method.
-
-  }
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // TODO: Implement submitForm() method.
     $form_state_values = $form_state->getValues();
-//    print_r($form_state_values['blocks']);
-//    exit();
     if (!empty($form_state_values['blocks']) && is_array($form_state_values['blocks'])) {
       foreach ($form_state_values['blocks'] as $key => $val) {
         if (is_numeric($key)) {

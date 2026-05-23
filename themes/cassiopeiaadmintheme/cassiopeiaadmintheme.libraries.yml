@@ -1,15 +1,46 @@
-global-styling:
+critical-admin:
   version: VERSION
-  js:
-    js/adminlte.js: {}
-    js/app.js: {}
+  css:
+    component:
+      css/critical-admin.css: { weight: -200 }
+
+bootstrap-icons-subset:
+  version: VERSION
+  css:
+    component:
+      css/bootstrap-icons-subset.css: { weight: -15 }
+
+adminlte:
+  version: VERSION
   css:
     component:
       css/adminlte.css: { weight: 100 }
+  js:
+    js/adminlte.js:
+      attributes:
+        defer: true
+
+admin-app:
+  version: VERSION
+  css:
+    component:
       css/app.css: { weight: 101 }
+  js:
+    js/app.js:
+      attributes:
+        defer: true
+  dependencies:
+    - cassiopeiaadmintheme/adminlte
+
+global-styling:
+  version: VERSION
+  dependencies:
+    - cassiopeiaadmintheme/critical-admin
+    - cassiopeiaadmintheme/bootstrap-icons-subset
+    - cassiopeiaadmintheme/admin-app
+
 bootstrap:
   js:
-    /libraries/popper.js/dist/umd/popper.min.js: { weight: -19 }
     /libraries/bootstrap/dist/js/bootstrap.min.js: { weight: -20 }
   css:
     component:
@@ -17,6 +48,7 @@ bootstrap:
   dependencies:
     - core/jquery
     - core/popperjs
+
 color.preview:
   version: VERSION
   css:
@@ -26,9 +58,13 @@ color.preview:
     color/preview.js: {}
   dependencies:
     - color/drupal.color
+
 overlayscrollbars:
   js:
-    /libraries/OverlayScrollbars/overlayscrollbars.browser.es6.min.js: { weight: -19 }
+    /libraries/OverlayScrollbars/overlayscrollbars.browser.es6.min.js:
+      weight: -19
+      attributes:
+        defer: true
   css:
     component:
       /libraries/OverlayScrollbars/overlayscrollbars.min.css: {}

@@ -8,6 +8,14 @@ dependencies:
 libraries:
   - cassiopeiatheme/global-styling
 
+# Public site does not use Bootstrap Icons classes; skip the 84 KB font CSS.
+libraries-override:
+  bootstrap/bootstrap-icons:
+    css:
+      component:
+        /libraries/bootstrap-icons/font/bootstrap-icons.min.css: false
+        css/components/bootstrap-icons.css: false
+
 version: '5.0.1'
 #project: 'cassiopeia'
 datestamp: 1726511779

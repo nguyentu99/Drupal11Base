@@ -1,20 +1,30 @@
+icon_preview:
+  version: VERSION
+  js:
+    js/icon-preview.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+
 form.CassiopeiaAdminAdministratorBlockAddForm:
   version: VERSION
-  js:
-    js/CassiopeiaAdminAdministratorBlockAddForm.js: {}
+  dependencies:
+    - cassiopeia_admin/icon_preview
+
 form.CassiopeiaAdminAdministratorBlockEditForm:
   version: VERSION
-  js:
-    js/CassiopeiaAdminAdministratorBlockEditForm.js: {}
+  dependencies:
+    - cassiopeia_admin/icon_preview
+
 form.CassiopeiaAdminAdministratorBlocksForm:
   version: VERSION
-  js:
-    js/CassiopeiaAdminAdministratorBlocksForm.js: {}
+
 form.CassiopeiaAdminAdministratorBlockItemAddForm:
   version: VERSION
-  js:
-    js/CassiopeiaAdminAdministratorBlockItemAddForm.js: {}
+  dependencies:
+    - cassiopeia_admin/icon_preview
+
 form.CassiopeiaAdminAdministratorBlockItemEditForm:
   version: VERSION
-  js:
-    js/CassiopeiaAdminAdministratorBlockItemEditForm.js: {}
+  dependencies:
+    - cassiopeia_admin/icon_preview

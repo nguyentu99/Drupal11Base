@@ -4,12 +4,8 @@
   <div class="sidebar-wrapper"> <!-- Sidebar user (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-{#        <img src="/themes/cassiopeiaadmintheme/images/user2-160x160.jpg" alt="User Image" class="img-fluid rounded-circle">#}
-        {% set account_picture = account.get("user_picture") %}
-        {% if account_picture is not empty and account_picture.getValue() is not empty and account_picture.getValue()[0]["target_id"] is not empty%}
-          {{ cassiopeia_image_style('style_200x200',account_picture.getValue()[0]["target_id"],'public://default.png', {"alt":['User Image'],'class': ['img-fluid', 'rounded-circle']}) }}
-        {% else %}
-          {{ cassiopeia_image_style('style_200x200',null,'public://default.png', {"alt":['User Image'],'class': ['img-fluid', 'rounded-circle']}) }}
+        {% if account_avatar %}
+          {{ account_avatar }}
         {% endif %}
       </div>
       <div class="info"> <a href="#" class="d-block">{{ account.getAccountName() }}</a> </div>

@@ -1,22 +1,19 @@
 <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-  {% for block in items %}
-    {% if "active" in block['#attributes']['class'] %}
-      {% set class %} menu-open {% endset %}
-    {% else %}
-      {% set class %}  {% endset %}
-    {% endif %}
-    <li class="nav-item {{ class }}">
-      <a href="#"  {{ attributes.addClass(block['#attributes']['class']) }}>{{ block['#title'] | raw }}</a>
-      <ul class="nav nav-treeview">
-        {% for item in block['#below'] %}
-          <li class="nav-item">
-              {% set link_text %}{{ item['#title']|raw }}{% endset %}
-              {{ link(link_text, item['#url'], create_attribute(item['#attributes'])) }}
-          </li>
-        {% endfor %}
-      </ul>
+  {% for block in blocks %}
+    <li class="nav-item{{ block.open ? ' menu-open' : '' }}">
+      <a href="#" class="nav-link{{ block.open ? ' active' : '' }}">
+        {% if block.icon_class %}
+          <i class="{{ block.icon_class }}"></i>
+        {% endif %}
+        <p>{{ block.label }} <i class="nav-arrow bi bi-chevron-right"></i></p>
+      </a>
+      {% if block.links is not empty %}
+        <ul class="nav nav-treeview">
+          {% for link in block.links %}
+            <li class="nav-item">{{ link }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
     </li>
   {% endfor %}
-</ul> <!--end::Sidebar Menu-->
-
-
+</ul>

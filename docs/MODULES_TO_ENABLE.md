@@ -1,0 +1,65 @@
+# Modules to enable (Cassiopeia stack)
+
+Use **Extend** (`/admin/modules`) or Drush. Enabling **`cassiopeia_admin`** pulls in most dependencies via `cassiopeia_admin.info.yml`.
+
+## Required (custom + core)
+
+| Module | Purpose |
+|--------|---------|
+| **cassiopeia** | Twig helpers, images, render template |
+| **cassiopeia_admin** | Admin sidebar menu, block/item CRUD |
+| **Block** (`block`) | Theme regions |
+| **User** (`user`) | Permissions, accounts |
+| **Views** (`views`) | Admin listings (dependency) |
+| **File** (`file`) | Images / uploads |
+| **Node** (`node`) | Optional Twig `cassiopeia_node_load` |
+
+## Required contrib
+
+| Module | Purpose |
+|--------|---------|
+| **Admin Theme** (`admin_theme`) | Admin theme on custom paths (`/administrator`, `/manager`, …) |
+| **Admin Toolbar** + **Admin Toolbar Tools** | Drupal admin toolbar |
+
+## Recommended contrib (in repo)
+
+| Module | Purpose |
+|--------|---------|
+| **Token** | Pathauto, Metatag |
+| **Pathauto** | URL aliases |
+| **Metatag** | SEO meta tags |
+| **SMTP** | Mail via PHPMailer |
+| **IMCE** | File browser |
+| **Color Field** | Color fields |
+| **Views Entity Form Field** | Views form integration |
+
+Metatag submodules (Open Graph, Twitter, etc.) are optional — enable only if needed.
+
+## Themes (`/admin/appearance`)
+
+| Theme | Role |
+|-------|------|
+| **Bootstrap** | Base theme (dependency) |
+| **cassiopeiatheme** | Default / public site |
+| **cassiopeiaadmintheme** | Administration theme |
+
+## Drush (one command)
+
+```bash
+composer require drush/drush:^13
+php vendor/bin/drush pm:enable cassiopeia cassiopeia_admin admin_theme admin_toolbar admin_toolbar_tools token pathauto metatag color_field imce smtp views_entity_form_field -y
+php vendor/bin/drush theme:enable cassiopeiatheme cassiopeiaadmintheme -y
+php vendor/bin/drush config:set system.theme default cassiopeiatheme -y
+php vendor/bin/drush config:set system.theme admin cassiopeiaadmintheme -y
+php vendor/bin/drush role:perm:add administrator "cassiopeia admin block manager,cassiopeia admin content manager" -y
+php vendor/bin/drush updb -y
+php vendor/bin/drush cr
+```
+
+## Permissions
+
+Grant to appropriate roles at `/admin/people/permissions`:
+
+- **Cassiopeia admin block manager** — sidebar CRUD UI
+- **Cassiopeia admin content manager** — floating “Quản trị” link → `/admin`
+- **Cassiopeia manager theme access (legacy)** — floating link → `/manager` (optional)

@@ -2,104 +2,53 @@
 
 namespace Drupal\cassiopeia\TwigExtension;
 
+use Drupal\cassiopeia\Service\CassiopeiaImageBuilder;
+use Drupal\Core\Link;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Url;
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Render\Markup;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\Markup as TwigMarkup;
-use Drupal\Core\Render\Markup;
-use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Url;
-use Drupal\Core\Link;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * CassiopeiaTwigExtension provides function and filter.
  */
 class CassiopeiaTwigExtension extends AbstractExtension {
 
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   *
-   */
-//  protected $entityTypeManager;
+  public function __construct(
+    protected CassiopeiaImageBuilder $imageBuilder,
+    protected RendererInterface $renderer,
+  ) {}
 
   /**
-   * Constructs a CassiopeiaTwigExtension
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *  The entity type manager.
-   */
-//  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-//    $this->entityTypeManager = $entity_type_manager;
-//  }
-
-  /**
-   * Declare your custom twig function here.
-   *
-   * @return \Twig\TwigFunction[]
-   *   TwigFunction array.
+   * {@inheritdoc}
    */
   public function getFunctions() {
     return [
-      new TwigFunction('cassiopeia_user_load',
-        [$this, 'cassiopeia_user_load']
-      ),
-      new TwigFunction('cassiopeia_node_load',
-        [$this, 'cassiopeia_node_load']
-      ),
-      new TwigFunction('cassiopeia_term_load',
-        [$this, 'cassiopeia_term_load']
-      ),
-      new TwigFunction('cassiopeia_file_load',
-        [$this, 'cassiopeia_file_load']
-      ),
-      new TwigFunction('cassiopeia_render_template',
-        [$this, 'cassiopeia_render_template']
-      ),
-      new TwigFunction('cassiopeia_image_style',
-        [$this, 'cassiopeia_image_style']
-      ),
-      new TwigFunction('cassiopeia_module_exists',
-        [$this, 'cassiopeia_module_exists']
-      ),
-      new TwigFunction('cassiopeia_breadcrumb',
-        [$this, 'cassiopeia_breadcrumb']
-      ),
-      new TwigFunction('cassiopeia_link',
-        [$this, 'cassiopeia_link']
-      ),
-      new TwigFunction('cassiopeia_url',
-        [$this, 'cassiopeia_url']
-      ),
-      new TwigFunction('cassiopeia_form',
-        [$this, 'cassiopeia_form']
-      ),
-      new TwigFunction('drupal_form',
-        [$this, 'drupal_form']
-      ),
-      new TwigFunction('cassiopeia_menu',
-        [$this, 'cassiopeia_menu']
-      ),
+      new TwigFunction('cassiopeia_user_load', [$this, 'cassiopeia_user_load']),
+      new TwigFunction('cassiopeia_node_load', [$this, 'cassiopeia_node_load']),
+      new TwigFunction('cassiopeia_term_load', [$this, 'cassiopeia_term_load']),
+      new TwigFunction('cassiopeia_file_load', [$this, 'cassiopeia_file_load']),
+      new TwigFunction('cassiopeia_render_template', [$this, 'cassiopeia_render_template']),
+      new TwigFunction('cassiopeia_image_style_build', [$this, 'cassiopeia_image_style_build']),
+      new TwigFunction('cassiopeia_image_style', [$this, 'cassiopeia_image_style']),
+      new TwigFunction('cassiopeia_module_exists', [$this, 'cassiopeia_module_exists']),
+      new TwigFunction('cassiopeia_breadcrumb', [$this, 'cassiopeia_breadcrumb']),
+      new TwigFunction('cassiopeia_link', [$this, 'cassiopeia_link']),
+      new TwigFunction('cassiopeia_url', [$this, 'cassiopeia_url']),
+      new TwigFunction('cassiopeia_form', [$this, 'cassiopeia_form']),
+      new TwigFunction('drupal_form', [$this, 'drupal_form']),
+      new TwigFunction('cassiopeia_menu', [$this, 'cassiopeia_menu']),
     ];
   }
 
   /**
-   * Declare your custom twig filter here
-   *
-   * @return \Twig\TwigFilter[]
-   *   TwigFilter array.
+   * {@inheritdoc}
    */
   public function getFilters() {
-    return [
-      //      new TwigFilter(
-      //        'cuttomFilter',
-      //        [$this, 'cuttomFilter']
-      //      ),
-    ];
+    return [];
   }
 
   /**
@@ -107,22 +56,46 @@ class CassiopeiaTwigExtension extends AbstractExtension {
    *
    */
   public function cassiopeia_user_load($uid) {
+    if (!$uid || !\Drupal::moduleHandler()->moduleExists('user')) {
+      return NULL;
+    }
     $user = \Drupal\user\Entity\User::load($uid);
+    if ($user && !$user->access('view')) {
+      return NULL;
+    }
     return $user;
   }
 
   public function cassiopeia_node_load($nid) {
+    if (!$nid || !\Drupal::moduleHandler()->moduleExists('node')) {
+      return NULL;
+    }
     $node = \Drupal\node\Entity\Node::load($nid);
+    if ($node && !$node->access('view')) {
+      return NULL;
+    }
     return $node;
   }
 
   public function cassiopeia_term_load($tid) {
+    if (!$tid || !\Drupal::moduleHandler()->moduleExists('taxonomy')) {
+      return NULL;
+    }
     $term = \Drupal\taxonomy\Entity\Term::load($tid);
+    if ($term && !$term->access('view')) {
+      return NULL;
+    }
     return $term;
   }
 
   public function cassiopeia_file_load($fid) {
+    if (!$fid || !\Drupal::moduleHandler()->moduleExists('file')) {
+      return NULL;
+    }
     $file = \Drupal\file\Entity\File::load($fid);
+    if ($file && !$file->access('view')) {
+      return NULL;
+    }
     return $file;
   }
 
@@ -140,40 +113,24 @@ class CassiopeiaTwigExtension extends AbstractExtension {
       ->render($type, $name, $path, $variables = NULL);
   }
 
+  /**
+   * Returns a cacheable image_style render array.
+   */
+  public function cassiopeia_image_style_build($style, $fid, $default = FALSE, $attributes = []) {
+    return $this->imageBuilder->buildRenderArray((string) $style, $fid, $default, $attributes ?? []) ?? [];
+  }
+
+  /**
+   * Renders an image style (legacy Twig helper).
+   *
+   * Prefer cassiopeia_image_style_build() in preprocess for cache bubbling.
+   */
   public function cassiopeia_image_style($style, $fid, $default = FALSE, $attributes = []) {
-    $image = NULL;
-    if (!empty($fid)) {
-      $file = \Drupal\file\Entity\File::load($fid);
+    $build = $this->imageBuilder->buildRenderArray((string) $style, $fid, $default, $attributes ?? []);
+    if (!$build) {
+      return '';
     }
-    else {
-      $file = NULL;
-    }
-
-    $styles = \Drupal\image\Entity\ImageStyle::loadMultiple();
-    $style_name = 'medium';
-    if (array_key_exists($style, $styles)) {
-      $style_name = $style;
-    }
-
-    if ($file) {
-      $image_array = [
-        '#theme' => 'image_style',
-        '#style_name' => $style_name,
-        '#uri' => $file->getFileUri(),
-        '#attributes' => $attributes,
-      ];
-      $image = \Drupal::service('renderer')->render($image_array);
-    }
-    elseif ($default) {
-      $image_array = [
-        '#theme' => 'image_style',
-        '#style_name' => $style_name,
-        '#uri' => $default,
-        '#attributes' => $attributes,
-      ];
-      $image = \Drupal::service('renderer')->render($image_array);
-    }
-    return $image;
+    return Markup::create((string) $this->renderer->renderInIsolation($build));
   }
 
   public function cassiopeia_breadcrumb() {

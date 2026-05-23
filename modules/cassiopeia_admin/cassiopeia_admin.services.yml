@@ -1,4 +1,31 @@
 services:
+  logger.channel.cassiopeia_admin:
+    parent: logger.channel_base
+    arguments: ['cassiopeia_admin']
+
+  cassiopeia_admin.menu_repository:
+    class: Drupal\cassiopeia_admin\Repository\AdministratorMenuRepository
+    arguments: ['@entity_type.manager', '@cache_tags.invalidator', '@logger.channel.cassiopeia_admin']
+
   cassiopeia_admin.administrator:
     class: Drupal\cassiopeia_admin\Service\CassiopeiaAdminAdministrator
-    arguments: []
+    arguments:
+      - '@cassiopeia_admin.menu_repository'
+      - '@module_handler'
+      - '@current_route_match'
+
+  cassiopeia_admin.param_converter.administrator_block:
+    class: Drupal\cassiopeia_admin\ParamConverter\AdministratorBlockParamConverter
+    tags:
+      - { name: paramconverter }
+
+  cassiopeia_admin.param_converter.administrator_block_item:
+    class: Drupal\cassiopeia_admin\ParamConverter\AdministratorBlockItemParamConverter
+    tags:
+      - { name: paramconverter }
+
+  cassiopeia_admin.menu_cache_invalidator_subscriber:
+    class: Drupal\cassiopeia_admin\EventSubscriber\MenuCacheInvalidatorSubscriber
+    arguments: ['@cassiopeia_admin.menu_repository']
+    tags:
+      - { name: event_subscriber }

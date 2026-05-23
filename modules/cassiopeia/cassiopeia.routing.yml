@@ -4,4 +4,4 @@ cassiopeia.test:
     _controller: '\Drupal\cassiopeia\Controller\TestController::content'
     _title: 'Test'
   requirements:
-    _permission: 'access content'
+    _permission: 'administer site configuration'

@@ -6,6 +6,14 @@ core_version_requirement: ^10 || ^11
 dependencies:
   - drupal:user
   - drupal:views
+  - drupal:block
+  - cassiopeia:cassiopeia
+  - admin_theme:admin_theme
+  - admin_toolbar:admin_toolbar
+  - admin_toolbar:admin_toolbar_tools
+  - token:token
+  - pathauto:pathauto
+  - metatag:metatag
 # Information added by Drupal.org packaging script on 2024-10-31
 version: '11.x-1.01'
 datestamp: 1730409975

@@ -78,22 +78,15 @@
       <!--begin::Fullscreen Toggle-->
       <li class="nav-item"> <a class="nav-link" href="#" data-lte-toggle="fullscreen"> <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i> <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none;"></i> </a> </li> <!--end::Fullscreen Toggle--> <!--begin::User Menu Dropdown-->
       <li class="nav-item dropdown user-menu">
-        {% set account_picture = account.get("user_picture") %}
         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-{#          <img src="/themes/cassiopeiaadmintheme/images/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="User Image"> #}
-          {% if account_picture is not empty and account_picture.getValue() is not empty and account_picture.getValue()[0]["target_id"] is not empty %}
-            {{ cassiopeia_image_style('style_200x200',account_picture.getValue()[0]["target_id"],'public://default.png', {"alt":['User Image'],'class': ['user-image', 'rounded-circle', 'shadow']})  }}
-          {% else %}
-            {{ cassiopeia_image_style('style_200x200',null,'public://default.png', {"alt":['User Image'],'class': ['user-image', 'rounded-circle', 'shadow']})  }}
+          {% if account_avatar %}
+            {{ account_avatar }}
           {% endif %}
           <span class="d-none d-md-inline">{{ account.getAccountName() }}</span> </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end"> <!--begin::User Image-->
           <li class="user-header text-bg-primary">
-{#            <img src="/themes/cassiopeiaadmintheme/images/user2-160x160.jpg" class="rounded-circle shadow" alt="User Image">#}
-            {% if account_picture is not empty and account_picture.getValue() is not empty and account_picture.getValue()[0]["target_id"] is not empty %}
-              {{ cassiopeia_image_style('style_200x200',account_picture.getValue()[0]["target_id"],'public://default.png', {"alt":['User Image'],'class': ['user-image', 'rounded-circle', 'shadow']})  }}
-            {% else %}
-              {{ cassiopeia_image_style('style_200x200',null,'public://default.png', {"alt":['User Image'],'class': ['user-image', 'rounded-circle', 'shadow']})  }}
+            {% if account_avatar %}
+              {{ account_avatar }}
             {% endif %}
             <p>
               {{ account.getEmail() }}

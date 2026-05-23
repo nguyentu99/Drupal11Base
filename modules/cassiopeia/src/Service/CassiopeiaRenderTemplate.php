@@ -1,15 +1,25 @@
 <?php
-namespace Drupal\cassiopeia_admin\Service;
+
+namespace Drupal\cassiopeia\Service;
+
 use Drupal\Core\Render\Markup;
+
+/**
+ * Renders extension Twig templates programmatically.
+ */
 class CassiopeiaRenderTemplate {
-  public function render(string $type, string $name, string $path, mixed $variables = null) {
+
+  /**
+   * Loads and renders a Twig template from an extension directory.
+   */
+  public function render(string $type, string $name, string $path, mixed $variables = NULL): Markup {
     $modulePath = \Drupal::service('extension.path.resolver')->getPath($type, $name);
     $path = $modulePath . $path;
     $template = \Drupal::service('twig')->load($path);
     $rendered = $template->render([
-      'variables' => $variables
+      'variables' => $variables,
     ]);
-    $rendered = Markup::create($rendered);
-    return $rendered;
+    return Markup::create($rendered);
   }
+
 }

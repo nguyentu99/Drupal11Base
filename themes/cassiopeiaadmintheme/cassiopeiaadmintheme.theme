@@ -14,7 +14,7 @@ use Drupal\node\Entity\Node;
 use Drupal\Component\Render\MarkupInterface;
 
 
-use Drupal\Component\Uuid\Uuid;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
@@ -23,52 +23,92 @@ use Drupal\Component\Uuid\Uuid;
  */
 function cassiopeiaadmintheme_preprocess_html(&$variables) {
   if (isset($variables['attributes']['class'])) {
-    $variables['attributes']['class'] = array_merge($variables['attributes']['class'],['layout-fixed', 'sidebar-expand-lg', 'bg-body-tertiary']);
-  }else {
+    $variables['attributes']['class'] = array_merge($variables['attributes']['class'], ['layout-fixed', 'sidebar-expand-lg', 'bg-body-tertiary']);
+  }
+  else {
     $variables['attributes']['class'] = ['layout-fixed', 'sidebar-expand-lg', 'bg-body-tertiary'];
   }
 
-//  $path =  \Drupal::service('extension.list.module')->getPath('cassiopeiaadmintheme');
-//  print_r($path);
+  $font_href = base_path() . 'libraries/bootstrap-icons/font/fonts/bootstrap-icons.woff2';
+  $variables['#attached']['html_head_link'][] = [
+    [
+      'rel' => 'preload',
+      'href' => $font_href,
+      'as' => 'font',
+      'type' => 'font/woff2',
+      'crossorigin' => 'anonymous',
+    ],
+    TRUE,
+  ];
 }
-
 
 /**
  * Implements hook_page_attachments_alter() for page templates.
  */
-function cassiopeiaadmintheme_page_attachments_alter(&$page) {
-
+function cassiopeiaadmintheme_page_attachments_alter(array &$attachments): void {
+  // Parent bootstrap theme may attach the full icon font via theme settings.
+  if (!empty($attachments['#attached']['library'])) {
+    $attachments['#attached']['library'] = array_values(array_filter(
+      $attachments['#attached']['library'],
+      static fn(string $library): bool => $library !== 'bootstrap/bootstrap-icons',
+    ));
+  }
 }
 
 /**
  * Implements hook_preprocess_HOOK() for page templates.
  */
 function cassiopeiaadmintheme_preprocess_page(&$variables) {
-
   $moduleHandler = \Drupal::service('module_handler');
   if ($moduleHandler->moduleExists('cassiopeia_admin')) {
-    $administrator_menu = \Drupal::service('cassiopeia_admin.administrator')->cassiopeia_admin_get_administrator_menu();
-    $variables['administrator_menu'] = $administrator_menu;
+    $variables['administrator_menu'] = \Drupal::service('cassiopeia_admin.administrator')
+      ->cassiopeia_admin_get_administrator_menu();
   }
-//  $user = \Drupal\user\Entity\User::load(1);
-//  dump($user->toArray());
-//  dump($user->get('user_picture')->entity->getFileUri());
-//  $node = \Drupal\node\Entity\Node::load(1);
-//  dump($node->get('field_image')->entity->getFileUri());
 
-//  $user_picture = $user->user_picture->entity->getFileUri();
-//  print_r($user_picture);
-//  $file = \Drupal\file\Entity\File::load(2);
-//  dump($file->getFileUri());
-//  getFileUri
+  $uid = (int) \Drupal::currentUser()->id();
+  if ($uid > 0) {
+    $account = User::load($uid);
+    if ($account) {
+      $variables['account'] = $account;
+      $variables['account_avatar_header'] = cassiopeiaadmintheme_build_user_avatar($account, [
+        'user-image',
+        'rounded-circle',
+        'shadow',
+      ]);
+      $variables['account_avatar_sidebar'] = cassiopeiaadmintheme_build_user_avatar($account, [
+        'img-fluid',
+        'rounded-circle',
+      ]);
+    }
+  }
+}
 
-//  Todo
-//  $styles = \Drupal\image\Entity\ImageStyle::loadMultiple();
-//  $styles = \Drupal::entityTypeManager()->getStorage('image_style')->loadMultiple();
-//  dump($styles);
+/**
+ * Builds a single image_style render array for a user account.
+ */
+function cassiopeiaadmintheme_build_user_avatar(User $account, array $classes): array {
+  /** @var \Drupal\cassiopeia\Service\CassiopeiaImageBuilder $image_builder */
+  $image_builder = \Drupal::service('cassiopeia.image_builder');
 
-//  End todo
+  $fid = NULL;
+  $picture = $account->get('user_picture');
+  if (!$picture->isEmpty() && $picture->entity) {
+    $fid = $picture->target_id;
+  }
 
+  $build = $image_builder->buildRenderArray('style_200x200', $fid, 'public://default.png', [
+    'class' => $classes,
+    'alt' => t('User picture'),
+  ]);
+
+  if ($build === NULL) {
+    return [];
+  }
+
+  $build['#cache']['tags'] = $account->getCacheTags();
+  $build['#cache']['contexts'] = ['user'];
+
+  return $build;
 }
 
 /**

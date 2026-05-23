@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Test hooks for cassiopeia_admin kernel tests.
+ */
+
+/**
+ * Implements hook_cassiopeia_admin_menu_blocks_alter().
+ */
+function cassiopeia_admin_test_cassiopeia_admin_menu_blocks_alter(array &$blocks): void {
+  $blocks[] = [
+    'label' => 'Test alter block',
+    'icon_class' => 'bi bi-gear',
+    'open' => FALSE,
+    'links' => [],
+  ];
+}
+
+/**
+ * Implements hook_cassiopeia_admin_menu_alter().
+ */
+function cassiopeia_admin_test_cassiopeia_admin_menu_alter(array &$blocks): void {
+  $blocks[0]['label'] = 'Legacy alter applied';
+}

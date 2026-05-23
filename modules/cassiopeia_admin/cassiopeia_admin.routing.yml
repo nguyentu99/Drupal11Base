@@ -22,6 +22,7 @@ cassiopeia_admin.administrator_block_delete:
     _title: 'Delete admin block'
   requirements:
     _permission: 'cassiopeia admin block manager'
+    administrator_block: \d+
   options:
     parameters:
       administrator_block:
@@ -34,6 +35,7 @@ cassiopeia_admin.administrator_block_edit:
     _title: 'Edit admin blocks'
   requirements:
     _permission: 'cassiopeia admin block manager'
+    administrator_block: \d+
   options:
     parameters:
       administrator_block:
@@ -46,37 +48,40 @@ cassiopeia_admin.administrator_block_items:
     _title: 'Admin block items'
   requirements:
     _permission: 'cassiopeia admin block manager'
+    administrator_block: \d+
   options:
     parameters:
       administrator_block:
         type: administrator_block
 
 cassiopeia_admin.administrator_block_item_delete:
-  path: 'admin/cassiopeia/administrator/block/{administrator_block}/item/{administrator_block_item}/delete'
+  path: '/admin/cassiopeia/administrator/block/{administrator_block}/item/{administrator_block_item}/delete'
   defaults:
     _controller: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorBlockItemDeleteController::content'
     _title: 'Admin block item delete'
   requirements:
     _permission: 'cassiopeia admin block manager'
+    administrator_block: \d+
+    administrator_block_item: \d+
   options:
     parameters:
       administrator_block:
         type: administrator_block
-      cassiopeia_admin_block_item:
+      administrator_block_item:
         type: administrator_block_item
 
 cassiopeia_admin.administrator_block_item_edit:
-  path: 'admin/cassiopeia/administrator/block/{administrator_block}/item/{administrator_block_item}/edit'
+  path: '/admin/cassiopeia/administrator/block/{administrator_block}/item/{administrator_block_item}/edit'
   defaults:
     _controller: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorBlockItemEditController::content'
     _title: 'Admin block item edit'
   requirements:
     _permission: 'cassiopeia admin block manager'
+    administrator_block: \d+
+    administrator_block_item: \d+
   options:
     parameters:
-      cassiopeia_admin_block:
+      administrator_block:
         type: administrator_block
-      cassiopeia_admin_block_item:
+      administrator_block_item:
         type: administrator_block_item
-
-

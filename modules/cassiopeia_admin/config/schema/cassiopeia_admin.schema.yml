@@ -1,0 +1,43 @@
+cassiopeia_admin.administrator_block.*:
+  type: config_entity
+  label: 'Administrator block'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    name:
+      type: label
+      label: 'Name'
+    icon:
+      type: string
+      label: 'Icon CSS classes'
+    position:
+      type: float
+      label: 'Sort position'
+
+cassiopeia_admin.administrator_block_item.*:
+  type: config_entity
+  label: 'Administrator block item'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    block_id:
+      type: string
+      label: 'Parent block ID'
+    name:
+      type: label
+      label: 'Name'
+    link:
+      type: string
+      label: 'Link path'
+    icon:
+      type: string
+      label: 'Icon CSS classes'
+    position:
+      type: float
+      label: 'Sort position'
+    url_meta:
+      type: string
+      label: 'Serialized route metadata'
+      nullable: true

@@ -2,11 +2,15 @@ services:
   cassiopeia.CassiopeiaRenderTemplate:
     class: Drupal\cassiopeia\Service\CassiopeiaRenderTemplate
     arguments: []
+  cassiopeia.image_builder:
+    class: Drupal\cassiopeia\Service\CassiopeiaImageBuilder
+    arguments: ['@entity_type.manager']
   cassiopeia.route_subscriber:
     class: Drupal\cassiopeia\Routing\RouteSubscriber
     tags:
       - { name: event_subscriber }
   cassiopeia.twig_extension:
     class: Drupal\cassiopeia\TwigExtension\CassiopeiaTwigExtension
+    arguments: ['@cassiopeia.image_builder', '@renderer']
     tags:
       - { name: twig.extension }

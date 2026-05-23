@@ -1,0 +1,8 @@
+name: 'Cassiopeia Admin Test'
+type: module
+description: 'Support module for cassiopeia_admin kernel tests.'
+package: Testing
+core_version_requirement: ^10 || ^11
+dependencies:
+  - cassiopeia_admin:cassiopeia_admin
+hidden: true
