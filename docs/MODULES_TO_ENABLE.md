@@ -54,7 +54,35 @@ php vendor/bin/drush config:set system.theme admin cassiopeiaadmintheme -y
 php vendor/bin/drush role:perm:add administrator "cassiopeia admin block manager,cassiopeia admin content manager" -y
 php vendor/bin/drush updb -y
 php vendor/bin/drush cr
+php vendor/bin/drush php:script scripts/install-administrator-entities.php
 ```
+
+## Status report fixes
+
+### Entity definitions (administrator_block / administrator_block_item)
+
+After enabling config entities, run:
+
+```bash
+php vendor/bin/drush php:script scripts/install-administrator-entities.php
+php vendor/bin/drush updb -y
+php vendor/bin/drush cr
+```
+
+Or only `drush updb` if update `11005` is pending.
+
+### Trusted host patterns
+
+1. Copy `sites/default/example.settings.local.php` → `sites/default/settings.local.php` (already created if you ran setup).
+2. At the **end** of `sites/default/settings.php`, uncomment:
+
+```php
+if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
+  include $app_root . '/' . $site_path . '/settings.local.php';
+}
+```
+
+Add your production hostname to `$settings['trusted_host_patterns']` before go-live.
 
 ## Permissions
 
