@@ -86,7 +86,7 @@
   inset-inline: 0;
 }
 .toolbar-oriented .toolbar-bar {
-  z-index: 502; /* Layer the bar just above the trays and above contextual link triggers. */
+  z-index: 99999; /* Layer the bar just above the trays and above contextual link triggers. */
 }
 .toolbar-oriented .toolbar-tray-vertical {
   position: absolute;
