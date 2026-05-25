@@ -93,9 +93,9 @@ function administrator_block_save($block = NULL) {
   if (empty($block)) {
     return;
   }
-  if (is_array($block)) {
-    $block = (object) $block;
-  }
+      if (is_array($block)) {
+        $block = (object) $block;
+      }
   \Drupal::service('cassiopeia_admin.menu_repository')->saveBlock($block);
 }
 
@@ -111,9 +111,9 @@ function administrator_block_item_save($blockItem) {
   if (empty($blockItem)) {
     return;
   }
-  if (is_array($blockItem)) {
-    $blockItem = (object) $blockItem;
-  }
+      if (is_array($blockItem)) {
+        $blockItem = (object) $blockItem;
+      }
   \Drupal::service('cassiopeia_admin.menu_repository')->saveItem($blockItem);
 }
 

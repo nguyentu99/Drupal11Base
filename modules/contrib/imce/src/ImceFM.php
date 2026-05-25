@@ -93,12 +93,12 @@ class ImceFM {
    *
    * @param array $conf
    *   File manager configuration.
-   * @param \Drupal\Core\Session\AccountProxyInterface $user
+   * @param \Drupal\Core\Session\AccountProxyInterface|null $user
    *   The active user.
-   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\Request|null $request
    *   The active request that contains parameters for file manager operations.
    */
-  public function __construct(array $conf, AccountProxyInterface $user = NULL, Request $request = NULL) {
+  public function __construct(array $conf, ?AccountProxyInterface $user = NULL, ?Request $request = NULL) {
     $this->conf = $conf;
     $this->user = $user ?: Imce::currentUser();
     $this->request = $request;
@@ -235,7 +235,7 @@ class ImceFM {
   /**
    * Adds a folder to the tree.
    */
-  public function addFolder($path, array $conf = NULL) {
+  public function addFolder($path, ?array $conf = NULL) {
     // Existing.
     $folder = $this->getFolder($path);
     if ($folder) {
@@ -483,6 +483,10 @@ class ImceFM {
     if (!empty($this->conf['url_alter'])) {
       $properties['url'] = Imce::service('file_url_generator')->generateAbsoluteString($uri);
     }
+    // Skip image properties if lazy_dimensions is enabled.
+    if (!empty($this->conf['lazy_dimensions'])) {
+      return $properties;
+    }
     // Get image properties.
     $regexp = $this->conf['image_extensions_regexp'] ?? $this->imageExtensionsRegexp();
     if ($regexp && preg_match($regexp, $uri)) {
@@ -659,9 +663,9 @@ class ImceFM {
   public function validateImageTypes(array $items, $silent = FALSE) {
     $regex = $this->imageExtensionsRegexp();
     foreach ($items as $item) {
-      if ($item->type === 'folder' || !preg_match($regex, $item->name)) {
+      if ($item->type !== 'file' || !preg_match($regex, $item->name)) {
         if (!$silent) {
-          $this->setMessage($this->t('%name is not an image.', ['%name' => $item->name]));
+          $this->setMessage($this->t('%name is not a supported image type.', ['%name' => $item->name]));
         }
         return FALSE;
       }
@@ -676,7 +680,7 @@ class ImceFM {
     // Build only once.
     $regexp = &$this->conf['image_extensions_regexp'];
     if (!isset($regexp)) {
-      $exts = trim($this->getConf('image_extensions', 'jpg jpeg png gif webp'));
+      $exts = trim($this->getConf('image_extensions', 'jpg jpeg png gif webp avif'));
       $regexp = $exts ? '/\.(' . preg_replace('/ +/', '|', $exts) . ')$/i' : FALSE;
     }
     return $regexp;

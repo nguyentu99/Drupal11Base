@@ -68,7 +68,6 @@ bootstrap-icons:
   version: VERSION
   css:
     component:
-      /libraries/bootstrap-icons/font/bootstrap-icons.min.css: {}
       css/components/bootstrap-icons.css: {}
 
 breadcrumb:

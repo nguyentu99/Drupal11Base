@@ -10,11 +10,4 @@
  * @see template_preprocess_input()
  */
 #}
-
-
-{% if attributes.type == "submit" %}
-  <input{{ attributes.removeClass("form-text") }} />
-{% else %}
-  <input{{ attributes.addClass("form-control").removeClass("form-text") }} />
-{% endif %}
-{{ children }}
+<input{{ attributes.addClass("form-control").removeClass("form-text") }} />{{ children }}

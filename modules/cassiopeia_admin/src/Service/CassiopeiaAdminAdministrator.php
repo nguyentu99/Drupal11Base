@@ -109,9 +109,9 @@ class CassiopeiaAdminAdministrator implements TrustedCallbackInterface {
 
     return [
       'administrator_menu' => [
-        '#theme' => 'cassiopeia_admin_administrator_menu',
+            '#theme' => 'cassiopeia_admin_administrator_menu',
         '#blocks' => $blocks,
-        '#cache' => [
+      '#cache' => [
           'keys' => ['cassiopeia_admin', 'menu', 'tree'],
           'tags' => [self::MENU_CACHE_TAG],
           'contexts' => ['route', 'user.permissions', 'languages:language_interface'],

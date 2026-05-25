@@ -82,7 +82,7 @@
 
 /* Layer the bar just above the trays and above contextual link triggers. */
 .toolbar-oriented .toolbar-bar {
-  z-index: 9999;
+  z-index: 502;
 }
 /* Position the admin toolbar fixed when the configured standard breakpoint is
  * active. */

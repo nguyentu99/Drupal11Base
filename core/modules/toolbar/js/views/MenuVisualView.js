@@ -34,7 +34,7 @@
       renderHorizontal() {
         // Render horizontal.
         if ('drupalToolbarMenu' in $.fn) {
-          // this.$el.children('.toolbar-menu').drupalToolbarMenuHorizontal();
+          this.$el.children('.toolbar-menu').drupalToolbarMenuHorizontal();
         }
       },
 
@@ -57,7 +57,7 @@
         });
         // Render the main menu as a nested, collapsible accordion.
         if ('drupalToolbarMenu' in $.fn) {
-          // this.$el.children('.toolbar-menu').drupalToolbarMenu();
+          this.$el.children('.toolbar-menu').drupalToolbarMenu();
         }
       },
     },

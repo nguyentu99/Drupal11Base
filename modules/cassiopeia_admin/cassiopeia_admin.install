@@ -10,6 +10,20 @@ function cassiopeia_admin_install() {
   $path[] = 'user/*';
   \Drupal::state()->set('admin_theme_path', implode("\n", $path));
   cassiopeia_admin_sync_admin_theme_paths();
+  cassiopeia_admin_install_entity_types();
+}
+
+/**
+ * Registers config entity types on first module install.
+ */
+function cassiopeia_admin_install_entity_types(): void {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type_manager = \Drupal::entityTypeManager();
+  foreach (['administrator_block', 'administrator_block_item'] as $entity_type_id) {
+    if ($manager->getEntityType($entity_type_id) === NULL) {
+      $manager->installEntityType($entity_type_manager->getDefinition($entity_type_id));
+    }
+  }
 }
 
 /**
@@ -122,6 +136,19 @@ function cassiopeia_admin_update_11004(): void {
   foreach (['administrator_block_items', 'administrator_blocks'] as $table) {
     if ($schema->tableExists($table)) {
       $schema->dropTable($table);
+    }
+  }
+}
+
+/**
+ * Registers administrator_block config entity types (fixes status report).
+ */
+function cassiopeia_admin_update_11005(): void {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type_manager = \Drupal::entityTypeManager();
+  foreach (['administrator_block', 'administrator_block_item'] as $entity_type_id) {
+    if ($manager->getEntityType($entity_type_id) === NULL) {
+      $manager->installEntityType($entity_type_manager->getDefinition($entity_type_id));
     }
   }
 }

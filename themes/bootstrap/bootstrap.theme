@@ -22,6 +22,7 @@ function bootstrap_preprocess_html(&$variables) {
   if (!isset($variables['attributes']['class'])) {
     $variables['attributes']['class'] = [];
   }
+
   // Color settings
   if (theme_get_setting('bootstrap_enable_color')) {
     $variables['#attached']['library'][] = 'bootstrap/colors';

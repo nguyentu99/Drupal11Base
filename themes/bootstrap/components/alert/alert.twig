@@ -16,6 +16,7 @@
     set classes = [
       'alert',
       'alert-dismissible',
+      'd-flex align-items-center',
       'fade',
       'show',
       'col-12',
@@ -34,19 +35,19 @@
     }
   %}
   <div aria-label="{{ status_headings[type] }}" {{ attributes|without('role', 'aria-label').addClass(classes).setAttribute('data-drupal-selector', 'messages').setAttribute('role', role[type]) }}>
+    {% if type == 'error' %}
+      <svg class="bi flex-shrink-0 me-4" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+    {% elseif type == 'warning' %}
+      <svg class="bi flex-shrink-0 me-4" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+    {% elseif type == 'status' %}
+      <svg class="bi flex-shrink-0 me-4" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+    {% elseif type == 'info' %}
+      <svg class="bi flex-shrink-0 me-4" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+    {% endif %}
     <div>
-      <h5 id="{{ title_ids[type] }}" class="alert-heading">
-        {% if type == 'error' %}
-          <i class="bi bi-exclamation-triangle-fill"></i>
-        {% elseif type == 'warning' %}
-          <i class="bi bi-exclamation-triangle-fill"></i>
-        {% elseif type == 'status' %}
-          <i class="bi bi-check-circle-fill"></i>
-        {% elseif type == 'info' %}
-          <i class="bi bi-exclamation-triangle-fill"></i>
-        {% endif %}
+      <h2 id="{{ title_ids[type] }}" class="alert-heading">
         {{ status_headings[type] }}
-      </h5>
+      </h2>
       {% for message in messages %}
         {% if loop.last %}
           {{ message }}

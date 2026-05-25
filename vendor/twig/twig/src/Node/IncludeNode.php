@@ -22,7 +22,7 @@ use Twig\Node\Expression\AbstractExpression;
  * @author Fabien Potencier <fabien@symfony.com>
  */
 #[YieldReady]
-class IncludeNode extends Node implements NodeOutputInterface
+class IncludeNode extends Node implements NodeOutputInterface, CoercesChildrenToStringInterface
 {
     public function __construct(AbstractExpression $expr, ?AbstractExpression $variables, bool $only, bool $ignoreMissing, int $lineno)
     {
@@ -38,17 +38,18 @@ class IncludeNode extends Node implements NodeOutputInterface
     {
         $compiler->addDebugInfo($this);
 
+        $sandboxed = $this->hasAttribute('sandboxed') && $this->getAttribute('sandboxed');
+
         if ($this->getAttribute('ignore_missing')) {
             $template = $compiler->getVarName();
 
             $compiler
-                ->write(\sprintf("$%s = null;\n", $template))
                 ->write("try {\n")
                 ->indent()
                 ->write(\sprintf('$%s = ', $template))
             ;
 
-            $this->addGetTemplate($compiler);
+            $this->addGetTemplate($compiler, $template);
 
             $compiler
                 ->raw(";\n")
@@ -56,12 +57,18 @@ class IncludeNode extends Node implements NodeOutputInterface
                 ->write("} catch (LoaderError \$e) {\n")
                 ->indent()
                 ->write("// ignore missing template\n")
+                ->write(\sprintf("\$$template = null;\n", $template))
                 ->outdent()
                 ->write("}\n")
                 ->write(\sprintf("if ($%s) {\n", $template))
                 ->indent()
-                ->write(\sprintf('yield from $%s->unwrap()->yield(', $template))
             ;
+
+            if ($sandboxed) {
+                $compiler->write(\sprintf("\$%s->unwrap()->checkSecurity();\n", $template));
+            }
+
+            $compiler->write(\sprintf('yield from $%s->unwrap()->yield(', $template));
 
             $this->addTemplateArguments($compiler);
             $compiler
@@ -69,6 +76,18 @@ class IncludeNode extends Node implements NodeOutputInterface
                 ->outdent()
                 ->write("}\n")
             ;
+        } elseif ($sandboxed) {
+            $template = $compiler->getVarName();
+
+            $compiler->write(\sprintf('$%s = ', $template));
+            $this->addGetTemplate($compiler);
+            $compiler
+                ->raw(";\n")
+                ->write(\sprintf("\$%s->unwrap()->checkSecurity();\n", $template))
+                ->write(\sprintf('yield from $%s->unwrap()->yield(', $template))
+            ;
+            $this->addTemplateArguments($compiler);
+            $compiler->raw(");\n");
         } else {
             $compiler->write('yield from ');
             $this->addGetTemplate($compiler);
@@ -78,19 +97,23 @@ class IncludeNode extends Node implements NodeOutputInterface
         }
     }
 
-    protected function addGetTemplate(Compiler $compiler)
+    /**
+     * @return void
+     */
+    protected function addGetTemplate(Compiler $compiler/* , string $template = '' */)
     {
         $compiler
-            ->write('$this->loadTemplate(')
+            ->raw('$this->load(')
             ->subcompile($this->getNode('expr'))
-            ->raw(', ')
-            ->repr($this->getTemplateName())
             ->raw(', ')
             ->repr($this->getTemplateLine())
             ->raw(')')
         ;
     }
 
+    /**
+     * @return void
+     */
     protected function addTemplateArguments(Compiler $compiler)
     {
         if (!$this->hasNode('variables')) {
@@ -106,5 +129,11 @@ class IncludeNode extends Node implements NodeOutputInterface
             $compiler->subcompile($this->getNode('variables'));
             $compiler->raw(')');
         }
+    }
+
+    public function getStringCoercedChildNames(): array
+    {
+        // the loader resolves the template-name expression by coercing it to a string
+        return ['expr'];
     }
 }

@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -82,6 +83,13 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
   protected $languageManager;
 
   /**
+   * The entity display repository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $entityDisplayRepository;
+
+  /**
    * Constructs a new EditQuantity object.
    *
    * @param array $configuration
@@ -98,14 +106,17 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
    *   The field widget plugin manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   *    The entity display repository.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, WidgetPluginManager $field_widget_manager, LanguageManagerInterface $language_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, WidgetPluginManager $field_widget_manager, LanguageManagerInterface $language_manager, EntityDisplayRepositoryInterface $entity_display_repository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityFieldManager = $entity_field_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldWidgetManager = $field_widget_manager;
     $this->languageManager = $language_manager;
+    $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**
@@ -119,7 +130,8 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
       $container->get('entity_field.manager'),
       $container->get('entity_type.manager'),
       $container->get('plugin.manager.field.widget'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('entity_display.repository')
     );
   }
 
@@ -351,6 +363,7 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
 
     $options['plugin']['contains']['hide_title']['default'] = TRUE;
     $options['plugin']['contains']['hide_description']['default'] = TRUE;
+    $options['plugin']['contains']['fallback_view_mode']['default'] = FALSE;
     $options['plugin']['contains']['type']['default'] = [];
     $options['plugin']['contains']['settings']['default'] = [];
     $options['plugin']['contains']['third_party_settings']['default'] = [];
@@ -388,6 +401,13 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
         '#type' => 'checkbox',
         '#title' => $this->t('Hide widget description'),
         '#default_value' => $this->options['plugin']['hide_description'],
+      ],
+      'fallback_view_mode' => [
+        '#type' => 'select',
+        '#title' => $this->t('Fallback view mode'),
+        '#description' => $this->t('By default, this field will be completely hidden if the user does not have access to edit this field. Choose a fallback view mode to render the field instead.'),
+        '#default_value' => $this->options['plugin']['fallback_view_mode'],
+        '#options' => [$this->t('- Disabled -')] + $this->entityDisplayRepository->getViewModeOptions($this->getEntityTypeId()),
       ],
       'settings_edit_form' => [],
     ];
@@ -476,26 +496,54 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
     $form['#tree'] = TRUE;
     $form += ['#parents' => []];
 
+    // Hide the submit button if the user can't edit anything.
+    $can_edit_any = FALSE;
+
     // Only add the buttons if there are results.
     if (!empty($this->getView()->result)) {
       $form[$this->options['id']]['#tree'] = TRUE;
       $form[$this->options['id']]['#entity_form_field'] = TRUE;
       foreach ($this->getView()->result as $row_index => $row) {
-        $entity_id = $row->_entity->id();
+        // Get the entity for this field (from relationship if available, otherwise base entity).
+        // This ensures we use the correct entity ID for form field names when using relationships,
+        // instead of the base entity ID which would cause all rows to share the same field names.
+        $entity_for_field = $this->getEntity($row);
+        if (!$entity_for_field) {
+          // Fallback to base entity if relationship entity is not available.
+          $entity_for_field = $row->_entity;
+        }
+
+        // Use the relationship entity ID for form field names, not the base entity ID.
+        // This fixes the issue where all rows share the same form field names when the view
+        // uses a relationship to access entities from a base entity.
+        $entity_id = $entity_for_field ? $entity_for_field->id() : $row->_entity->id();
+
         // Initialize this row and column.
         $form[$this->options['id']][$row_index]['#parents'] = [$this->options['id'], $entity_id];
         $form[$this->options['id']][$row_index]['#tree'] = TRUE;
 
         // Make sure there's an entity for this row (relationships can be null).
-        if ($this->getEntity($row)) {
+        if ($entity_for_field) {
           // Load field definition based on current entity bundle.
           $entity = $this->getEntityTranslationByRelationship($this->getEntity($row), $row);
           if ($entity->hasField($field_name) && $this->getBundleFieldDefinition($entity->bundle())->isDisplayConfigurable('form')) {
             $items = $entity->get($field_name)->filterEmptyItems();
+            $can_edit_row = ($entity->access('update') && $items->access('edit'));
+            $can_edit_any = $can_edit_any || $can_edit_row;
 
-            // Add widget to form and add field overrides.
+            // Use fallback view mode if user does not have edit access.
+            if ($this->options['plugin']['fallback_view_mode'] && !$can_edit_row) {
+              $form[$this->options['id']][$row_index][$field_name] = $items->view($this->options['plugin']['fallback_view_mode']);
+            }
+            else {
+              // Add widget to form and add field overrides.
+              $form[$this->options['id']][$row_index][$field_name] = $this->getPluginInstance()
+                ->form($items, $form[$this->options['id']][$row_index], $form_state);
+              $form[$this->options['id']][$row_index][$field_name]['#access'] = $can_edit_row;
+            }
+
             $form[$this->options['id']][$row_index][$field_name] = $this->getPluginInstance()->form($items, $form[$this->options['id']][$row_index], $form_state);
-            $form[$this->options['id']][$row_index][$field_name]['#access'] = ($entity->access('update') && $items->access('edit'));
+            $form[$this->options['id']][$row_index][$field_name]['#access'] = $can_edit_row;
             $form[$this->options['id']][$row_index][$field_name]['#cache']['contexts'] = $entity->getCacheContexts();
             $form[$this->options['id']][$row_index][$field_name]['#cache']['tags'] = $entity->getCacheTags();
             $form[$this->options['id']][$row_index][$field_name]['#parents'] = [
@@ -516,6 +564,11 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
           }
         }
       }
+    }
+
+    // Hide submit button if there's no results or can not edit.
+    if (empty($this->getView()->result) || (!$can_edit_any)) {
+      $form['actions']['submit']['#access'] = FALSE;
     }
   }
 
@@ -607,15 +660,20 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
 
         if ($entity) {
           $entity = $this->getEntityTranslationByRelationship($entity, $row);
-          $original_entity = $this->getEntityTranslationByRelationship($storage->loadUnchanged($entity->id()), $row);
+          $old = $storage->loadUnchanged($entity->id());
 
-          try {
-            if ($this->entityShouldBeSaved($entity, $original_entity)) {
-              $storage->save($entity);
-              $rows_saved[$row_index] = $entity->label();
+          if ($old) {
+            $original_entity = $this->getEntityTranslationByRelationship($old, $row);
+
+            try {
+              if ($this->entityShouldBeSaved($entity, $original_entity)) {
+                $storage->save($entity);
+                $rows_saved[$row_index] = $entity->label();
+              }
             }
-          } catch (\Exception $exception) {
-            $rows_failed[$row_index] = $entity->label();
+            catch (\Exception $exception) {
+              $rows_failed[$row_index] = $entity->label();
+            }
           }
         }
       }

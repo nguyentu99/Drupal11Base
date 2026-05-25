@@ -43,7 +43,7 @@
     messageWrapper.setAttribute('data-drupal-message-type', type);
 
     messageWrapper.innerHTML = `
-    <div class="messages__content  alert alert-${messagesBootstrapTypes[type]} alert-dismissible fade show" role="alert">
+    <div class="messages__content container alert alert-${messagesBootstrapTypes[type]} alert-dismissible fade show" role="alert">
       <h2 class="visually-hidden">
         ${messagesTypes[type]}
       </h2>
