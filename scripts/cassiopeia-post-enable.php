@@ -2,17 +2,14 @@
 
 /**
  * @file
- * One-off bootstrap script: admin paths + schema version after enabling modules.
+ * Sync admin_theme paths after enabling the Cassiopeia stack.
  *
- * Usage: php vendor/bin/drush php:script scripts/cassiopeia-post-enable.php
+ * Usage: drush php:script scripts/cassiopeia-post-enable.php
  */
 
 $paths = implode("\n", [
-  'administrator',
   'admin',
   'admin/*',
-  'manager',
-  'manager/*',
   'user',
   'user/*',
 ]);
@@ -22,6 +19,5 @@ if (!\Drupal::state()->get('admin_theme_path')) {
 }
 
 cassiopeia_admin_sync_admin_theme_paths();
-\Drupal::keyValue('system.schema')->set('cassiopeia_admin', 11004);
 
-print "Cassiopeia post-enable: admin_theme paths synced, schema set to 11004.\n";
+print "Cassiopeia post-enable: admin_theme paths synced.\n";

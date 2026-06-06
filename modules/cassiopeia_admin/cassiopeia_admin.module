@@ -222,21 +222,15 @@ function cassiopeia_admin_requirements(string $phase): array {
 function cassiopeia_admin_page_bottom(array &$page_bottom) {
   $user = \Drupal::currentUser();
   $admin_context = \Drupal::service('router.admin_context');
-  if ($admin_context->isAdminRoute()) {
+  if ($admin_context->isAdminRoute() || !$user->hasPermission('cassiopeia admin content manager')) {
     return;
   }
-  $has_content = $user->hasPermission('cassiopeia admin content manager');
-  $has_manager = $user->hasPermission('c3s quantri access theme');
-  if (!$has_content && !$has_manager) {
-    return;
-  }
-  $target = $has_content ? 'admin' : 'manager';
   $page_bottom['cassiopeia_admin_menu'] = [
     '#type' => 'container',
     '#attributes' => [
       'class' => ['cassiopeia-admin-floating-link'],
     ],
-    'link' => Link::fromTextAndUrl(t('Quản trị'), Url::fromUri('internal:/' . $target))->toRenderable(),
+    'link' => Link::fromTextAndUrl(t('Administration'), Url::fromUri('internal:/admin'))->toRenderable(),
     '#attached' => [
       'library' => ['cassiopeia_admin/floating_admin_link'],
     ],

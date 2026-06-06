@@ -1,14 +1,13 @@
 <?php
 
 function cassiopeia_admin_install() {
-  $path[] = 'administrator';
-  $path[] = 'admin';
-  $path[] = 'admin/*';
-  $path[] = 'manager';
-  $path[] = 'manager/*';
-  $path[] = 'user';
-  $path[] = 'user/*';
-  \Drupal::state()->set('admin_theme_path', implode("\n", $path));
+  $paths = [
+    'admin',
+    'admin/*',
+    'user',
+    'user/*',
+  ];
+  \Drupal::state()->set('admin_theme_path', implode("\n", $paths));
   cassiopeia_admin_sync_admin_theme_paths();
   cassiopeia_admin_install_entity_types();
   cassiopeia_admin_install_image_style();

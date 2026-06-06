@@ -32,7 +32,7 @@ class CassiopeiaRenderTemplateTest extends KernelTestBase {
    */
   public function testRendersValidTemplate(): void {
     $service = $this->container->get('cassiopeia.CassiopeiaRenderTemplate');
-    $markup = $service->render('module', 'cassiopeia', '/templates/test.html.twig', ['ok' => TRUE]);
+    $markup = $service->render('module', 'cassiopeia', '/templates/render-fixture.html.twig', ['ok' => TRUE]);
     $this->assertNotEmpty((string) $markup);
   }
 

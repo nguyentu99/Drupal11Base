@@ -1,16 +1,8 @@
-cassiopeia_admin.administrator:
-  path: '/admin/cassiopeia/administrator'
-  defaults:
-    _controller: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorController::content'
-    _title: 'Manager admin blocks'
-  requirements:
-    _permission: 'cassiopeia admin block manager'
-
 cassiopeia_admin.administrator_block:
   path: '/admin/cassiopeia/administrator/blocks'
   defaults:
     _controller: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorController::content'
-    _title: 'Manager admin blocks'
+    _title: 'Administrator menu blocks'
   requirements:
     _permission: 'cassiopeia admin block manager'
 
