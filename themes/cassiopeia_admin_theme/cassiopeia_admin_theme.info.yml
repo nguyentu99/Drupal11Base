@@ -19,10 +19,10 @@ regions:
 #  sidebar_second: 'Secondary'
 
 libraries:
-  - cassiopeiaadmintheme/overlayscrollbars
-  - cassiopeiaadmintheme/global-styling
+  - cassiopeia_admin_theme/overlayscrollbars
+  - cassiopeia_admin_theme/global-styling
 
-# AdminLTE ships layout CSS; load vendor Bootstrap grid/reboot via cassiopeiaadmintheme/bootstrap.
+# AdminLTE ships layout CSS; load vendor Bootstrap grid/reboot via cassiopeia_admin_theme/bootstrap.
 libraries-override:
   bootstrap/global-styling: false
   bootstrap/bootstrap-icons:

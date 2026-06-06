@@ -6,9 +6,9 @@ dependencies:
   module:
     - system
   theme:
-    - cassiopeiaadmintheme
-id: cassiopeiaadmintheme_account_menu
-theme: cassiopeiaadmintheme
+    - cassiopeia_admin_theme
+id: cassiopeia_admin_theme_account_menu
+theme: cassiopeia_admin_theme
 region: secondary_menu
 weight: -7
 provider: null

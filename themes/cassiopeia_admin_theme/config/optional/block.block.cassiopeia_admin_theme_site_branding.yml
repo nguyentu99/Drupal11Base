@@ -4,9 +4,9 @@ dependencies:
   module:
     - system
   theme:
-    - cassiopeiaadmintheme
-id: cassiopeiaadmintheme_site_branding
-theme: cassiopeiaadmintheme
+    - cassiopeia_admin_theme
+id: cassiopeia_admin_theme_site_branding
+theme: cassiopeia_admin_theme
 region: header
 weight: -7
 provider: null

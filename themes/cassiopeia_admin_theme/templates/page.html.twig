@@ -14,13 +14,13 @@
 
 <div id="app-wrapper" class="app-wrapper">
   <!--begin::Header-->
-  {{ include('@cassiopeiaadmintheme/templates/header.html.twig', {
+  {{ include('@cassiopeia_admin_theme/templates/header.html.twig', {
     'account': account,
     'account_avatar': account_avatar_header
   }) }}
   <!--end::Header-->
   <!--begin::App sidebar-->
-  {{ include('@cassiopeiaadmintheme/templates/appsidebar.html.twig', {
+  {{ include('@cassiopeia_admin_theme/templates/appsidebar.html.twig', {
     'administrator_menu': administrator_menu,
     'account': account,
     'account_avatar': account_avatar_sidebar
@@ -58,8 +58,8 @@
 {#          <div class="test-header">{{ page.header }}</div>#}
 {#          <div class="test-primary-menu">{{ page.primary_menu }}</div>#}
 {#          <div class="test-secondary-menu">{{ page.secondary_menu }}</div>#}
-{#          <div class="test-breadcrumb">{{ page.navbar_branding.cassiopeiaadmintheme_breadcrumbs }}</div>#}
-{#          <div class="test-breadcrumb">{{ page.navbar_branding.cassiopeiaadmintheme_main_menu }}</div>#}
+{#          <div class="test-breadcrumb">{{ page.navbar_branding.cassiopeia_admin_theme_breadcrumbs }}</div>#}
+{#          <div class="test-breadcrumb">{{ page.navbar_branding.cassiopeia_admin_theme_main_menu }}</div>#}
 {#          <div class="test-breadcrumb">{{ page.navbar_branding}}</div>#}
           <div class="app-page-status-messages">{{ page.status_messages }}</div>
           {% set page_highlighted %}{% apply spaceless %}
@@ -277,9 +277,9 @@
   </main>
   <!--end::App Main-->
   <!--begin::Footer-->
-  {{ include('@cassiopeiaadmintheme/templates/footer.html.twig', {'test': 'test data'}) }}
+  {{ include('@cassiopeia_admin_theme/templates/footer.html.twig', {'test': 'test data'}) }}
   <!--end::Footer-->
   <!--begin::Control sidebar-->
-  {{ include('@cassiopeiaadmintheme/templates/controlsidebar.html.twig',{'test': 'test data'}) }}
+  {{ include('@cassiopeia_admin_theme/templates/controlsidebar.html.twig',{'test': 'test data'}) }}
   <!--end::Control sidebar-->
 </div>

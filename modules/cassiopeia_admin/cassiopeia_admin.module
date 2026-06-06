@@ -217,6 +217,13 @@ function cassiopeia_admin_page_bottom(array &$page_bottom) {
   }
   $target = $has_content ? 'admin' : 'manager';
   $page_bottom['cassiopeia_admin_menu'] = [
-    '#markup' => '<div style="position: fixed; bottom: 30px; left: 10px; background: #ccc; border-radius: 5px; padding: 5px; z-index: 999;">' . Link::fromTextAndUrl('Quản trị', Url::fromUri('internal:/' . $target), [])->toString() . '</div>',
+    '#type' => 'container',
+    '#attributes' => [
+      'class' => ['cassiopeia-admin-floating-link'],
+    ],
+    'link' => Link::fromTextAndUrl(t('Quản trị'), Url::fromUri('internal:/' . $target))->toRenderable(),
+    '#attached' => [
+      'library' => ['cassiopeia_admin/floating_admin_link'],
+    ],
   ];
 }

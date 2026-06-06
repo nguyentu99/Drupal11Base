@@ -4,9 +4,9 @@ dependencies:
   module:
     - search
   theme:
-    - cassiopeiaadmintheme
-id: cassiopeiaadmintheme_search_form_narrow
-theme: cassiopeiaadmintheme
+    - cassiopeia_admin_theme
+id: cassiopeia_admin_theme_search_form_narrow
+theme: cassiopeia_admin_theme
 region: sidebar_first
 weight: -7
 provider: null

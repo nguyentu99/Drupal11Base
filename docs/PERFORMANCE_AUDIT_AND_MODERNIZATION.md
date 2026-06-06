@@ -61,7 +61,7 @@ Cassiopeia’s performance profile is dominated by **uncached admin chrome** (cu
 
 ### 2.2 Estimated metrics
 
-| Metric | Public (`cassiopeiatheme`) | Admin (`cassiopeiaadmintheme`) |
+| Metric | Public (`cassiopeia_theme`) | Admin (`cassiopeia_admin_theme`) |
 |--------|---------------------------|--------------------------------|
 | **TTFB (uncached)** | 180–350 ms | **500–1200 ms** (with `dump()`: **800–2000 ms**) |
 | **TTFB (cached page)** | 80–150 ms (anonymous only) | N/A for logged-in admin |
@@ -164,8 +164,8 @@ sequenceDiagram
 
 ```
 bootstrap (contrib)
-├── cassiopeiatheme — minimal layout, global-styling
-└── cassiopeiaadmintheme — AdminLTE + OS + duplicate bootstrap library definition
+├── cassiopeia_theme — minimal layout, global-styling
+└── cassiopeia_admin_theme — AdminLTE + OS + duplicate bootstrap library definition
 ```
 
 | Issue | Risk |
@@ -410,7 +410,7 @@ Invalidate `cassiopeia_admin_menu:list` on block/item CRUD.
 | Kernel tests for menu cache | 16 h | Safe | Regression guard | Done (4 tests) |
 | Fix `/test` render helper (P-17) | 2 h | Safe | No fatal on `/test` | Done |
 
-**Config entity export** remains optional for a future sprint — custom SQL tables are unchanged; use `drush updb` + menu CRUD for environment sync today.
+**Config entity export** is implemented — `administrator_block` / `administrator_block_item` with updates `11003`–`11005`. Export via `drush cex` for environment sync.
 
 ---
 
@@ -434,7 +434,7 @@ Debug leftover from AdminLTE template integration.
 
 ## Current Code
 
-```70:70:themes/cassiopeiaadmintheme/templates/page.html.twig
+```70:70:themes/cassiopeia_admin_theme/templates/page.html.twig
           {{ dump() }}
 ```
 
@@ -656,18 +656,18 @@ Twig extension convenience without preprocess discipline.
 
 ## Current Code
 
-```15:23:themes/cassiopeiaadmintheme/templates/page.html.twig
+```15:23:themes/cassiopeia_admin_theme/templates/page.html.twig
 {% set account = cassiopeia_user_load(user.account.id()) %}
 ...
-  {{ include('@cassiopeiaadmintheme/templates/header.html.twig',{'account': account}) }}
+  {{ include('@cassiopeia_admin_theme/templates/header.html.twig',{'account': account}) }}
 ...
-  {{ include('@cassiopeiaadmintheme/templates/appsidebar.html.twig',{'administrator_menu': administrator_menu, 'account': account}) }}
+  {{ include('@cassiopeia_admin_theme/templates/appsidebar.html.twig',{'administrator_menu': administrator_menu, 'account': account}) }}
 ```
 
 ## Optimized Solution
 
 ```php
-// cassiopeiaadmintheme_preprocess_page()
+// cassiopeia_admin_theme_preprocess_page()
 $account = \Drupal::currentUser();
 if (!$account->isAnonymous()) {
   $variables['account'] = User::load($account->id());
@@ -704,17 +704,17 @@ if (!$account->isAnonymous()) {
 Frontend, Render
 
 ## Current Problem
-`cassiopeiaadmintheme.info.yml` attaches `global-styling`, `overlayscrollbars`, and theme inherits Bootstrap libraries → **~680 KB uncompressed CSS** and **~250+ KB JS** before jQuery.
+`cassiopeia_admin_theme.info.yml` attaches `global-styling`, `overlayscrollbars`, and theme inherits Bootstrap libraries → **~680 KB uncompressed CSS** and **~250+ KB JS** before jQuery.
 
 ## Root Cause
 AdminLTE demo template merged as global library.
 
 ## Current Code
 
-```21:23:themes/cassiopeiaadmintheme/cassiopeiaadmintheme.info.yml
+```21:23:themes/cassiopeia_admin_theme/cassiopeia_admin_theme.info.yml
 libraries:
-  - cassiopeiaadmintheme/overlayscrollbars
-  - cassiopeiaadmintheme/global-styling
+  - cassiopeia_admin_theme/overlayscrollbars
+  - cassiopeia_admin_theme/global-styling
 ```
 
 ## Optimized Solution
@@ -725,7 +725,7 @@ adminlte.core:
   css: { component: { css/adminlte.layout.css: {} } }
   js: { js/adminlte.min.js: { attributes: { defer: true } } }
 adminlte.sidebar-only:
-  dependencies: [cassiopeiaadmintheme/adminlte.core]
+  dependencies: [cassiopeia_admin_theme/adminlte.core]
 ```
 
 Attach `overlayscrollbars` only on routes needing custom scrollbar (optional).
@@ -823,7 +823,7 @@ Misconfigured cache metadata on callback result.
 
 ## Current Code
 
-```48:51:themes/cassiopeiaadmintheme/cassiopeiaadmintheme.theme
+```48:51:themes/cassiopeia_admin_theme/cassiopeia_admin_theme.theme
   if ($moduleHandler->moduleExists('cassiopeia_admin')) {
     $administrator_menu = \Drupal::service('cassiopeia_admin.administrator')->cassiopeia_admin_get_administrator_menu();
     $variables['administrator_menu'] = $administrator_menu;
@@ -969,7 +969,7 @@ Incomplete Composer/npm library install.
 
 ## Current Code
 
-```10:13:themes/cassiopeiaadmintheme/cassiopeiaadmintheme.libraries.yml
+```10:13:themes/cassiopeia_admin_theme/cassiopeia_admin_theme.libraries.yml
 bootstrap:
   js:
     /libraries/popper.js/dist/umd/popper.min.js: { weight: -19 }
@@ -1245,7 +1245,9 @@ Security-critical; **minor** render stability
 - [x] **P-04** Fix `cassiopeia_image_style()` style loading
 - [x] **P-05** Pass account + avatar from preprocess
 - [x] **P-11** Fix Popper / use `core/popperjs`
-- [ ] Enable CSS/JS aggregation on staging/prod (Configuration → Performance)
+- [ ] Enable CSS/JS aggregation when needed — `sites/default/example.settings.local.php` or Performance UI
+- [x] **P-10** Trim empty theme preprocess stubs
+- [x] Views display cache audit — `drush php:script scripts/views-cache-audit.php`
 
 ### Short term (Sprint 2)
 
@@ -1267,14 +1269,14 @@ Security-critical; **minor** render stability
 
 ### Long term (Sprint 5+)
 
-- [ ] Evaluate config entity export for blocks (deferred — high effort)
+- [x] Config entity export for administrator blocks (`administrator_block` / `administrator_block_item`, `update_11003`–`11005`)
 - [ ] Optional Menu API synchronization
 - [x] Event subscriber + entity hooks for menu cache invalidation
 - [x] `hook_cassiopeia_admin_menu_alter` + `hook_cassiopeia_admin_menu_blocks_alter`
 - [x] Kernel tests: cache, lazy builder, alter hooks, entity invalidation
 - [x] **P-15** Trim bootstrap-icons payload (subset on admin; disabled on public)
-- [ ] Views display cache audit (site config)
-- [ ] Blackfire CI budget on admin dashboard route
+- [x] Views display cache audit — `scripts/views-cache-audit.php` (core Views OK)
+- [ ] Blackfire CI budget on admin dashboard route (manual)
 
 ---
 

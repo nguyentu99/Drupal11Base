@@ -1,6 +1,6 @@
 # Project Audit Report — Drupal11Base
 
-**Scope:** Full project review with emphasis on custom code (`cassiopeia`, `cassiopeia_admin`, `cassiopeiatheme`, `cassiopeiaadmintheme`), Composer stack, and operational patterns.  
+**Scope:** Full project review with emphasis on custom code (`cassiopeia`, `cassiopeia_admin`, `cassiopeia_theme`, `cassiopeia_admin_theme`), Composer stack, and operational patterns.  
 **Severity legend:** 🔴 Critical · 🟠 High · 🟡 Medium · 🔵 Low  
 **Remediation reference:** Performance sprints 1–5 (see `docs/PERFORMANCE_AUDIT_AND_MODERNIZATION.md`, `docs/TECHNICAL_DOCUMENTATION.md` §14–15).
 
@@ -12,10 +12,10 @@ The following audit findings were **addressed in code** (May 2025). Items marked
 
 | Area | Fixed | Still open |
 |------|-------|------------|
-| Performance (menu cache, assets) | P-01–P-03, P-06 subset, P-08, P-10 repository | Production aggregation, Blackfire, Views cache |
+| Performance (menu cache, assets) | P-01–P-03, P-06 subset, P-08, P-10 theme stubs | Production aggregation (documented), Blackfire (manual) |
 | Correctness (routes, delete, render) | S-04, S-05, M-01, M-02, D-01, D-02, D-13, M-05 FormState | — |
-| Security (forms, deps, test route) | S-01–S-12, S-17; S-06 bid validation; S-11 permissions defined | — |
-| Architecture | Repository, config entities (`administrator_block` / `administrator_block_item`), 6 kernel tests, migration 11003–11004 | Production aggregation |
+| Security (forms, deps, test route) | S-01–S-17 (incl. S-13 path validation, S-16 `.env.example`) | Contrib hardening (imce, metatag surface) |
+| Architecture | Repository, config entities, 6 kernel tests, migration 11003–11005 | Optional Menu API sync |
 
 ---
 
@@ -41,7 +41,7 @@ The custom Cassiopeia stack was a **Drupal 7–style admin menu system** partial
 | ID | Issue | Location | Impact |
 |----|--------|----------|--------|
 | S-01 | **Stored XSS via menu `icon` and `name` fields** | Forms, list `#markup`, DB fields | **Fixed** — `AdministratorFieldHelper`, sanitize on save, escaped `#markup`, safe icon preview JS |
-| S-02 | **Outdated PHPMailer (v6.1.7, 2020)** | `composer.json` | **Partially fixed** — constraint `^6.9`; run `composer update phpmailer/phpmailer` on deploy |
+| S-02 | **Outdated PHPMailer (v6.1.7, 2020)** | `composer.json` | **Fixed** — `^6.9` / v6.12.0 in `composer.lock` |
 
 ### 🟠 High
 
@@ -62,26 +62,26 @@ The custom Cassiopeia stack was a **Drupal 7–style admin menu system** partial
 | S-10 | **`#markup` with unescaped DB values** | Block list forms | **Fixed** — `AdministratorFieldHelper::escapeText()` / `iconMarkup()` |
 | S-11 | **Legacy permission referenced but undefined** | `cassiopeia_admin.permissions.yml`, `hook_page_bottom` | **Fixed** — permission defined; content manager machine name aligned with yml |
 | S-12 | **Silent exception swallowing** | `AdministratorMenuRepository` | **Fixed** — errors logged to `cassiopeia_admin` channel |
-| S-13 | **`CassiopeiaRenderTemplate` marks arbitrary Twig output safe** | `Markup::create($rendered)` | If template path/variables ever come from user input, XSS bypasses escaping |
+| S-13 | **`CassiopeiaRenderTemplate` marks arbitrary Twig output safe** | `Markup::create($rendered)` | **Fixed** — path validated via `ExtensionPathResolver` + `realpath` before load |
 | S-14 | **Contrib surface area** | `metatag` (+many submodules), `imce`, `smtp` | Larger attack surface; `imce` requires strict roles and private file scheme |
 
 ### 🔵 Low
 
 | ID | Issue | Location | Impact |
 |----|--------|----------|--------|
-| S-15 | **No `hook_requirements` / security advisories workflow documented** | Project root | Operational risk, not code defect |
-| S-16 | **Sites settings gitignored** (correct) but no `.env.example` at root | `.gitignore` | Risk of secrets in ad-hoc `settings.php` without team template |
+| S-15 | **No `hook_requirements` / security advisories workflow documented** | Project root | **Improved** — run `composer audit` after deploys (see TECHNICAL_DOCUMENTATION §13.4) |
+| S-16 | **Sites settings gitignored** (correct) but no `.env.example` at root | `.gitignore` | **Fixed** — `.env.example` at repo root |
 | S-17 | **t4t_admin.admin.inc** contains D7 `db_query` patterns | Dead file in repo | **Fixed** — removed `t4t_admin.admin.inc`, `t4t_admin.theme.inc` |
 
 ### Recommendations (security)
 
 1. ~~Remove `dump()`~~ — done.
-2. Finish S-01: validate `icon` at input; escape `name` in forms and tables.
+2. ~~Finish S-01~~ — done (`AdministratorFieldHelper`, escaped list markup, icon preview JS).
 3. ~~Fix item delete~~ — done.
 4. ~~Param converters and routes~~ — done.
-5. Upgrade **PHPMailer** (still required).
-6. Add access checks in Twig helpers or avoid entity loads in Twig.
-7. Restrict `/test` in production.
+5. ~~Upgrade PHPMailer~~ — done (v6.12.0).
+6. ~~Add access checks in Twig helpers~~ — done.
+7. ~~Restrict `/test` in production~~ — done.
 
 ---
 
@@ -99,7 +99,7 @@ The custom Cassiopeia stack was a **Drupal 7–style admin menu system** partial
 
 | ID | Issue | Location | Impact |
 |----|--------|----------|--------|
-| P-04 | **Full JOIN query for menu** | `cassiopeia_admin_get_items_all()` | Loads all blocks/items even when sidebar collapsed; no pagination |
+| P-04 | **Full JOIN query for menu** | Repository (legacy SQL) | **Fixed** — config entities; no SQL JOIN for menu data |
 | P-05 | **Entity::load() in Twig** | `cassiopeia_user_load`, etc. in `page.html.twig` / header | Extra queries per page; risk of duplicate loads if called multiple times |
 | P-06 | **~2100 files under `libraries/`** | `bootstrap-icons` repo | **Improved** — full icon CSS disabled on Cassiopeia themes; admin uses subset CSS |
 | P-07 | **Duplicate Bootstrap library definitions** | Both Cassiopeia themes redefine `bootstrap` library | Maintenance drift; potential double-load if libraries merged incorrectly |
@@ -110,7 +110,7 @@ The custom Cassiopeia stack was a **Drupal 7–style admin menu system** partial
 
 | ID | Issue | Location | Impact |
 |----|--------|----------|--------|
-| P-10 | **Empty preprocess hooks** | `cassiopeiatheme.theme`, `cassiopeiaadmintheme.theme` | Minor PHP overhead registering many hooks |
+| P-10 | **Empty preprocess hooks** | `cassiopeia_theme.theme`, `cassiopeia_admin_theme.theme` | **Fixed** — stubs removed; only hooks with logic remain |
 | P-11 | **Lazy builder placeholder still invokes callback per request** | Expected Drupal behavior | **Mitigated** — render cache hit skips rebuild; placeholder for BigPipe |
 | P-12 | **Image style `style_200x200` in templates** | Admin header/sidebar | Image derivative generation on first hit; ensure style exists to avoid failures |
 
@@ -140,8 +140,8 @@ The custom Cassiopeia stack was a **Drupal 7–style admin menu system** partial
 | M-03 | **No automated tests** | Custom modules | **Partially fixed** — 6 kernel tests in `cassiopeia_admin/tests/src/Kernel/` (incl. `ConfigStorageTest`) |
 | M-04 | **Procedural DB API in `.module`** | `administrator_block_*` | **Fixed** — `AdministratorMenuRepository` + wrappers |
 | M-05 | **Incorrect `FormStateInterface` usage** | Administrator forms | **Fixed** — `AdministratorFormTrait` uses `administrator_block` / `administrator_block_item` keys |
-| M-06 | **~400 lines commented D7 code** | `cassiopeia_admin.module` | Obscures real behavior; merge conflict magnet |
-| M-07 | **Legacy files not removed** | `t4t_admin.admin.inc`, `t4t_admin.theme.inc` | Dead D7 code; not autoloaded but confusing |
+| M-06 | **~400 lines commented D7 code** | `cassiopeia_admin.module` | **Fixed** — removed |
+| M-07 | **Legacy files not removed** | `t4t_admin.admin.inc`, `t4t_admin.theme.inc` | **Fixed** — removed |
 | M-08 | **No `hook_update_N()`** | `cassiopeia_admin` | **Fixed** — `hook_update_11001` (`url_meta`, index on `bid`) |
 | M-09 | **Inconsistent redirect targets** | `setRedirect('admin/cassiopeia/...')` vs route names | Updates after add may fail silently |
 
@@ -149,11 +149,11 @@ The custom Cassiopeia stack was a **Drupal 7–style admin menu system** partial
 
 | ID | Issue | Location | Impact |
 |----|--------|----------|--------|
-| M-10 | **TODO stubs in every form/controller** | `TestForm`, admin forms | Incomplete API contracts |
+| M-10 | **TODO stubs in every form/controller** | `TestForm`, admin forms | **Fixed** — TestForm cleaned; admin forms complete |
 | M-11 | **Custom modules outside `modules/custom/`** | `modules/cassiopeia*` | Diverges from Composer template; onboarding friction |
 | M-12 | **No `composer.json` entries for custom packages** | Root composer | Custom code not versioned as Composer packages |
 | M-13 | **Duplicate route controllers** | `CassiopeiaAdminAdministratorBlocksController` empty extend | Dead indirection |
-| M-14 | **`cassiopeia` `test` table unused** | `hook_schema` | Dead schema |
+| M-14 | **`cassiopeia` `test` table unused** | `hook_schema` | **Fixed** — empty schema; `cassiopeia_update_11001` drops table |
 | M-15 | **`admin_theme_path` state unused** | `cassiopeia_admin_install()` | **Fixed** — `cassiopeia_admin_sync_admin_theme_paths()` + `update_11002` |
 | M-16 | **Mixed Vietnamese/English UI strings** | Forms, messages | i18n inconsistency |
 | M-17 | **No README for Cassiopeia stack** | `docs/` | **Improved** — TECHNICAL_DOCUMENTATION, AUDIT_REPORT, PERFORMANCE_AUDIT |
@@ -186,10 +186,10 @@ The custom Cassiopeia stack was a **Drupal 7–style admin menu system** partial
 | D-04 | **Procedural persistence layer** | DB in `.module` | **Improved** — repository service; procedural wrappers remain for BC |
 | D-05 | **Raw SQL for config-like data** | Menu blocks | **Fixed** — `administrator_block` / `administrator_block_item` config entities |
 | D-06 | **HTML in menu link `#title` with `html => TRUE`** | `CassiopeiaAdminAdministrator` | **Fixed** — `#type` => `link` render arrays; escaped labels |
-| D-07 | **`#markup` for user-provided strings** | Admin list forms | Use `#plain_text` or render elements |
-| D-08 | **`setRedirect()` with path not route** | `BlockAddForm` line 85 | `setRedirect('cassiopeia_admin.administrator_block')` |
-| D-09 | **Twig extension loads optional modules unconditionally** | `Node::load`, `Term::load` without module_exists | Guard or declare dependencies in `cassiopeia.info.yml` |
-| D-10 | **No `cassiopeia_admin` dependency on `cassiopeia`** | Admin theme depends on both; module does not | Declare `cassiopeia:cassiopeia` if shared API expected |
+| D-07 | **`#markup` for user-provided strings** | Admin list forms | **Fixed** — `AdministratorFieldHelper` |
+| D-08 | **`setRedirect()` with path not route** | Block forms | **Fixed** — route names |
+| D-09 | **Twig extension loads optional modules unconditionally** | `CassiopeiaTwigExtension` | **Fixed** — `moduleExists()` guards + entity `access('view')` |
+| D-10 | **No `cassiopeia_admin` dependency on `cassiopeia`** | `cassiopeia_admin.info.yml` | **Fixed** — `cassiopeia:cassiopeia` declared |
 
 ### 🟡 Medium
 
@@ -199,10 +199,10 @@ The custom Cassiopeia stack was a **Drupal 7–style admin menu system** partial
 | D-12 | **Forms not using `ConfigFormBase` / entity forms** | All `FormBase` | Pattern mismatch for CRUD on structured data |
 | D-13 | **No cache tags on custom data writes** | `administrator_block_save()` | **Fixed** — see critical section above |
 | D-14 | **Permission machine names with spaces** | `cassiopeia admin block manager` | Valid but discouraged; prefer `administer cassiopeia blocks` |
-| D-15 | **`RouteSubscriber` registered but empty** | `cassiopeia` | Remove service if unused |
+| D-15 | **`RouteSubscriber` registered but empty** | `cassiopeia` | **Fixed** — service and class removed |
 | D-16 | **Theme depends on module** | `dependencies: cassiopeia:cassiopeia` in theme | Modules should not be required by themes for business logic; use optional integration in preprocess |
 | D-17 | **Controller returns `#markup` from render helper** | `TestController` | **Improved** — service works; prefer `#theme` embed for production |
-| D-18 | **Global CSS classes in `hook_page_bottom`** | Inline styles in `#markup` | Library + template |
+| D-18 | **Global CSS classes in `hook_page_bottom`** | Inline styles in `#markup` | **Fixed** — `floating_admin_link` library + render array |
 | D-19 | **Using `\stdClass` for records** | Block/item objects | Value object or typed DTO class |
 | D-20 | **Array syntax `array()`** | Throughout custom code | `[]` per Drupal coding standards |
 
@@ -233,46 +233,43 @@ The custom Cassiopeia stack was a **Drupal 7–style admin menu system** partial
 
 ## 6. Prioritized remediation roadmap
 
-### Phase 1 — Immediate (production safety) — largely complete
+### Phase 1 — Immediate (production safety) — complete
 
 1. ~~Remove `dump()`~~ ✅
-2. Escape/sanitize menu `name` and `icon` at **form/input** layer — **partial** (render-time icon sanitize only)
+2. ~~Escape/sanitize menu `name` and `icon` at form/input layer~~ ✅
 3. ~~Fix block item delete~~ ✅
 4. ~~Routing + param converters~~ ✅
-5. Upgrade PHPMailer — **pending**
+5. ~~Upgrade PHPMailer~~ ✅ (v6.12.0)
 
-### Phase 2 — Stability — largely complete
+### Phase 2 — Stability — complete
 
 1. ~~Fix `CassiopeiaRenderTemplate` / `_cassiopeia_render_template_()`~~ ✅
-2. Replace `FormState` `#block` hacks — **pending**
+2. ~~Replace `FormState` `#block` hacks~~ ✅ — `AdministratorFormTrait` + `administrator_block` keys
 3. ~~Cache tags + menu max-age~~ ✅
-4. Remove dead D7 files / commented code — **pending**
-5. ~~Kernel tests for menu~~ ✅ (4 tests)
+4. ~~Remove dead D7 files / commented code~~ ✅
+5. ~~Kernel tests for menu~~ ✅ (6 tests)
 
-### Phase 3 — Architecture — in progress
+### Phase 3 — Architecture — largely complete
 
-1. ~~Migrate administrator blocks to config entities~~ — **done** (`update_11003` / `11004`)
+1. ~~Migrate administrator blocks to config entities~~ ✅ (`update_11003` / `11004` / `11005`)
 2. ~~Repository service~~ ✅
 3. ~~Split AdminLTE / icons subset~~ ✅
-4. Document `admin_theme` path configuration — **pending**
-5. Runbook in `docs/` — **this file + TECHNICAL_DOCUMENTATION + PERFORMANCE_AUDIT**
+4. Document `admin_theme` path configuration — see TECHNICAL_DOCUMENTATION §13.2
+5. Runbook in `docs/` — this file + TECHNICAL_DOCUMENTATION + PERFORMANCE_AUDIT + MODULES_TO_ENABLE
 
 ---
 
 ## 7. Issue index by file
 
-| `modules/cassiopeia/src/Service/CassiopeiaRenderTemplate.php` | M-02 ✅, D-02 ✅ |
-| `modules/cassiopeia/src/Controller/TestController.php` | M-01 ✅, S-08 (restrict route — open) |
-| `modules/cassiopeia_admin/src/Repository/AdministratorMenuRepository.php` | M-04 ✅, P-08 ✅, D-13 ✅ |
-| `modules/cassiopeia_admin/src/EventSubscriber/MenuCacheInvalidatorSubscriber.php` | D-13 ✅ |
-| `modules/cassiopeia_admin/cassiopeia_admin.routing.yml` | S-05 ✅, D-01 ✅ |
-| `modules/cassiopeia_admin/src/Service/CassiopeiaAdminAdministrator.php` | S-01 (partial), P-01 ✅, D-06 ✅ |
-| `modules/cassiopeia_admin/src/Form/*BlockItemDeleteForm.php` | S-04 ✅ |
-| `modules/cassiopeia_admin/templates/cassiopeia-admin-administrator-menu.html.twig` | S-01 (partial) |
-| `modules/cassiopeia_admin/tests/src/Kernel/*.php` | M-03 ✅ |
-| `themes/cassiopeiaadmintheme/templates/page.html.twig` | S-03 ✅, P-02 ✅ |
-| `themes/cassiopeiaadmintheme/css/bootstrap-icons-subset.css` | P-06 ✅ |
-| `composer.json` | S-02 (open) |
+| `modules/cassiopeia/src/Service/CassiopeiaRenderTemplate.php` | M-02 ✅, D-02 ✅, S-13 ✅ |
+| `modules/cassiopeia/src/Controller/TestController.php` | M-01 ✅, S-08 ✅ |
+| `modules/cassiopeia/cassiopeia.install` | M-14 ✅ |
+| `modules/cassiopeia_admin/src/Repository/AdministratorMenuRepository.php` | M-04 ✅, P-04 ✅, P-08 ✅, D-13 ✅ |
+| `modules/cassiopeia_admin/src/Service/CassiopeiaAdminAdministrator.php` | S-01 ✅, P-01 ✅, D-06 ✅ |
+| `modules/cassiopeia_admin/cassiopeia_admin.module` | D-18 ✅, M-06 ✅ |
+| `modules/cassiopeia_admin/templates/cassiopeia-admin-administrator-menu.html.twig` | S-01 ✅ |
+| `composer.json` / `composer.lock` | S-02 ✅ |
+| `.env.example` | S-16 ✅ |
 
 ---
 

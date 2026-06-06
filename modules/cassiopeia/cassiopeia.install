@@ -1,28 +1,25 @@
 <?php
 
 /**
- * Implements hook_schema().
+ * @file
+ * Install and update hooks for the cassiopeia module.
  */
-function cassiopeia_schema() {
-  $schema =  array(
-    'test' => array(
-      'fields' => array(
-        'id' => array(
-          'type' => 'serial',
-          'not null' => TRUE,
-        ),
-        'name' => array(
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-        ),
-      ),
-      'primary key' => array(
-        'id',
-      ),
-    )
-  );
 
-  return $schema;
+/**
+ * Implements hook_schema().
+ *
+ * Legacy demo table removed; use config/content entities for new data.
+ */
+function cassiopeia_schema(): array {
+  return [];
 }
 
+/**
+ * Drops unused legacy {test} table from early module versions.
+ */
+function cassiopeia_update_11001(): void {
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('test')) {
+    $schema->dropTable('test');
+  }
+}

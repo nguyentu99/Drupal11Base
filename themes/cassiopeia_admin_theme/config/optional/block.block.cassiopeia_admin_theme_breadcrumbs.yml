@@ -4,9 +4,9 @@ dependencies:
   module:
     - system
   theme:
-    - cassiopeiaadmintheme
-id: cassiopeiaadmintheme_breadcrumbs
-theme: cassiopeiaadmintheme
+    - cassiopeia_admin_theme
+id: cassiopeia_admin_theme_breadcrumbs
+theme: cassiopeia_admin_theme
 region: breadcrumbs
 weight: 0
 provider: null

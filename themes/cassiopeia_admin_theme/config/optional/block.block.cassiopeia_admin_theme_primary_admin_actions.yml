@@ -2,9 +2,9 @@ langcode: en
 status: true
 dependencies:
   theme:
-    - cassiopeiaadmintheme
-id: cassiopeiaadmintheme_primary_admin_actions
-theme: cassiopeiaadmintheme
+    - cassiopeia_admin_theme
+id: cassiopeia_admin_theme_primary_admin_actions
+theme: cassiopeia_admin_theme
 region: content
 weight: -6
 provider: null

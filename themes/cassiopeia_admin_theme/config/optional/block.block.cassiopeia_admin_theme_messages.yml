@@ -4,9 +4,9 @@ dependencies:
   module:
     - system
   theme:
-    - cassiopeiaadmintheme
-id: cassiopeiaadmintheme_messages
-theme: cassiopeiaadmintheme
+    - cassiopeia_admin_theme
+id: cassiopeia_admin_theme_messages
+theme: cassiopeia_admin_theme
 region: status_messages
 weight: -6
 provider: null

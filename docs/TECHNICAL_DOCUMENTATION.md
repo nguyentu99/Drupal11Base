@@ -1,6 +1,6 @@
 # Drupal 11 Base — Technical Documentation
 
-This document describes the architecture of the **Drupal11Base** project, with emphasis on the custom **Cassiopeia** stack: modules `cassiopeia`, `cassiopeia_admin`, and themes `cassiopeiatheme`, `cassiopeiaadmintheme`.
+This document describes the architecture of the **Drupal11Base** project, with emphasis on the custom **Cassiopeia** stack: modules `cassiopeia`, `cassiopeia_admin`, and themes `cassiopeia_theme`, `cassiopeia_admin_theme`.
 
 ---
 
@@ -12,8 +12,8 @@ This document describes the architecture of the **Drupal11Base** project, with e
 4. [Dependency graph](#4-dependency-graph)
 5. [Module: cassiopeia](#5-module-cassiopeia)
 6. [Module: cassiopeia_admin](#6-module-cassiopeia_admin)
-7. [Theme: cassiopeiatheme](#7-theme-cassiopeiatheme)
-8. [Theme: cassiopeiaadmintheme](#8-theme-cassiopeiaadmintheme)
+7. [Theme: cassiopeia_theme](#7-theme-cassiopeia_theme)
+8. [Theme: cassiopeia_admin_theme](#8-theme-cassiopeia_admin_theme)
 9. [Request and rendering flow](#9-request-and-rendering-flow)
 10. [Database schema](#10-database-schema)
 11. [Routes and permissions](#11-routes-and-permissions)
@@ -35,8 +35,8 @@ This document describes the architecture of the **Drupal11Base** project, with e
 
 The site is a standard Drupal 11 codebase extended with a **dual-theme** setup:
 
-- **Public front office** → `cassiopeiatheme` (Bootstrap-based, minimal custom layout).
-- **Custom administration UI** → `cassiopeiaadmintheme` (Bootstrap + **AdminLTE 4** shell) driven by configurable sidebar data in `cassiopeia_admin`.
+- **Public front office** → `cassiopeia_theme` (Bootstrap-based, minimal custom layout).
+- **Custom administration UI** → `cassiopeia_admin_theme` (Bootstrap + **AdminLTE 4** shell) driven by configurable sidebar data in `cassiopeia_admin`.
 
 Core Drupal still provides content, users, Views, and configuration; Cassiopeia layers presentation helpers (Twig), a custom admin chrome, and database-backed navigation blocks.
 
@@ -54,8 +54,8 @@ Drupal11Base/
 │   ├── cassiopeia_admin/          # Custom admin navigation & CRUD
 │   └── contrib/                   # Composer/contrib modules
 ├── themes/
-│   ├── cassiopeiatheme/           # Public theme
-│   ├── cassiopeiaadmintheme/      # Admin theme (AdminLTE)
+│   ├── cassiopeia_theme/           # Public theme
+│   ├── cassiopeia_admin_theme/      # Admin theme (AdminLTE)
 │   └── bootstrap/                 # Base theme (contrib)
 ├── libraries/                     # Front-end libraries (Bootstrap, AdminLTE deps, icons, …)
 ├── sites/default/                 # Site settings (gitignored when local)
@@ -87,7 +87,7 @@ Drupal11Base/
 ```mermaid
 flowchart TB
   subgraph Public["Public site"]
-    CT[cassiopeiatheme]
+    CT[cassiopeia_theme]
     BS1[bootstrap base theme]
     CM[cassiopeia module]
     CT --> BS1
@@ -95,7 +95,7 @@ flowchart TB
   end
 
   subgraph Admin["Custom admin experience"]
-    CAT[cassiopeiaadmintheme]
+    CAT[cassiopeia_admin_theme]
     BS2[bootstrap base theme]
     CA[cassiopeia_admin module]
     CM2[cassiopeia module]
@@ -124,8 +124,8 @@ flowchart TB
 |-------|----------------|
 | **cassiopeia** | Shared Twig functions, optional programmatic Twig rendering, demo route `/test` |
 | **cassiopeia_admin** | DB-backed admin sidebar groups/items, CRUD UI, permissions, floating “Quản trị” shortcut |
-| **cassiopeiatheme** | Public page shell (header / breadcrumb / content / footer) |
-| **cassiopeiaadmintheme** | AdminLTE layout, injects dynamic sidebar from `cassiopeia_admin` |
+| **cassiopeia_theme** | Public page shell (header / breadcrumb / content / footer) |
+| **cassiopeia_admin_theme** | AdminLTE layout, injects dynamic sidebar from `cassiopeia_admin` |
 
 ---
 
@@ -134,10 +134,10 @@ flowchart TB
 ```
 bootstrap (contrib theme)
     ↑
-    ├── cassiopeiatheme
+    ├── cassiopeia_theme
     │       └── depends: cassiopeia (module)
     │
-    └── cassiopeiaadmintheme
+    └── cassiopeia_admin_theme
             ├── depends: cassiopeia (module)
             └── depends: cassiopeia_admin (module)
 
@@ -159,7 +159,7 @@ Both custom themes declare `base theme: bootstrap` and attach their own `global-
 
 ### 5.1 Purpose
 
-Foundation module for the Cassiopeia product line. It exposes **Twig helpers** used heavily by `cassiopeiaadmintheme` and provides infrastructure for rendering arbitrary module Twig files outside the normal theme registry.
+Foundation module for the Cassiopeia product line. It exposes **Twig helpers** used heavily by `cassiopeia_admin_theme` and provides infrastructure for rendering arbitrary module Twig files outside the normal theme registry.
 
 ### 5.2 Services (`cassiopeia.services.yml`)
 
@@ -234,7 +234,7 @@ Provides a **custom administration navigation system** independent of Drupal cor
 
 Administrators with the right permission manage this structure at  
 `/admin/cassiopeia/administrator` (and related routes).  
-The assembled tree is rendered in `cassiopeiaadmintheme`’s sidebar.
+The assembled tree is rendered in `cassiopeia_admin_theme`’s sidebar.
 
 ### 6.2 Data model
 
@@ -360,14 +360,14 @@ Large portions of `cassiopeia_admin.module`, `t4t_admin.admin.inc`, and `t4t_adm
 
 ---
 
-## 7. Theme: cassiopeiatheme
+## 7. Theme: cassiopeia_theme
 
-**Path:** `themes/cassiopeiatheme/`  
+**Path:** `themes/cassiopeia_theme/`  
 **Base theme:** `bootstrap`  
 **Depends on module:** `cassiopeia`  
 **Version:** 5.0.1
 
-### 7.1 Libraries (`cassiopeiatheme.libraries.yml`)
+### 7.1 Libraries (`cassiopeia_theme.libraries.yml`)
 
 | Library | Assets |
 |---------|--------|
@@ -385,9 +385,9 @@ Large portions of `cassiopeia_admin.module`, `t4t_admin.admin.inc`, and `t4t_adm
 | `header.html.twig` | Empty structural header container |
 | `footer.html.twig` | Empty structural footer container |
 
-`page.html.twig` uses Twig `include` with namespace `@cassiopeiatheme/templates/...`.
+`page.html.twig` uses Twig `include` with namespace `@cassiopeia_theme/templates/...`.
 
-### 7.3 PHP (`cassiopeiatheme.theme`)
+### 7.3 PHP (`cassiopeia_theme.theme`)
 
 Defines preprocess hooks for html, page, node, regions, forms, menus, tables, etc. **Most implementations are empty stubs** ready for project-specific logic. No admin menu integration on the public theme.
 
@@ -397,14 +397,14 @@ Inherits Bootstrap’s region layout from the base theme; `page.html.twig` prima
 
 ---
 
-## 8. Theme: cassiopeiaadmintheme
+## 8. Theme: cassiopeia_admin_theme
 
-**Path:** `themes/cassiopeiaadmintheme/`  
+**Path:** `themes/cassiopeia_admin_theme/`  
 **Base theme:** `bootstrap`  
 **Depends on:** `cassiopeia`, `cassiopeia_admin`  
 **Version:** 5.0.1
 
-### 8.1 Libraries (`cassiopeiaadmintheme.libraries.yml`)
+### 8.1 Libraries (`cassiopeia_admin_theme.libraries.yml`)
 
 | Library | Role |
 |---------|------|
@@ -420,7 +420,7 @@ Inherits Bootstrap’s region layout from the base theme; `page.html.twig` prima
 
 ### 8.2 AdminLTE layout
 
-`cassiopeiaadmintheme_preprocess_html()` adds body classes:
+`cassiopeia_admin_theme_preprocess_html()` adds body classes:
 
 - `layout-fixed`
 - `sidebar-expand-lg`
@@ -442,10 +442,10 @@ app-wrapper
 ### 8.3 Administrator menu injection
 
 ```php
-// cassiopeiaadmintheme_preprocess_page()
+// cassiopeia_admin_theme_preprocess_page()
 $variables['administrator_menu'] = \Drupal::service('cassiopeia_admin.administrator')
   ->cassiopeia_admin_get_administrator_menu();
-// Avatars: cassiopeiaadmintheme_build_user_avatar() → cassiopeia.image_builder
+// Avatars: cassiopeia_admin_theme_build_user_avatar() → cassiopeia.image_builder
 ```
 
 `appsidebar.html.twig` outputs `{{ administrator_menu }}` inside `<nav class="mt-2">`. User avatars are built in preprocess as cacheable render arrays (not Twig `user_load`).
@@ -456,9 +456,9 @@ $variables['administrator_menu'] = \Drupal::service('cassiopeia_admin.administra
 
 ### 8.5 Optional block configuration
 
-`config/optional/block.block.cassiopeiaadmintheme_*.yml` ships default block placements when the theme is installed (content, breadcrumbs, messages, menus, local tasks, etc.).
+`config/optional/block.block.cassiopeia_admin_theme_*.yml` ships default block placements when the theme is installed (content, breadcrumbs, messages, menus, local tasks, etc.).
 
-### 8.6 Custom regions (`cassiopeiaadmintheme.info.yml`)
+### 8.6 Custom regions (`cassiopeia_admin_theme.info.yml`)
 
 | Region | Usage in templates |
 |--------|-------------------|
@@ -470,7 +470,7 @@ $variables['administrator_menu'] = \Drupal::service('cassiopeia_admin.administra
 
 ### 8.7 UI polish
 
-`cassiopeiaadmintheme_preprocess_menu_local_action()` adds Bootstrap class `btn-sm` to local action links.
+`cassiopeia_admin_theme_preprocess_menu_local_action()` adds Bootstrap class `btn-sm` to local action links.
 
 ---
 
@@ -492,7 +492,7 @@ HTTP request
 
 ```
 HTTP request (path matched as admin via core or admin_theme contrib)
-  → Administration theme: cassiopeiaadmintheme
+  → Administration theme: cassiopeia_admin_theme
   → preprocess_page: load administrator_menu (lazy builder)
   → page.html.twig + appsidebar (DB-driven menu)
   → Main content (Views, entities, cassiopeia_admin forms, etc.)
@@ -617,19 +617,26 @@ These are standard Drupal extensions; they are not hard-required by Cassiopeia m
 ### 13.2 Recommended site setup
 
 1. **Install Drupal 11** and enable modules: `cassiopeia`, `cassiopeia_admin`.
-2. Set **default theme** → `cassiopeiatheme`.
-3. Set **administration theme** → `cassiopeiaadmintheme`.
+2. Set **default theme** → `cassiopeia_theme`.
+3. Set **administration theme** → `cassiopeia_admin_theme`.
 4. Enable **Admin Theme** contrib and configure **Include paths** to match routes that should use the admin theme (align with paths from `cassiopeia_admin_install()` or your custom `administrator` / `manager` paths).
 5. Grant permissions to appropriate roles.
 6. Create image style **`style_200x200`** (referenced in admin templates).
 7. Place default files: `public://default.png` for avatar fallback.
 8. Run `drush updb -y` after pulling `cassiopeia_admin` updates (e.g. `hook_update_11001` for `url_meta`).
 9. Run `drush cr` after code, route, or library changes.
-10. Enable CSS/JS aggregation in production (`system.performance`).
+10. Optional: enable CSS/JS aggregation via `sites/default/settings.local.php` or **Configuration → Development → Performance**.
 
 ### 13.3 Libraries
 
 Front-end dependencies are expected under `libraries/` (Bootstrap, Popper, OverlayScrollbars, bootstrap-icons, etc.). Themes reference them with absolute web paths such as `/libraries/bootstrap/dist/css/bootstrap.min.css`.
+
+### 13.4 Security and dependency maintenance
+
+1. After pulling code or updating Composer dependencies, run `composer audit` and address reported advisories.
+2. Copy `.env.example` → `.env` for local reference only; **do not commit** secrets (`.env` is gitignored).
+3. Copy `sites/default/example.settings.local.php` → `settings.local.php` and include it at the end of `sites/default/settings.php`.
+4. Review **imce** upload permissions and **metatag** submodules — disable unused submodules in production.
 
 ---
 
@@ -638,15 +645,18 @@ Front-end dependencies are expected under `libraries/` (Bootstrap, Popper, Overl
 | Issue | Impact | Status |
 |-------|--------|--------|
 | **PHPMailer** | Mail transport security | **Fixed** — `^6.9` / v6.12.0 in lock file |
-| **Stored XSS risk** in menu `name` / `icon` if not validated at input | Admin users with block-manager permission | Partially mitigated: icon sanitized at render; escape names in forms |
-| **Silent exception swallowing** in repository CRUD | Failed writes appear successful | Open |
+| **Stored XSS risk** in menu `name` / `icon` | Admin users with block-manager permission | **Fixed** — `AdministratorFieldHelper`, escaped list markup, icon preview JS |
+| **Silent exception swallowing** in repository CRUD | Failed writes appear successful | **Fixed** — logged to `logger.channel.cassiopeia_admin` |
 | **`admin_theme_path` state** | Admin theme path list | **Fixed** — synced to `admin_theme.settings` when empty |
-| **Large commented D7 code blocks** | Maintainer noise | Open |
-| **`cassiopeia` `test` table unused** | Schema drift | Open |
-| **Config entity export** for administrator blocks | No config sync between environments | Deferred (optional architecture sprint) |
+| **Large commented D7 code blocks** | Maintainer noise | **Fixed** — removed from `cassiopeia_admin.module` |
+| **`cassiopeia` `test` table unused** | Schema drift | **Fixed** — empty schema; `cassiopeia_update_11001` drops legacy table |
+| **Config entity export** for administrator blocks | Config sync between environments | **Fixed** — `administrator_block` / `administrator_block_item` config entities |
 | **`/test` route** | Demo surface | **Fixed** — `administer site configuration` only |
-| **Twig `*_load()` helpers** | Entity access not enforced in extension | Open — use preprocess + access checks |
-| **FormState `#block` in form state** | Possible AJAX/rebuild issues | Open — prefer `$form_state->set('block', …)` |
+| **Twig `*_load()` helpers** | Entity access not enforced | **Fixed** — `moduleExists()` + `access('view')` |
+| **FormState `#block` in form state** | Possible AJAX/rebuild issues | **Fixed** — `AdministratorFormTrait` uses `administrator_block` / `administrator_block_item` keys |
+| **`CassiopeiaRenderTemplate` path trust** | XSS if arbitrary paths loaded | **Fixed** — `realpath` validation inside extension directory |
+| **Production CSS/JS aggregation** | Page weight on prod | **Open** — uncomment in `settings.local.php` or Performance UI |
+| **Empty theme preprocess stubs** | Minor PHP overhead | **Fixed** — removed from both Cassiopeia themes (P-10) |
 
 ### Resolved in performance sprints 1–5
 
@@ -662,7 +672,7 @@ Front-end dependencies are expected under `libraries/` (Bootstrap, Popper, Overl
 | Procedural DB only in `.module` | `AdministratorMenuRepository` + wrappers |
 | O(n) `path.validator` in menu | `url_meta` + `AdministratorLinkMetadata` |
 | Full bootstrap-icons on every page | Subset on admin; disabled on public |
-| No kernel tests | Four kernel tests under `tests/src/Kernel/` |
+| No kernel tests | Six kernel tests under `tests/src/Kernel/` (incl. `ConfigStorageTest`) |
 | `hook_cassiopeia_admin_menu_alter` commented | Restored (+ `hook_cassiopeia_admin_menu_blocks_alter`) |
 
 ---
@@ -679,20 +689,24 @@ Front-end dependencies are expected under `libraries/` (Bootstrap, Popper, Overl
 - [x] Bootstrap Icons subset (admin); disable full pack on public
 - [x] Critical admin CSS; avatar via `CassiopeiaImageBuilder`
 - [x] Menu cache event subscriber + entity/module invalidation hooks
-- [x] Kernel tests (cache, lazy builder, alter hooks, entity invalidation)
+- [x] Kernel tests (cache, lazy builder, alter hooks, entity invalidation, config storage)
 - [x] Restore menu alter hooks
+- [x] Sanitize/validate menu fields at form level; audit `#markup` in list forms
+- [x] Replace silent `catch` in repository with logging
+- [x] Refactor FormState storage off `#block` keys (`AdministratorFormTrait`)
+- [x] Remove dead D7 files (`t4t_admin.*`) and large comment blocks
+- [x] Config entities for administrator blocks/items (`update_11003`–`11005`)
+- [x] Harden `CassiopeiaRenderTemplate` path validation (S-13)
+- [x] Floating admin link library (D-18); remove empty `RouteSubscriber` (D-15)
+- [x] Drop legacy `test` table (`cassiopeia_update_11001`); `.env.example` (S-16)
 
-### Remaining
+### Remaining (ops / optional)
 
-- [x] Upgrade PHPMailer to supported 6.9.x+
-- [ ] Sanitize/validate menu fields at form level; audit `#markup` in list forms
-- [ ] Replace silent `catch` in repository with logging or rethrow
-- [x] Wire `admin_theme_path` → `admin_theme.settings` (when paths empty)
-- [x] Restrict `/test` (administer site configuration)
-- [ ] Refactor FormState storage off `#block` keys
-- [ ] Remove dead D7 files (`t4t_admin.*`) and large comment blocks
-- [ ] Evaluate config entities for block export (optional)
-- [ ] Production: aggregation, Blackfire baseline, Views cache audit
+- [ ] Enable CSS/JS aggregation when needed (`example.settings.local.php` or Performance UI)
+- [x] Views display cache audit — `scripts/views-cache-audit.php`
+- [x] Trim empty preprocess hooks in theme `.theme` files (P-10)
+- [ ] Blackfire baseline on admin dashboard (manual QA)
+- [ ] Include `settings.local.php` at end of `sites/default/settings.php` if not done yet
 
 ---
 
@@ -708,7 +722,6 @@ cassiopeia.routing.yml
 cassiopeia.services.yml
 src/Controller/TestController.php
 src/Form/TestForm.php
-src/Routing/RouteSubscriber.php
 src/Service/CassiopeiaRenderTemplate.php
 src/Service/CassiopeiaImageBuilder.php
 src/TwigExtension/CassiopeiaTwigExtension.php
@@ -727,7 +740,10 @@ cassiopeia_admin.routing.yml
 cassiopeia_admin.services.yml
 cassiopeia_admin.permissions.yml
 cassiopeia_admin.libraries.yml
+css/floating-admin-link.css
 cassiopeia_admin.theme.inc
+src/Entity/AdministratorBlock.php
+src/Entity/AdministratorBlockItem.php
 src/Repository/AdministratorMenuRepository.php
 src/Service/CassiopeiaAdminAdministrator.php
 src/Service/AdministratorLinkMetadata.php
@@ -742,24 +758,24 @@ tests/src/Kernel/*.php
 tests/modules/cassiopeia_admin_test/
 ```
 
-### cassiopeiatheme
+### cassiopeia_theme
 
 ```
-cassiopeiatheme.info.yml
-cassiopeiatheme.theme
-cassiopeiatheme.libraries.yml
+cassiopeia_theme.info.yml
+cassiopeia_theme.theme
+cassiopeia_theme.libraries.yml
 theme-settings.php
 templates/*.html.twig
 css/app.css
 js/app.js
 ```
 
-### cassiopeiaadmintheme
+### cassiopeia_admin_theme
 
 ```
-cassiopeiaadmintheme.info.yml
-cassiopeiaadmintheme.theme
-cassiopeiaadmintheme.libraries.yml
+cassiopeia_admin_theme.info.yml
+cassiopeia_admin_theme.theme
+cassiopeia_admin_theme.libraries.yml
 theme-settings.php
 config/optional/block.block.*.yml
 templates/*.html.twig
@@ -771,8 +787,8 @@ js/adminlte.js
 js/app.js
 ```
 
-*(Subset rebuild script: `scripts/build-bootstrap-icons-subset.py` at repo root.)*
+*(Subset rebuild script: `scripts/build-bootstrap-icons-subset.py` at repo root. Site overrides: `sites/default/example.settings.local.php`, `.env.example`.)*
 
 ---
 
-*Document maintained with codebase. Last aligned with performance sprints 1–5. Drupal core: [Drupal.org documentation](https://www.drupal.org/documentation).*
+*Document maintained with codebase. Last aligned with post-sprint hardening (May 2025). Drupal core: [Drupal.org documentation](https://www.drupal.org/documentation).*

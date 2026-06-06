@@ -110,7 +110,7 @@ class CassiopeiaTwigExtension extends AbstractExtension {
 
   public function cassiopeia_render_template(string $type, string $name, string $path, mixed $variables = NULL) {
     return \Drupal::service('cassiopeia.CassiopeiaRenderTemplate')
-      ->render($type, $name, $path, $variables = NULL);
+      ->render($type, $name, $path, $variables);
   }
 
   /**

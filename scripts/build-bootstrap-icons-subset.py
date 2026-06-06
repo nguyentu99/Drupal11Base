@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Build bootstrap-icons-subset.css for cassiopeiaadmintheme."""
+"""Build bootstrap-icons-subset.css for cassiopeia_admin_theme."""
 
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "libraries/bootstrap-icons/font/bootstrap-icons.min.css"
-OUT = ROOT / "themes/cassiopeiaadmintheme/css/bootstrap-icons-subset.css"
+OUT = ROOT / "themes/cassiopeia_admin_theme/css/bootstrap-icons-subset.css"
 
 ICONS = [
     "list", "search", "arrows-fullscreen", "fullscreen-exit", "grid-fill",

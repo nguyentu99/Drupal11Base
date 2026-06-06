@@ -40,17 +40,17 @@ Metatag submodules (Open Graph, Twitter, etc.) are optional — enable only if n
 | Theme | Role |
 |-------|------|
 | **Bootstrap** | Base theme (dependency) |
-| **cassiopeiatheme** | Default / public site |
-| **cassiopeiaadmintheme** | Administration theme |
+| **cassiopeia_theme** | Default / public site |
+| **cassiopeia_admin_theme** | Administration theme |
 
 ## Drush (one command)
 
 ```bash
 composer require drush/drush:^13
 php vendor/bin/drush pm:enable cassiopeia cassiopeia_admin admin_theme admin_toolbar admin_toolbar_tools token pathauto metatag color_field imce smtp views_entity_form_field -y
-php vendor/bin/drush theme:enable cassiopeiatheme cassiopeiaadmintheme -y
-php vendor/bin/drush config:set system.theme default cassiopeiatheme -y
-php vendor/bin/drush config:set system.theme admin cassiopeiaadmintheme -y
+php vendor/bin/drush theme:enable cassiopeia_theme cassiopeia_admin_theme -y
+php vendor/bin/drush config:set system.theme default cassiopeia_theme -y
+php vendor/bin/drush config:set system.theme admin cassiopeia_admin_theme -y
 php vendor/bin/drush role:perm:add administrator "cassiopeia admin block manager,cassiopeia admin content manager" -y
 php vendor/bin/drush updb -y
 php vendor/bin/drush cr

@@ -30,15 +30,15 @@ admin-app:
       attributes:
         defer: true
   dependencies:
-    - cassiopeiaadmintheme/adminlte
+    - cassiopeia_admin_theme/adminlte
 
 global-styling:
   version: VERSION
   dependencies:
-    - cassiopeiaadmintheme/critical-admin
-    - cassiopeiaadmintheme/bootstrap
-    - cassiopeiaadmintheme/bootstrap-icons-subset
-    - cassiopeiaadmintheme/admin-app
+    - cassiopeia_admin_theme/critical-admin
+    - cassiopeia_admin_theme/bootstrap
+    - cassiopeia_admin_theme/bootstrap-icons-subset
+    - cassiopeia_admin_theme/admin-app
 
 bootstrap:
   js:

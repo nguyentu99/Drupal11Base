@@ -9,14 +9,10 @@ use Drupal\Core\Form\FormStateInterface;
 class TestForm extends FormBase {
 
   public function getFormId() {
-    // TODO: Implement getFormId() method.
     return 'test_form';
-
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-    // TODO: Implement buildForm() method.
-
     $form['example_select'] = [
       '#type' => 'select',
       '#title' => $this->t('Example select field'),
@@ -82,7 +78,7 @@ class TestForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // TODO: Implement submitForm() method.
+    // Demo form — no persistence.
   }
 
 }

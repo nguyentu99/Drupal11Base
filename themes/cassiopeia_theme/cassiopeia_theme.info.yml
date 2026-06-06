@@ -6,7 +6,7 @@ base theme: bootstrap
 dependencies:
   - cassiopeia:cassiopeia
 libraries:
-  - cassiopeiatheme/global-styling
+  - cassiopeia_theme/global-styling
 
 # Public site does not use Bootstrap Icons classes; skip the 84 KB font CSS.
 libraries-override:

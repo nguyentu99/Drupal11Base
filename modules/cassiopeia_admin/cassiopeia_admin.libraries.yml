@@ -6,6 +6,12 @@ icon_preview:
     - core/jquery
     - core/drupal
 
+floating_admin_link:
+  version: VERSION
+  css:
+    component:
+      css/floating-admin-link.css: {}
+
 form.CassiopeiaAdminAdministratorBlockAddForm:
   version: VERSION
   dependencies:

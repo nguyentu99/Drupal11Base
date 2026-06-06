@@ -7029,6 +7029,7 @@
     top: 0;
     bottom: 0;
     max-height: 100vh;
+    z-index: 400;
   }
   .sidebar-expand-lg.layout-fixed .app-sidebar .sidebar-wrapper {
     height: calc(100vh - (calc(3.5rem + 1px)));
