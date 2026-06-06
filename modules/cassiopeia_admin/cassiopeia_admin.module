@@ -191,7 +191,6 @@ function cassiopeia_admin_theme($existing, $type, $theme, $path) {
     ],
     'cassiopeia_admin_administrator_icon' => [
       'variables' => ['icon' => NULL],
-      'file' => 'cassiopeia_admin.theme.inc',
     ],
     'cassiopeia_admin_administrator_menu' => [
       'variables' => [
@@ -199,6 +198,22 @@ function cassiopeia_admin_theme($existing, $type, $theme, $path) {
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function cassiopeia_admin_requirements(string $phase): array {
+  $requirements = [];
+  if ($phase === 'runtime') {
+    $requirements['cassiopeia_admin_composer_audit'] = [
+      'title' => t('Composer security audit'),
+      'value' => t('Run after dependency updates'),
+      'description' => t('From the project root, run <code>composer audit</code> and address reported advisories.'),
+      'severity' => REQUIREMENT_INFO,
+    ];
+  }
+  return $requirements;
 }
 
 /**

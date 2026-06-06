@@ -621,11 +621,11 @@ These are standard Drupal extensions; they are not hard-required by Cassiopeia m
 3. Set **administration theme** → `cassiopeia_admin_theme`.
 4. Enable **Admin Theme** contrib and configure **Include paths** to match routes that should use the admin theme (align with paths from `cassiopeia_admin_install()` or your custom `administrator` / `manager` paths).
 5. Grant permissions to appropriate roles.
-6. Create image style **`style_200x200`** (referenced in admin templates).
+6. Image style **`style_200x200`** is created by `cassiopeia_admin` install / `update_11006` (admin avatars).
 7. Place default files: `public://default.png` for avatar fallback.
-8. Run `drush updb -y` after pulling `cassiopeia_admin` updates (e.g. `hook_update_11001` for `url_meta`).
+8. Run `drush updb -y` after pulling module updates.
 9. Run `drush cr` after code, route, or library changes.
-10. Optional: enable CSS/JS aggregation via `sites/default/settings.local.php` or **Configuration → Development → Performance**.
+10. Optional: enable CSS/JS aggregation via `settings.local.php` or **Configuration → Development → Performance**.
 
 ### 13.3 Libraries
 
@@ -655,8 +655,9 @@ Front-end dependencies are expected under `libraries/` (Bootstrap, Popper, Overl
 | **Twig `*_load()` helpers** | Entity access not enforced | **Fixed** — `moduleExists()` + `access('view')` |
 | **FormState `#block` in form state** | Possible AJAX/rebuild issues | **Fixed** — `AdministratorFormTrait` uses `administrator_block` / `administrator_block_item` keys |
 | **`CassiopeiaRenderTemplate` path trust** | XSS if arbitrary paths loaded | **Fixed** — `realpath` validation inside extension directory |
-| **Production CSS/JS aggregation** | Page weight on prod | **Open** — uncomment in `settings.local.php` or Performance UI |
-| **Empty theme preprocess stubs** | Minor PHP overhead | **Fixed** — removed from both Cassiopeia themes (P-10) |
+| **Image style `style_200x200`** | Avatar render failures | **Fixed** — `cassiopeia_admin` install + `update_11006` |
+| **Production CSS/JS aggregation** | Page weight on prod | **Site ops** — optional in `settings.local.php` or Performance UI |
+| **Empty theme preprocess stubs** | Minor PHP overhead | **Fixed** (P-10) |
 
 ### Resolved in performance sprints 1–5
 
@@ -699,14 +700,17 @@ Front-end dependencies are expected under `libraries/` (Bootstrap, Popper, Overl
 - [x] Harden `CassiopeiaRenderTemplate` path validation (S-13)
 - [x] Floating admin link library (D-18); remove empty `RouteSubscriber` (D-15)
 - [x] Drop legacy `test` table (`cassiopeia_update_11001`); `.env.example` (S-16)
+- [x] Image style `style_200x200` (`update_11006`, P-12)
+- [x] Remove duplicate `CassiopeiaAdminAdministratorBlocksController` (M-13)
+- [x] `hook_requirements` composer audit reminder (S-15)
+- [x] Shared Bootstrap library `cassiopeia/bootstrap` (P-07)
+- [x] Kernel test `CassiopeiaRenderTemplateTest` (S-13)
 
-### Remaining (ops / optional)
+### Remaining (site ops / optional — not codebase)
 
-- [ ] Enable CSS/JS aggregation when needed (`example.settings.local.php` or Performance UI)
-- [x] Views display cache audit — `scripts/views-cache-audit.php`
-- [x] Trim empty preprocess hooks in theme `.theme` files (P-10)
+- [ ] Enable CSS/JS aggregation when deploying to production
 - [ ] Blackfire baseline on admin dashboard (manual QA)
-- [ ] Include `settings.local.php` at end of `sites/default/settings.php` if not done yet
+- [ ] Run `php scripts/patch-settings-include.php` if `settings.php` cannot include `settings.local.php` yet
 
 ---
 
@@ -719,12 +723,14 @@ cassiopeia.info.yml
 cassiopeia.module
 cassiopeia.install
 cassiopeia.routing.yml
+cassiopeia.libraries.yml
 cassiopeia.services.yml
 src/Controller/TestController.php
 src/Form/TestForm.php
 src/Service/CassiopeiaRenderTemplate.php
 src/Service/CassiopeiaImageBuilder.php
 src/TwigExtension/CassiopeiaTwigExtension.php
+tests/src/Kernel/CassiopeiaRenderTemplateTest.php
 templates/test.html.twig
 templates/test_form.html.twig
 ```
@@ -750,7 +756,8 @@ src/Service/AdministratorLinkMetadata.php
 src/EventSubscriber/MenuCacheInvalidatorSubscriber.php
 src/ParamConverter/AdministratorBlockParamConverter.php
 src/ParamConverter/AdministratorBlockItemParamConverter.php
-src/Controller/*.php
+config/install/image.style.style_200x200.yml
+src/Controller/CassiopeiaAdminAdministratorController.php
 src/Form/*.php
 templates/*.html.twig
 js/*.js
@@ -787,7 +794,7 @@ js/adminlte.js
 js/app.js
 ```
 
-*(Subset rebuild script: `scripts/build-bootstrap-icons-subset.py` at repo root. Site overrides: `sites/default/example.settings.local.php`, `.env.example`.)*
+*(Subset rebuild: `scripts/build-bootstrap-icons-subset.py`. Views cache audit: `scripts/views-cache-audit.php`. Site overrides: `sites/default/example.settings.local.php`, `.env.example`.)*
 
 ---
 

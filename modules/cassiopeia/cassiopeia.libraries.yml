@@ -1,1 +1,12 @@
-
+bootstrap:
+  version: VERSION
+  js:
+    /libraries/bootstrap/dist/js/bootstrap.bundle.min.js:
+      weight: -20
+      attributes:
+        defer: true
+  css:
+    component:
+      /libraries/bootstrap/dist/css/bootstrap.min.css: { weight: -50 }
+  dependencies:
+    - core/jquery

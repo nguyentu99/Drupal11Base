@@ -22,7 +22,7 @@ libraries:
   - cassiopeia_admin_theme/overlayscrollbars
   - cassiopeia_admin_theme/global-styling
 
-# AdminLTE ships layout CSS; load vendor Bootstrap grid/reboot via cassiopeia_admin_theme/bootstrap.
+# Vendor Bootstrap CSS/JS via cassiopeia/bootstrap (shared with cassiopeia_theme).
 libraries-override:
   bootstrap/global-styling: false
   bootstrap/bootstrap-icons:

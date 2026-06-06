@@ -74,7 +74,7 @@ Or only `drush updb` if update `11005` is pending.
 ### Trusted host patterns
 
 1. Copy `sites/default/example.settings.local.php` → `sites/default/settings.local.php` (already created if you ran setup).
-2. At the **end** of `sites/default/settings.php`, uncomment:
+2. At the **end** of `sites/default/settings.php`, add (or run `php scripts/patch-settings-include.php`):
 
 ```php
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {

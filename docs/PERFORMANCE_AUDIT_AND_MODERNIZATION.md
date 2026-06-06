@@ -1245,11 +1245,11 @@ Security-critical; **minor** render stability
 - [x] **P-04** Fix `cassiopeia_image_style()` style loading
 - [x] **P-05** Pass account + avatar from preprocess
 - [x] **P-11** Fix Popper / use `core/popperjs`
-- [ ] Enable CSS/JS aggregation when needed — `sites/default/example.settings.local.php` or Performance UI
+- [x] **P-07** Shared Bootstrap library (`cassiopeia/bootstrap`)
+- [x] **P-12** Image style `style_200x200` via `cassiopeia_admin` install / `update_11006`
+- [ ] Enable CSS/JS aggregation on production (Performance UI or `settings.local.php`)
 - [x] **P-10** Trim empty theme preprocess stubs
 - [x] Views display cache audit — `drush php:script scripts/views-cache-audit.php`
-
-### Short term (Sprint 2)
 
 - [x] **P-03** Store resolved URL/route on menu item save (`url_meta` + `hook_update_11001`)
 - [x] **P-18** Remove `\| raw`; escape output (Twig auto-escape + `#type` link)

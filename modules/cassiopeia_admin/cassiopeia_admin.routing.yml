@@ -9,7 +9,7 @@ cassiopeia_admin.administrator:
 cassiopeia_admin.administrator_block:
   path: '/admin/cassiopeia/administrator/blocks'
   defaults:
-    _controller: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorBlocksController::content'
+    _controller: '\Drupal\cassiopeia_admin\Controller\CassiopeiaAdminAdministratorController::content'
     _title: 'Manager admin blocks'
   requirements:
     _permission: 'cassiopeia admin block manager'

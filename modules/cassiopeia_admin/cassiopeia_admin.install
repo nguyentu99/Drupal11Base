@@ -11,6 +11,31 @@ function cassiopeia_admin_install() {
   \Drupal::state()->set('admin_theme_path', implode("\n", $path));
   cassiopeia_admin_sync_admin_theme_paths();
   cassiopeia_admin_install_entity_types();
+  cassiopeia_admin_install_image_style();
+}
+
+/**
+ * Creates the avatar image style used by cassiopeia_admin_theme.
+ */
+function cassiopeia_admin_install_image_style(): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('image_style');
+  if ($storage->load('style_200x200')) {
+    return;
+  }
+  /** @var \Drupal\image\Entity\ImageStyle $style */
+  $style = $storage->create([
+    'name' => 'style_200x200',
+    'label' => '200x200',
+  ]);
+  $style->addImageEffect([
+    'id' => 'image_scale_and_crop',
+    'data' => [
+      'width' => 200,
+      'height' => 200,
+      'anchor' => 'center-center',
+    ],
+  ]);
+  $style->save();
 }
 
 /**
@@ -151,6 +176,13 @@ function cassiopeia_admin_update_11005(): void {
       $manager->installEntityType($entity_type_manager->getDefinition($entity_type_id));
     }
   }
+}
+
+/**
+ * Creates style_200x200 image style for admin avatars (P-12).
+ */
+function cassiopeia_admin_update_11006(): void {
+  cassiopeia_admin_install_image_style();
 }
 
 /**
