@@ -1,0 +1,77 @@
+{#
+/**
+ * @file
+ * Market research listing page (/nghien-cuu-thi-truong).
+ */
+#}
+<div class="page-hero">
+  <img class="page-hero__media" src="{{ market_page.hero_image }}" alt="{{ market_page.hero_image_alt }}">
+  <div class="page-hero__content">
+    <div class="container">
+      {% if market_page.breadcrumb %}
+        <nav class="page-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
+          <ol class="breadcrumb page-hero__breadcrumb">
+            {% for item in market_page.breadcrumb %}
+              {% if item.url %}
+                <li class="breadcrumb-item"><a href="{{ item.url }}">{{ item.label }}</a></li>
+              {% else %}
+                <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
+              {% endif %}
+            {% endfor %}
+          </ol>
+        </nav>
+      {% endif %}
+      <h1 class="page-hero__title">{{ market_page.title }}</h1>
+    </div>
+  </div>
+</div>
+
+<main class="market-page">
+  <div class="container">
+    <div class="market-page__search-block">
+      <h2 class="news-page__search-label">{{ 'Search'|t }}</h2>
+      <form class="news-page__search" action="{{ market_page.search_action }}" method="get" role="search">
+        <input type="search" name="q" value="{{ market_page.search_query }}" placeholder="{{ 'Search reports…'|t }}" aria-label="{{ 'Search reports'|t }}">
+        <button type="submit" class="news-page__search-btn" aria-label="{{ 'Search'|t }}">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        </button>
+      </form>
+    </div>
+
+    {% if market_page.items %}
+      <div class="row market-page__grid g-4">
+        {% for item in market_page.items %}
+          <div class="col-6 col-md-4">
+            <article class="news-card">
+              <a class="news-card__media" href="{{ item.url }}">
+                {% if item.image %}
+                  <img class="news-card__img" src="{{ item.image.url }}" alt="{{ item.image.alt }}"{% if item.image.width %} width="{{ item.image.width }}"{% endif %}{% if item.image.height %} height="{{ item.image.height }}"{% endif %}>
+                {% endif %}
+              </a>
+              <div class="news-card__body">
+                <h3 class="news-card__title"><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                {% if item.date %}
+                  <time class="news-card__date" datetime="{{ item.date_iso }}">{{ item.date }}</time>
+                {% endif %}
+              </div>
+            </article>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="news-page__empty">{{ market_page.empty_message }}</p>
+    {% endif %}
+
+    {% if market_page.pager %}
+      <nav class="news-page__pagination" aria-label="{{ 'Report pagination'|t }}">
+        <ul class="pagination">
+          {% for page_item in market_page.pager %}
+            <li class="page-item{% if page_item.active %} active{% endif %}"{% if page_item.active %} aria-current="page"{% endif %}>
+              <a class="page-link" href="{{ page_item.url }}">{{ page_item.number }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+</main>

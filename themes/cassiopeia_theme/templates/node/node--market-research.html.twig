@@ -1,0 +1,127 @@
+{#
+/**
+ * @file
+ * Market research detail page.
+ */
+#}
+{% if view_mode == 'full' and market_research %}
+  <div class="page-hero page-hero--banner-only">
+    <img class="page-hero__media" src="{{ market_research.hero_image }}" alt="{{ market_research.hero_image_alt }}">
+  </div>
+
+  <main class="market-article">
+    <div class="container">
+      <div class="row market-article__layout">
+        <div class="col-lg-9">
+          <div class="market-article__header">
+            {% if market_research.breadcrumb %}
+              <nav class="market-article__breadcrumb" aria-label="{{ 'Breadcrumb'|t }}">
+                {% for item in market_research.breadcrumb %}
+                  {% if item.url %}
+                    <a href="{{ item.url }}">{{ item.label }}</a>
+                  {% else %}
+                    <span aria-current="page">{{ item.label }}</span>
+                  {% endif %}
+                  {% if not loop.last %}
+                    <span class="market-article__breadcrumb-sep" aria-hidden="true"><i class="fa-solid fa-chevron-right"></i></span>
+                  {% endif %}
+                {% endfor %}
+              </nav>
+            {% endif %}
+            <h1 class="market-article__title">{{ market_research.title }}</h1>
+            {% if market_research.date %}
+              <div class="market-article__meta">
+                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                <time datetime="{{ market_research.date_iso }}">{{ market_research.date }}</time>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="market-article__content">
+            {{ market_research.body }}
+            <hr>
+            {% if market_research.share_url %}
+              <div class="d-flex align-items-center gap-3">
+                <span>{{ 'Share'|t }}:</span>
+                <div class="article-share" aria-label="{{ 'Share report'|t }}">
+                  <a class="article-share__link" href="https://www.facebook.com/sharer/sharer.php?u={{ market_research.share_url|url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="{{ 'Share on Facebook'|t }}">
+                    <i class="fa-brands fa-facebook-f" aria-hidden="true" style="color: #1877F2;"></i>
+                  </a>
+                  <a class="article-share__link" href="https://www.linkedin.com/sharing/share-offsite/?url={{ market_research.share_url|url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="{{ 'Share on LinkedIn'|t }}">
+                    <i class="fa-brands fa-linkedin-in" aria-hidden="true" style="color: #3872BE;"></i>
+                  </a>
+                  <a class="article-share__link" href="https://zalo.me/share?url={{ market_research.share_url|url_encode }}" target="_blank" rel="noopener noreferrer" style="color: #1877F2; font-weight: 600;">Zalo</a>
+                  <a class="article-share__link" href="{{ market_research.share_url }}" aria-label="{{ 'Copy link'|t }}">
+                    <i class="fa-solid fa-link" aria-hidden="true" style="color: #FFAD0F;"></i>
+                  </a>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if market_research.sidebar %}
+          <aside class="col-lg-3">
+            <div class="market-sidebar">
+              <h2 class="market-sidebar__title">{{ 'Featured news'|t }}</h2>
+              <div class="market-sidebar__list">
+                {% for item in market_research.sidebar %}
+                  <a class="market-sidebar__item" href="{{ item.url }}">
+                    <span class="market-sidebar__thumb">
+                      {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.image.alt }}">
+                      {% endif %}
+                    </span>
+                    <span class="market-sidebar__copy">
+                      {% if item.date %}
+                        <time class="market-sidebar__date" datetime="{{ item.date_iso }}">{{ item.date }}</time>
+                      {% endif %}
+                      <span class="market-sidebar__title-text">{{ item.title }}</span>
+                    </span>
+                  </a>
+                  {% if not loop.last %}
+                    <hr class="market-sidebar__rule">
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </aside>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+
+  {% if market_research.related %}
+    <div class="market-related">
+      <div class="container">
+        <h2 class="t-heading-1 market-related__title">{{ 'Related reports'|t }}</h2>
+        <div class="market-related__inner">
+          <div class="market-related-carousel owl-carousel">
+            {% for item in market_research.related %}
+              <article class="news-card">
+                <a class="news-card__media" href="{{ item.url }}">
+                  {% if item.image %}
+                    <img class="news-card__img" src="{{ item.image.url }}" alt="{{ item.image.alt }}"{% if item.image.width %} width="{{ item.image.width }}"{% endif %}{% if item.image.height %} height="{{ item.image.height }}"{% endif %}>
+                  {% endif %}
+                </a>
+                <div class="news-card__body">
+                  <h3 class="news-card__title"><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                  {% if item.date %}
+                    <time class="news-card__date" datetime="{{ item.date_iso }}">{{ item.date }}</time>
+                  {% endif %}
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+          <div class="market-related__dots">
+            {% for item in market_research.related %}
+              <button type="button"{% if loop.first %} class="is-active"{% endif %} aria-label="{{ 'Related report @num'|t({'@num': loop.index}) }}"></button>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% else %}
+  {{ content }}
+{% endif %}

@@ -1,0 +1,135 @@
+{#
+/**
+ * @file
+ * All-news listing page (/news).
+ */
+#}
+<div class="page-hero">
+  <img class="page-hero__media" src="{{ news_page.hero_image }}" alt="{{ news_page.hero_image_alt }}">
+  <div class="page-hero__content">
+    <div class="container">
+      {% if news_page.breadcrumb %}
+        <nav class="page-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
+          <ol class="breadcrumb page-hero__breadcrumb">
+            {% for item in news_page.breadcrumb %}
+              {% if item.url %}
+                <li class="breadcrumb-item"><a href="{{ item.url }}">{{ item.label }}</a></li>
+              {% else %}
+                <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
+              {% endif %}
+            {% endfor %}
+          </ol>
+        </nav>
+      {% endif %}
+      <h1 class="page-hero__title">{{ news_page.title }}</h1>
+    </div>
+  </div>
+</div>
+
+<main class="news-page">
+  <div class="container">
+    <div class="news-page__toolbar">
+      <div>
+        <h2 class="news-page__search-label">{{ 'Search'|t }}</h2>
+        <form class="news-page__search" action="{{ news_page.search_action }}" method="get" role="search">
+          <input type="search" name="q" value="{{ news_page.search_query }}" placeholder="{{ 'Search news…'|t }}" aria-label="{{ 'Search news'|t }}">
+          <button type="submit" class="news-page__search-btn" aria-label="{{ 'Search'|t }}">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          </button>
+        </form>
+      </div>
+      {% if news_page.filters %}
+        <div class="news-page__filters" role="tablist" aria-label="{{ 'Filter news'|t }}">
+          {% for filter in news_page.filters %}
+            {% if filter.active %}
+              <span class="news-page__filter is-active" role="tab" aria-selected="true">{{ filter.label }}</span>
+            {% else %}
+              <a class="news-page__filter" href="{{ filter.url }}" role="tab" aria-selected="false">{{ filter.label }}</a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% if news_page.featured %}
+      <div class="news-page__featured">
+        <div class="row news-page__featured-grid g-4">
+          {% for item in news_page.featured %}
+            <div class="col-12 col-lg-4">
+              <article class="news-card">
+                <a class="news-card__media" href="{{ item.url }}">
+                  {% if item.image %}
+                    <img class="news-card__img" src="{{ item.image.url }}" alt="{{ item.image.alt }}"{% if item.image.width %} width="{{ item.image.width }}"{% endif %}{% if item.image.height %} height="{{ item.image.height }}"{% endif %}>
+                  {% endif %}
+                </a>
+                <div class="news-card__body">
+                  {% if item.category %}
+                    <span class="news-card__cat">{{ item.category }}</span>
+                  {% endif %}
+                  <h3 class="news-card__title"><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                  {% if item.date %}
+                    <time class="news-card__date" datetime="{{ item.date_iso }}">{{ item.date }}</time>
+                  {% endif %}
+                </div>
+              </article>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if news_page.list_columns[0] or news_page.list_columns[1] %}
+      <hr class="news-page__divider">
+      <div class="row news-page__list">
+        {% for column in news_page.list_columns %}
+          {% if column %}
+            <div class="col-lg-6 news-page__list-col">
+              {% for item in column %}
+                <article class="news-list-item">
+                  <h2 class="news-list-item__title"><a href="{{ item.url }}">{{ item.title }}</a></h2>
+                  <div class="news-list-item__body">
+                    <a class="news-list-item__media" href="{{ item.url }}">
+                      {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.image.alt }}">
+                      {% endif %}
+                    </a>
+                    <div class="news-list-item__content">
+                      {% if item.excerpt %}
+                        <p class="news-list-item__excerpt">{{ item.excerpt }}</p>
+                      {% endif %}
+                      <div class="news-list-item__meta">
+                        {% if item.category %}
+                          <span class="news-card__cat">{{ item.category }}</span>
+                        {% endif %}
+                        {% if item.date %}
+                          <time class="news-list-item__date" datetime="{{ item.date_iso }}">{{ item.date }}</time>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </article>
+                {% if not loop.last %}
+                  <hr class="news-list-item__rule">
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% elseif not news_page.has_results %}
+      <p class="news-page__empty">{{ news_page.empty_message }}</p>
+    {% endif %}
+
+    {% if news_page.pager %}
+      <nav class="news-page__pagination" aria-label="{{ 'News pagination'|t }}">
+        <ul class="pagination">
+          {% for page_item in news_page.pager %}
+            <li class="page-item{% if page_item.active %} active{% endif %}"{% if page_item.active %} aria-current="page"{% endif %}>
+              <a class="page-link" href="{{ page_item.url }}">{{ page_item.number }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+</main>
