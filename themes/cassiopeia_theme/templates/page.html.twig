@@ -1,34 +1,18 @@
-
-
-<div id="page-wrapper">
-  <div id="page-wrapper-container">
-
-    {{ include('@cassiopeia_theme/templates/header.html.twig') }}
-
-    <div id="breadcrumb-wrapper" class="breadcrumb-wrapper clearfix">
-      <div class="breadcrumb-wrapper-container">
-        <div id="breadcrumb" class="breadcrumb">
-          <div class="breadcrumb-container">
-            {{ page.breadcrumb }}
-          </div>
-        </div>
-      </div>
+{{ include('@cassiopeia_theme/templates/header.html.twig') }}
+<div class="site-status-messages">{{ page.status_messages }}</div>
+<main id="main-content" class="site-main">
+  {% if page.breadcrumb %}
+    <div class="container py-3">
+      {{ page.breadcrumb }}
     </div>
-
-    <div id="main-wrapper" class="main-wrapper clearfix">
-      <div class="main-wrapper-container">
-        <div id="main" class="{{ container }}">
-          <div class="main-container">
-            {{ page.content }}
-          </div>
-        </div>
-      </div>
+  {% endif %}
+  {% if page.highlighted %}
+    <div class="container">
+      {{ page.highlighted }}
     </div>
-
-    {{ include('@cassiopeia_theme/templates/footer.html.twig') }}
-
+  {% endif %}
+  <div class="container py-4">
+    {{ page.content }}
   </div>
-</div>
-
-
-
+</main>
+{{ include('@cassiopeia_theme/templates/footer.html.twig') }}

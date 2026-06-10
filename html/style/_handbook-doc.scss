@@ -1,0 +1,165 @@
+// ——— Chi tiết tài liệu cẩm nang ———
+
+.handbook-doc {
+    padding: 64px 0 112px;
+
+    &__header {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 40px;
+    }
+
+    &__title {
+        margin: 0;
+        text-transform: uppercase;
+    }
+
+    &__accent {
+        background: $red;
+        height: 4px;
+        width: 120px;
+    }
+
+    &__layout {
+        --bs-gutter-x: 30px;
+        align-items: flex-start;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+
+        h2 {
+            @include Mona-SemiBold();
+            font-size: 24px;
+            line-height: 32px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        h3 {
+            @include Mona-Medium();
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 28px;
+            margin: 0;
+        }
+
+        p,
+        li {
+            @include Mona-Regular();
+            font-size: 16px;
+            line-height: 24px;
+            margin: 0;
+        }
+
+        ol,
+        ul {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 0;
+            padding-left: 24px;
+        }
+
+        ol li {
+            @include Mona-Medium();
+        }
+
+        figure {
+            margin: 0;
+            width: 100%;
+
+            img {
+                display: block;
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+
+        > div {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+    }
+
+    &__sidebar {
+        @media (min-width: 992px) {
+            border-left: 1px solid #d8d8d8;
+            padding-left: 30px;
+        }
+    }
+
+    &__nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+    }
+
+    &__nav-link {
+        @include Mona-Medium();
+        border-bottom: 1px solid #d8d8d8;
+        color: #02291c;
+        display: block;
+        font-size: 16px;
+        line-height: 24px;
+        padding: 16px 12px;
+        text-decoration: none;
+        transition: background 0.2s, color 0.2s;
+
+        &:hover {
+            color: $green;
+        }
+
+        &.is-active {
+            background: #e6f4ed;
+            border-bottom-color: transparent;
+            color: $green;
+        }
+
+        &--download {
+            align-items: center;
+            border-bottom: 0;
+            color: #05583c;
+            display: flex;
+            gap: 8px;
+
+            i {
+                font-size: 20px;
+            }
+        }
+    }
+}
+
+.handbook-doc__cta-wrap {
+    margin-bottom: 64px;
+    padding-top: 0;
+}
+
+.handbook-related {
+    background: #f5f5f7;
+    padding: 64px 0;
+
+    &__title {
+        margin: 0 0 40px;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    &__grid {
+        --bs-gutter-x: 30px;
+
+        .doc-card__label {
+            background: #fff;
+        }
+    }
+}
+
+.handbook-doc__sidebar{
+    position: sticky;
+    top: 150px;
+}

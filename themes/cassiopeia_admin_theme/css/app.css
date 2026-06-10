@@ -1,67 +1,88 @@
 .ui-widget-overlay {
-  z-index: 1259;
+    z-index: 1259;
 }
 
 .ui-dialog {
-  z-index: 1260;
+    z-index: 1260;
 }
+
 .js td .dropbutton-multiple .dropbutton-widget {
-  border-radius: 0.375rem;
+    border-radius: 0.375rem;
 }
+
 .js .dropbutton-multiple .dropbutton-widget .dropbutton-action a {
-  text-decoration: none;
+    text-decoration: none;
 }
+
 .views-display-top {
-  display: flex;
+    display: flex;
 }
+
 .views-display-top .dropbutton-wrapper {
-  position: absolute;
+    position: absolute;
 }
+
 .js .views-edit-view .dropbutton-wrapper .dropbutton .dropbutton-action > * {
-  font-size: 12px;
-  text-decoration: none;
+    font-size: 12px;
+    text-decoration: none;
 }
+
 .js .views-edit-view .dropbutton-wrapper.dropbutton-multiple .dropbutton .dropbutton-action > * {
-  padding-left: 12px;
+    padding-left: 12px;
 }
 
 .views-ui-display-tab-bucket .dropbutton-wrapper {
-  position: absolute !important;
-  top: 4px;
-  right: 5px;
+    position: absolute !important;
+    top: 4px;
+    right: 5px;
 }
+
 .views-displays .tabs .action-list input.form-submit {
-  color: inherit;
+    color: inherit;
 }
+
 #views-display-menu-tabs {
-  list-style: none;
+    list-style: none;
 }
+
 small .admin-link::before {
-  content: "";
+    content: "";
 }
 
 small .admin-link::after {
-  content: "";
+    content: "";
 }
 
-.input-group-text button.link{
-  margin-left: 5px;
+.input-group-text button.link {
+    margin-left: 5px;
 }
 
 .app-page-highlighted {
-  position: relative;
-  min-height: 41px;
+    position: relative;
+    min-height: 41px;
 }
-.app-page-highlighted .block-local-actions-block{
-  position: absolute;
-  right: -5px;
-  top: -2px;
+
+.app-page-highlighted .block-local-actions-block {
+    position: absolute;
+    right: -5px;
+    top: -2px;
 }
 
 .app-page-content .block-page-title-block {
-  display: none;
+    display: none;
 }
 
 .app-content .description {
-  display: none;
+    display: none;
+}
+
+a, a:hover, a:focus {
+    text-decoration: none !important;
+}
+
+.placeholder {
+    display: inline-block;
+    vertical-align: unset;
+    background-color: transparent;
+    opacity: unset;
 }

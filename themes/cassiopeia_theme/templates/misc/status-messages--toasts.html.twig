@@ -1,0 +1,48 @@
+{#
+/**
+ * @file
+ * Status messages as Bootstrap toasts (same as cassiopeia_admin_theme).
+ */
+#}
+{{ attach_library('cassiopeia_theme/toast-messages') }}
+
+<div class="toast-container position-fixed top-0 end-0 p-3 app-toast-container" aria-live="polite" aria-atomic="true" data-drupal-messages-toast-container>
+  {% for type, messages in message_list %}
+    {%
+      set toast_class = {
+        'status': 'toast-success',
+        'error': 'toast-danger',
+        'warning': 'toast-warning',
+        'info': 'toast-info',
+      }
+    %}
+    {%
+      set role = {
+        'status': 'status',
+        'warning': 'alert',
+        'error': 'alert',
+        'info': 'status',
+      }
+    %}
+    {%
+      set autohide = {
+        'status': 'true',
+        'warning': 'true',
+        'error': 'false',
+        'info': 'true',
+      }
+    %}
+    {% for message in messages %}
+      <div {{ attributes|without('role', 'aria-label').addClass(['toast', 'fade', toast_class[type]|default('toast-info')]).setAttribute('role', role[type]|default('status')).setAttribute('data-bs-autohide', autohide[type]|default('true')).setAttribute('data-bs-delay', toast_delay) }} aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <strong class="me-auto">{{ status_headings[type] }}</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="{{ 'Close'|t }}"></button>
+        </div>
+        <div class="toast-body">
+          {{ message }}
+        </div>
+      </div>
+    {% endfor %}
+  {% endfor %}
+  <div class="toast-message-queue" data-drupal-messages></div>
+</div>

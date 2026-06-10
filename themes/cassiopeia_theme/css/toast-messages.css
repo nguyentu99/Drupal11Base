@@ -1,0 +1,70 @@
+/**
+ * @file
+ * Toast notifications — aligned with cassiopeia_admin_theme.
+ */
+
+.app-toast-container {
+  z-index: 1090;
+  max-width: min(24rem, calc(100vw - 1.5rem));
+  pointer-events: none;
+}
+
+.app-toast-container .toast {
+  pointer-events: auto;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.site-status-messages {
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.site-status-messages .app-toast-container {
+  position: fixed;
+}
+
+.toast-message-queue {
+  display: contents;
+}
+
+.toast-success {
+  --bs-toast-header-color: #fff;
+  --bs-toast-header-bg: #198754;
+  --bs-toast-header-border-color: #198754;
+  --bs-toast-border-color: #198754;
+  --bs-toast-bg: var(--bs-success-bg-subtle, #d1e7dd);
+}
+
+.toast-success .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.toast-info {
+  --bs-toast-header-color: #000;
+  --bs-toast-header-bg: #0dcaf0;
+  --bs-toast-header-border-color: #0dcaf0;
+  --bs-toast-border-color: #0dcaf0;
+  --bs-toast-bg: var(--bs-info-bg-subtle, #cff4fc);
+}
+
+.toast-warning {
+  --bs-toast-header-color: #000;
+  --bs-toast-header-bg: #ffc107;
+  --bs-toast-header-border-color: #ffc107;
+  --bs-toast-border-color: #ffc107;
+  --bs-toast-bg: var(--bs-warning-bg-subtle, #fff3cd);
+}
+
+.toast-danger {
+  --bs-toast-header-color: #fff;
+  --bs-toast-header-bg: #dc3545;
+  --bs-toast-header-border-color: #dc3545;
+  --bs-toast-border-color: #dc3545;
+  --bs-toast-bg: var(--bs-danger-bg-subtle, #f8d7da);
+}
+
+.toast-danger .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}

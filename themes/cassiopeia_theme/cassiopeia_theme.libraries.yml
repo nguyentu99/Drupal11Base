@@ -1,9 +1,67 @@
-global-styling:
-  version: VERSION
+jquery37:
+  version: 3.7.1
   js:
-    js/app.js: {}
+    https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js:
+      type: external
+      weight: -20
+      preprocess: false
+      minified: true
+
+owl-carousel:
+  version: 2.3.4
   css:
     component:
-      css/app.css: { weight: 99 }
+      https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css: { type: external }
+      https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css: { type: external }
+  js:
+    https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js: { type: external }
+  dependencies:
+    - core/jquery
+
+fontawesome:
+  version: 6.5.1
+  css:
+    component:
+      https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css: { type: external }
+
+site-style:
+  version: VERSION
+  css:
+    component:
+      css/style.css: { weight: 0 }
+      css/fonts.css: { weight: 1 }
+  dependencies:
+    - cassiopeia_theme/fontawesome
+
+site-scripts:
+  version: VERSION
+  js:
+    js/main.js:
+      attributes:
+        defer: true
+  dependencies:
+    - cassiopeia_theme/owl-carousel
+    - cassiopeia/bootstrap
+
+toast-messages:
+  version: VERSION
+  css:
+    component:
+      css/toast-messages.css: {}
+  js:
+    js/toast-messages.js:
+      attributes:
+        defer: true
+  dependencies:
+    - core/drupal
+    - core/drupal.message
+    - core/once
+    - cassiopeia/bootstrap
+
+global-styling:
+  version: VERSION
   dependencies:
     - cassiopeia/bootstrap
+    - cassiopeia_theme/site-style
+    - cassiopeia_theme/site-scripts
+    - cassiopeia_theme/toast-messages

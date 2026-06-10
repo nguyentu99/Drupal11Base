@@ -1,0 +1,840 @@
+{#
+/** Homepage section from html/index.html */
+#}
+<div class="hero">
+        <img width="1920" height="880" class="hero__media" src="{{ directory }}/images/banner.jpg" alt="Khu công nghiệp Green Park IP">
+        <div class="hero__curve"></div>
+    </div>
+
+    <div class="section about-stats">
+        <div class="container">
+            <div class="row g-4 g-lg-5 align-items-start">
+                <div class="col-lg-7">
+                    <h2 class="t-heading-1 mb-4">Nhà phát triển công nghiệp hàng đầu với các
+                        giải pháp toàn diện</h2>
+                    <p class="t-body text-justify mb-4 mb-lg-5">
+                        <strong class="t-subtitle">CNCIndustrial</strong> tập trung phát triển và khai thác hạ tầng
+                        khu công nghiệp theo định hướng xanh – thông minh – bền vững, cung cấp hệ sinh thái công
+                        nghiệp đồng bộ cho nhà đầu tư trong và ngoài nước
+                    </p>
+                    <div class="row g-3 g-md-4">
+                        <div class="col-md-4 col-6">
+                            <div class="stat-card">
+                                <div class="stat-card__value"><span class="stat-card__num"
+                                        data-count="600">0</span><span>+</span></div>
+                                <p class="stat-card__label">Tổng mức đầu tư<br>(triệu USD)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-6">
+                            <div class="stat-card">
+                                <div class="stat-card__value"><span class="stat-card__num"
+                                        data-count="650">0</span><span>+</span></div>
+                                <p class="stat-card__label">Hecta quỹ đất công nghiệp đang ĐT & PT</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-6">
+                            <div class="stat-card">
+                                <div class="stat-card__value"><span class="stat-card__num"
+                                        data-count="80">0</span><span>+</span></div>
+                                <p class="stat-card__label">Tổng diện tích nhà xưởng kho lấp đầy (Ha)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-6">
+                            <div class="stat-card">
+                                <div class="stat-card__value"><span class="stat-card__num"
+                                        data-count="95">0</span><span>%</span></div>
+                                <p class="stat-card__label">Tỉ lệ lấp đầy trên diện tích xây dựng (%)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-6">
+                            <div class="stat-card">
+                                <div class="stat-card__value"><span class="stat-card__num"
+                                        data-count="498">0</span><span>+</span></div>
+                                <p class="stat-card__label">Thu hút đầu tư luỹ kế (triệu USD)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-6">
+                            <div class="stat-card">
+                                <div class="stat-card__value"><span class="stat-card__num"
+                                        data-count="63">0</span><span>+</span></div>
+                                <p class="stat-card__label">Số lượng khách hàng</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 about-stats__map">
+                    <div class="vn-map">
+                        <img width="516" height="620" class="vn-map__base" src="{{ directory }}/images/cnc-map.png"
+                            alt="Bản đồ các dự án CNC Industrial tại Việt Nam">
+                        <div class="vn-map__spot vn-map__spot--phu-tho">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 95 32"
+                                fill="none">
+                                <path d="M93.75 30.75L55.5446 0.75H0.75" stroke="#8CB6A8" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <span class="vn-map__pin"><img width="16" height="20" src="{{ directory }}/images/svg/location.svg"
+                                    alt=""></span>
+                            <span class="vn-map__label vn-map__label--accent">
+                                <span class="vn-map__label-name">Phú Thọ</span><span class="vn-map__label-sep">:</span>
+                                <span class="vn-map__label-value">500 ha</span>
+                            </span>
+                        </div>
+                        <div class="vn-map__spot vn-map__spot--ha-noi">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 90 37"
+                                fill="none">
+                                <path d="M88.75 0.75L55.25 36.25H0.75" stroke="#8CB6A8" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <span class="vn-map__pin"><img width="16" height="20" src="{{ directory }}/images/svg/location.svg"
+                                    alt=""></span>
+                            <span class="vn-map__label">
+                                <span class="vn-map__label-name">Hà Nội</span><span class="vn-map__label-sep">:</span>
+                                <span class="vn-map__label-value">6.5 ha</span>
+                            </span>
+                        </div>
+                        <div class="vn-map__spot vn-map__spot--bac-ninh">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 74 60"
+                                fill="none">
+                                <path d="M0.750245 58.75L30.3286 0.750001H72.7502" stroke="#8CB6A8" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <span class="vn-map__pin"><img width="16" height="20" src="{{ directory }}/images/svg/location.svg"
+                                    alt=""></span>
+                            <span class="vn-map__label vn-map__label--accent">
+                                <span class="vn-map__label-name">Bắc Ninh</span><span class="vn-map__label-sep">:</span>
+                                <span class="vn-map__label-value">68.1 ha</span>
+                            </span>
+                        </div>
+                        <div class="vn-map__spot vn-map__spot--hung-yen">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 83 25"
+                                fill="none">
+                                <path d="M0.75 23.75L34.0257 0.75H81.75" stroke="#8CB6A8" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <span class="vn-map__pin"><img width="16" height="20" src="{{ directory }}/images/svg/location.svg"
+                                    alt=""></span>
+                            <span class="vn-map__label vn-map__label--accent">
+                                <span class="vn-map__label-name">Hưng Yên</span><span class="vn-map__label-sep">:</span>
+                                <span class="vn-map__label-value">10 ha</span>
+                            </span>
+                        </div>
+                        <div class="vn-map__spot vn-map__spot--ninh-binh">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 83 55"
+                                fill="none">
+                                <path d="M0.75 0.750122L34.0257 53.7501H81.75" stroke="#8CB6A8" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <span class="vn-map__pin"><img width="16" height="20" src="{{ directory }}/images/svg/location.svg"
+                                    alt=""></span>
+                            <span class="vn-map__label vn-map__label--accent">
+                                <span class="vn-map__label-name">Ninh Bình</span><span
+                                    class="vn-map__label-sep">:</span>
+                                <span class="vn-map__label-value">4.6 ha</span>
+                            </span>
+                        </div>
+                        <div class="vn-map__spot vn-map__spot--quang-ngai">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 88 32"
+                                fill="none">
+                                <path d="M86.75 30.75L51.4203 0.75H0.75" stroke="#8CB6A8" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <span class="vn-map__pin"><img width="16" height="20" src="{{ directory }}/images/svg/location.svg"
+                                    alt=""></span>
+                            <span class="vn-map__label">
+                                <span class="vn-map__label-name">Quảng Ngãi</span><span
+                                    class="vn-map__label-sep">:</span>
+                                <span class="vn-map__label-value">1.9 ha</span>
+                            </span>
+                        </div>
+                        <div class="vn-map__spot vn-map__spot--da-nang">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 87 18"
+                                fill="none">
+                                <path d="M0.750245 0.750122L35.6692 16.7501H85.7502" stroke="#8CB6A8" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <span class="vn-map__pin"><img width="16" height="20" src="{{ directory }}/images/svg/location.svg"
+                                    alt=""></span>
+                            <span class="vn-map__label">
+                                <span class="vn-map__label-name">Đà Nẵng</span><span class="vn-map__label-sep">:</span>
+                                <span class="vn-map__label-value">1 ha</span>
+                            </span>
+                        </div>
+                        <div class="vn-map__spot vn-map__spot--hcm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 70 40"
+                                fill="none">
+                                <path d="M68.75 38.75L40.8149 0.75H0.75" stroke="#8CB6A8" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <span class="vn-map__pin"><img width="16" height="20" src="{{ directory }}/images/svg/location.svg"
+                                    alt=""></span>
+                            <span class="vn-map__label">
+                                <span class="vn-map__label-name">TP. Hồ Chí Minh</span><span
+                                    class="vn-map__label-sep">:</span>
+                                <span class="vn-map__label-value">5.2 ha</span>
+                            </span>
+                        </div>
+                        <span class="vn-map__island-label vn-map__island-label--hoang-sa">Quần Đảo<br>Hoàng Sa</span>
+                        <span class="vn-map__island-label vn-map__island-label--truong-sa">Quần Đảo<br>Trường Sa</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section section--gray section--services" id="dich-vu">
+        <div class="container">
+            <div class="section__head section__head--split">
+                <h2 class="t-heading-1">Dịch vụ CNCIndustrial</h2>
+                <p class="t-body">CNCIndustrial tập trung phát triển và đồng hành cùng doanh nghiệp từ giai đoạn
+                    chuẩn bị hạ tầng, xây dựng, vận hành đến tối ưu hoạt động sản xuất lâu dài. Với 8 giải pháp
+                    dịch vụ chủ lực giúp các doanh nghiệp phát triển mạnh tại Việt Nam.</p>
+            </div>
+        </div>
+        <div class="services-showcase">
+            <div class="services-showcase__slide" data-default-bg="{{ directory }}/images/services-bg.jpg">
+                <div class="services-showcase__bgs">
+                    <img width="1920" height="768" class="services-showcase__bg is-visible" src="{{ directory }}/images/services-bg.jpg"
+                        alt="">
+                    <img width="1920" height="768" class="services-showcase__bg" alt="">
+                </div>
+                <div class="services-showcase__labels">
+                    <article class="services-showcase__label" tabindex="0" data-bg="images/services-bg.jpg">
+                        <h3 class="services-showcase__label-title">Giải pháp hạ tầng khu<br>công nghiệp</h3>
+                        <div class="services-showcase__label-body">
+                            <p class="services-showcase__label-desc">Cung cấp giải pháp tổng thể từ quy hoạch, san nền,
+                                giao thông, cấp điện – cấp nước, thoát nước – xử lý nước thải, viễn thông, cây xanh đến
+                                hạ tầng môi trường. Mục tiêu là tạo quỹ “đất sạch” với hạ tầng đồng bộ, sẵn sàng bàn
+                                giao cho nhà đầu tư thứ cấp và nhà máy vào hoạt động. </p>
+                            <span class="services-showcase__label-rule"></span>
+                            <a class="btn-see-more" href="{{ base_path }}giai-phap-ha-tang-kcn">xem thêm<span
+                                    class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
+                        </div>
+                    </article>
+                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-2.jpg">
+                        <h3 class="services-showcase__label-title">Thiết kế và xây dựng công trình<br>công nghiệp</h3>
+                        <div class="services-showcase__label-body">
+                            <p class="services-showcase__label-desc">Thực hiện thiết kế cơ sở, thiết kế kỹ thuật – bản
+                                vẽ thi công và thi công trọn gói nhà xưởng, kho bãi, công trình phụ trợ và khối văn
+                                phòng trong khu công nghiệp. Đảm bảo công trình đạt tiêu chuẩn kỹ thuật, tối ưu chi phí
+                                đầu tư, phù hợp dây chuyền sản xuất và quy hoạch tổng thể hạ tầng. </p>
+                            <span class="services-showcase__label-rule"></span>
+                            <a class="btn-see-more" href="{{ base_path }}thiet-ke-xay-dung-cong-trinh-cong-nghiep">xem thêm<span
+                                    class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
+                        </div>
+                    </article>
+                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-3.jpg">
+                        <h3 class="services-showcase__label-title">Thiết lập hệ thống kỹ thuật và nội thất nhà xưởng
+                        </h3>
+                        <div class="services-showcase__label-body">
+                            <p class="services-showcase__label-desc">Cung cấp dịch vụ cải tạo, mở rộng, nâng cấp nhà
+                                xưởng và thiết lập hệ thống kỹ thuật và nội thất khu văn phòng, khu phụ trợ trong nhà
+                                máy theo nhu cầu sản xuất cụ thể của từng khách hàng. Tối ưu công năng, dòng di chuyển,
+                                môi trường làm việc (ánh sáng, thông gió, cách nhiệt, tiếng ồn) và giảm chi phí vận
+                                hành. </p>
+                            <span class="services-showcase__label-rule"></span>
+                            <a class="btn-see-more" href="{{ base_path }}thiet-lap-he-thong-ky-thuat-noi-that-nha-xuong">xem
+                                thêm<span class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
+                        </div>
+                    </article>
+                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-4.jpg">
+                        <h3 class="services-showcase__label-title">Thiết kế thi công giải pháp phòng cháy công nghiệp
+                        </h3>
+                        <div class="services-showcase__label-body">
+                            <p class="services-showcase__label-desc">Tư vấn giải pháp, thiết kế, thẩm duyệt và thi công
+                                các hệ thống Phòng cháy chữa cháy (PCCC) cho nhà xưởng và hạ tầng khu công nghiệp theo
+                                quy định pháp luật. Đồng thời cung cấp dịch vụ nghiệm thu, huấn luyện, bảo trì để đảm
+                                bảo an toàn cháy nổ trong suốt quá trình vận hành. </p>
+                            <span class="services-showcase__label-rule"></span>
+                            <a class="btn-see-more" href="{{ base_path }}thiet-ke-thi-cong-giai-phap-phong-chay-cong-nghiep">xem
+                                thêm<span class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
+                        </div>
+                    </article>
+                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-1-1.jpg">
+                        <h3 class="services-showcase__label-title">Khai thác và xúc tiến đầu tư<br>khu công nghiệp</h3>
+                        <div class="services-showcase__label-body">
+                            <p class="services-showcase__label-desc">Dịch vụ chiến lược đầu tư khu công nghiệp giúp Chủ đầu tư tối ưu hoạt động xúc tiến đầu tư, từ nghiên cứu thị trường, phát triển khách hàng đến marketing và kết nối nhà đầu tư quốc tế. Mục tiêu là tăng tỷ lệ lấp đầy, thu hút FDI chất lượng cao, tối đa hóa giá trị tài sản và nâng cao năng lực cạnh tranh của khu công nghiệp.</p>
+                            <span class="services-showcase__label-rule"></span>
+                            <a class="btn-see-more" href="{{ base_path }}khai-thac-va-xuc-tien-dau-tu-kcn">xem thêm<span
+                                    class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
+                        </div>
+                    </article>
+                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-2-2.jpg">
+                        <h3 class="services-showcase__label-title">Quản lý, vận hành<br>khu công nghiệp</h3>
+                        <div class="services-showcase__label-body">
+                            <p class="services-showcase__label-desc">
+                                Vận hành đồng bộ hệ thống hạ tầng kỹ thuật (điện, nước, xử lý nước thải, PCCC, an ninh, cảnh quan, vệ sinh) và dịch vụ hỗ trợ nhà đầu tư. Hướng đến mô hình quản lý chuyên nghiệp, minh bạch, nâng cao chất lượng dịch vụ và sức hấp dẫn của khu công nghiệp.
+                            </p>
+                            <span class="services-showcase__label-rule"></span>
+                            <a class="btn-see-more" href="{{ base_path }}quan-ly-van-hanh-kcn">xem thêm<span
+                                    class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
+                        </div>
+                    </article>
+                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-3-3.jpg">
+                        <h3 class="services-showcase__label-title">Tư vấn pháp lý <br> đầu tư</h3>
+                        <div class="services-showcase__label-body">
+                            <p class="services-showcase__label-desc">Đồng hành pháp lý cho chủ đầu tư hạ tầng và nhà đầu tư trong suốt vòng đời dự án: từ chủ trương đầu tư, đất đai, xây dựng, môi trường, PCCC, giấy chứng nhận đầu tư, đăng ký kinh doanh, vận hành và mọi giấy phép hoạt động... Giúp rút ngắn thời gian thủ tục, giảm rủi ro pháp lý và đảm bảo tuân thủ đầy đủ quy định của pháp luật. </p>
+                            <span class="services-showcase__label-rule"></span>
+                            <a class="btn-see-more" href="{{ base_path }}tu-van-phap-ly-dau-tu">xem thêm<span
+                                    class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
+                        </div>
+                    </article>
+                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-4-4.jpg">
+                        <h3 class="services-showcase__label-title">Tiện ích nhà ở, <br> văn phòng</h3>
+                        <div class="services-showcase__label-body">
+                            <p class="services-showcase__label-desc">
+                                Phát triển và vận hành hệ thống nhà ở công nhân, nhà ở chuyên gia, căn hộ dịch vụ và văn phòng cho thuê gắn với khu công nghiệp. Tạo hệ sinh thái dịch vụ – tiện ích đồng bộ (nhà ở, làm việc, thương mại – dịch vụ) nhằm nâng cao chất lượng sống và giữ chân nguồn nhân lực.
+                            </p>
+                            <span class="services-showcase__label-rule"></span>
+                            <a class="btn-see-more" href="{{ base_path }}tien-ich-nha-o-van-phong">xem thêm<span
+                                    class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="services-showcase__nav">
+                <button type="button" class="services-showcase__nav-btn services-showcase__nav-btn--prev is-disabled"
+                    aria-label="Dịch vụ trước">
+                    <img width="48" height="48" src="{{ directory }}/images/svg/services-arrow-left.svg" alt="">
+                </button>
+                <button type="button" class="services-showcase__nav-btn services-showcase__nav-btn--next"
+                    aria-label="Dịch vụ tiếp theo">
+                    <img width="48" height="48" src="{{ directory }}/images/svg/services-arrow-left.svg" alt="">
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="container">
+            <div class="section__head section__head--split">
+                <h2 class="t-heading-1">Các dự án công nghiệp<br class="d-none d-md-inline">
+                    nổi bật</h2>
+                <p class="t-body">CNCIndustrial đã đầu tư đáng kể vào bảy tỉnh thành trên khắp Việt Nam. Trong số
+                    đó, Phú Thọ (mới) nổi bật là trọng tâm, với 650 ha quỹ đất đã mua lại cho đến nay.</p>
+            </div>
+        </div>
+        <article class="project-featured">
+            <img width="1920" height="596" class="project-featured__img" src="{{ directory }}/images/du-an-banner.jpg"
+                alt="Khu công nghiệp Nam Bình Xuyên Green Park">
+            <div class="project-featured__panel">
+                <div class="project-featured__info">
+                    <h3 class="project-featured__title">Khu công nghiệp Nam Bình Xuyên<br>Green Park</h3>
+                    <p class="project-featured__loc">
+                        <img width="20" height="20" class="project-featured__loc-icon"
+                            src="{{ directory }}/images/svg/location-white.svg" alt="">
+                        KCN Nam Bình Xuyên, Xuân Lãng, Phú Thọ
+                    </p>
+                </div>
+                <a class="btn-see-more" href="{{ base_path }}kcn-nam-binh-xuyen-green-park">xem thêm<span
+                        class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
+            </div>
+        </article>
+        <div class="container">
+            <div class="project-carousel owl-carousel">
+                <article class="project-card">
+                    <a class="project-card__link" href="{{ base_path }}kcn-nam-binh-xuyen-green-park">
+                        <img width="420" height="293" class="project-card__img" src="{{ directory }}/images/du-an-banner.jpg"
+                            alt="KCN Nam Bình Xuyên Green Park">
+                        <div class="project-card__body">
+                            <h3 class="project-card__title">KCN Nam Bình Xuyên Green Park</h3>
+                            <p class="project-card__loc">
+                                <img width="20" height="20" src="{{ directory }}/images/svg/location-green.svg" alt="">
+                                KCN Nam Bình Xuyên, Xuân Lãng, Phú Thọ
+                            </p>
+                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
+                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
+                                        class="fa-solid fa-arrow-right"></i></span></span>
+                        </div>
+                    </a>
+                </article>
+                <article class="project-card">
+                    <a class="project-card__link" href="{{ base_path }}cnctech-ba-thien-1">
+                        <img width="420" height="293" class="project-card__img"
+                            src="{{ directory }}/images/projects/ba-thien/gallery-1.jpg" alt="CNCTech Bá Thiện 1">
+                        <div class="project-card__body">
+                            <h3 class="project-card__title">CNCTech Bá Thiện 1</h3>
+                            <p class="project-card__loc">
+                                <img width="20" height="20" src="{{ directory }}/images/svg/location-green.svg" alt="">
+                                Khu công nghiệp Bá Thiện - Phân khu I, Bình Xuyên, Phú Thọ
+                            </p>
+                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
+                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
+                                        class="fa-solid fa-arrow-right"></i></span></span>
+                        </div>
+                    </a>
+                </article>
+                <article class="project-card">
+                    <a class="project-card__link" href="{{ base_path }}tt-logistics-bac-giang">
+                        <img width="420" height="293" class="project-card__img" src="{{ directory }}/images/banner-bac-gian.jpg"
+                            alt="TT Logistics quốc tế Bắc Giang">
+                        <div class="project-card__body">
+                            <h3 class="project-card__title">TT Logistics quốc tế Bắc Giang</h3>
+                            <p class="project-card__loc">
+                                <img width="20" height="20" src="{{ directory }}/images/svg/location-green.svg" alt="">
+                                Quốc lộ 1A – Phường Tiền Phong – Tỉnh Bắc Ninh – Việt Nam
+                            </p>
+                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
+                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
+                                        class="fa-solid fa-arrow-right"></i></span></span>
+                        </div>
+                    </a>
+                </article>
+                <article class="project-card">
+                    <a class="project-card__link" href="{{ base_path }}kcn-thang-long-3">
+                        <img width="420" height="293" class="project-card__img" src="{{ directory }}/images/thang-long-2.jpg"
+                            alt="KCN Thăng Long 3">
+                        <div class="project-card__body">
+                            <h3 class="project-card__title">KCN Thăng Long 3</h3>
+                            <p class="project-card__loc">
+                                <img width="20" height="20" src="{{ directory }}/images/svg/location-green.svg" alt="">
+                                KCN Thăng Long 3, huyện Bình Nguyên, tỉnh Phú Thọ, Việt Nam
+                            </p>
+                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
+                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
+                                        class="fa-solid fa-arrow-right"></i></span></span>
+                        </div>
+                    </a>
+                </article>
+                <article class="project-card">
+                    <a class="project-card__link" href="{{ base_path }}khu-cong-nghiep-binh-xuyen">
+                        <img width="420" height="293" class="project-card__img" src="{{ directory }}/images/binh-xuyen-banner.jpg"
+                            alt="Khu công nghiệp Bình Xuyên">
+                        <div class="project-card__body">
+                            <h3 class="project-card__title">Khu công nghiệp Bình Xuyên</h3>
+                            <p class="project-card__loc">
+                                <img width="20" height="20" src="{{ directory }}/images/svg/location-green.svg" alt="">
+                                Bình Xuyên IC, xã Bình Nguyên, tỉnh Phú Thọ, Việt Nam
+                            </p>
+                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
+                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
+                                        class="fa-solid fa-arrow-right"></i></span></span>
+                        </div>
+                    </a>
+                </article>
+                <article class="project-card">
+                    <a class="project-card__link" href="{{ base_path }}kcn-thang-long-2">
+                        <img width="420" height="293" class="project-card__img" src="{{ directory }}/images/thang-long-2.jpg"
+                            alt="Khu công nghiệp Thăng Long 2">
+                        <div class="project-card__body">
+                            <h3 class="project-card__title">Khu công nghiệp Thăng Long 2</h3>
+                            <p class="project-card__loc">
+                                <img width="20" height="20" src="{{ directory }}/images/svg/location-green.svg" alt="">
+                                Thăng Long 2 IC Xã Yên Mỹ, Tỉnh Hưng Yên, Việt Nam
+                            </p>
+                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
+                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
+                                        class="fa-solid fa-arrow-right"></i></span></span>
+                        </div>
+                    </a>
+                </article>
+                <article class="project-card">
+                    <a class="project-card__link" href="{{ base_path }}cnctech-ha-nam">
+                        <img width="420" height="293" class="project-card__img" src="{{ directory }}/images/ha-nam-banner.jpg"
+                            alt="Hà Nam IC">
+                        <div class="project-card__body">
+                            <h3 class="project-card__title">Hà Nam IC</h3>
+                            <p class="project-card__loc">
+                                <img width="20" height="20" src="{{ directory }}/images/svg/location-green.svg" alt="">
+                                Khu công nghiệp Hà nam, tỉnh Ninh Bình, Việt Nam
+                            </p>
+                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
+                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
+                                        class="fa-solid fa-arrow-right"></i></span></span>
+                        </div>
+                    </a>
+                </article>
+                <article class="project-card">
+                    <a class="project-card__link" href="{{ base_path }}cum-cong-nghiep-hop-thinh">
+                        <img width="420" height="293" class="project-card__img" src="{{ directory }}/images/hop-thinh-banner.jpg"
+                            alt="Cụm công nghiệp Hợp Thịnh">
+                        <div class="project-card__body">
+                            <h3 class="project-card__title">Cụm công nghiệp Hợp Thịnh</h3>
+                            <p class="project-card__loc">
+                                <img width="20" height="20" src="{{ directory }}/images/svg/location-green.svg" alt="">
+                                Cụm Hợp Thịnh. Xã Hội Thịnh, tỉnh Phú Thọ, Việt Nam
+                            </p>
+                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
+                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
+                                        class="fa-solid fa-arrow-right"></i></span></span>
+                        </div>
+                    </a>
+                </article>
+            </div>
+            <div class="project-carousel__dots">
+                <button type="button" class="is-active"></button>
+                <button type="button"></button>
+                <button type="button"></button>
+                <button type="button"></button>
+                <button type="button"></button>
+                <button type="button"></button>
+                <button type="button"></button>
+                <button type="button"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section section--gray partners">
+        <div class="container">
+            <h2 class="t-heading-1 mb-4 mb-lg-5">Mạng lưới đối tác & khách hàng</h2>
+            <div class="row g-4 g-xl-5 align-items-stretch">
+                <div class="col-lg-4">
+                    <div class="partners__stat mb-3">
+                        <i class="fa-regular fa-globe partners__stat-icon"></i>
+                        <div>
+                            <p class="partners__stat-value partners__stat-value--green">45</p>
+                            <p class="partners__stat-label">Khách hàng quốc tế</p>
+                        </div>
+                    </div>
+                    <hr class="partners__divider">
+                    <div class="partners__stat mb-4">
+                        <i class="fa-regular fa-earth-americas partners__stat-icon text-accent"></i>
+                        <div>
+                            <p class="partners__stat-value partners__stat-value--red">6+</p>
+                            <p class="partners__stat-label">Quốc gia</p>
+                        </div>
+                    </div>
+                    <div class="table-responsive partners__table">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Quốc gia</th>
+                                    <th scope="col" class="text-center">Khách hàng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Đài Loan (Trung Quốc)</td>
+                                    <td class="text-center">5</td>
+                                </tr>
+                                <tr>
+                                    <td>Hàn Quốc</td>
+                                    <td class="text-center">3</td>
+                                </tr>
+                                <tr>
+                                    <td>Malaysia</td>
+                                    <td class="text-center">1</td>
+                                </tr>
+                                <tr>
+                                    <td>Việt Nam</td>
+                                    <td class="text-center">7</td>
+                                </tr>
+                                <tr>
+                                    <td>Trung Quốc</td>
+                                    <td class="text-center">27</td>
+                                </tr>
+                                <tr>
+                                    <td>Hong Kong</td>
+                                    <td class="text-center">2</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Tổng cộng</strong></td>
+                                    <td class="text-center"><strong>45</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-8 partners__map">
+                    <img src="{{ directory }}/images/CNC.Map.png" alt="Bản đồ mạng lưới khách hàng quốc tế của CNC Industrial">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section customers">
+        <div class="customers__bg">
+            <div class="customers__earth-glow"></div>
+            <img width="1920" height="762" class="customers__earth" src="{{ directory }}/images/customers/earth-bg.jpg" alt="">
+        </div>
+        <div class="container customers__inner">
+            <h2 class="t-heading-1 customers__title">Khách hàng của chúng tôi</h2>
+            <div class="customers__logos">
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
+                        src="{{ directory }}/images/LOGO/Ability%20%C4%91en.png" alt="Ability đen"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/Accton-Logo-Color.png"
+                        alt="Accton-Logo-Color"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/Anotech.png"
+                        alt="Anotech">
+                </a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/Anson.png"
+                        alt="Anson"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/apd_logo-02-1.png"
+                        alt="apd logo-02-1"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/Arts.png"
+                        alt="Arts"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/beifa.png"
+                        alt="beifa"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
+                        src="{{ directory }}/images/LOGO/Bia%20H%C3%A0%20N%E1%BB%99i.png" alt="Bia Hà Nội"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
+                        src="{{ directory }}/images/LOGO/ChatGPT%20Image%2020_49_07%2027%20thg%205%2C%202026.png"
+                        alt="ChatGPT Image 20 49 07 27 thg 5, 2026"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/DB%20Schenker.png"
+                        alt="DB Schenker"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/feliks.png"
+                        alt="feliks">
+                </a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/FHE.png"
+                        alt="FHE"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/ghtk.png"
+                        alt="ghtk"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/Glitter.png"
+                        alt="Glitter">
+                </a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/I-Chain.png"
+                        alt="I-Chain">
+                </a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/JOC.png"
+                        alt="JOC"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/Kingstone.png"
+                        alt="Kingstone"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/KW.png" alt="KW"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/Lesus.jpg"
+                        alt="Lesus"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
+                        src="{{ directory }}/images/LOGO/LOGO%20CTY%20KH%C3%81CH%20H%C3%80NG-06.png" alt="CTY KHÁCH HÀNG-06"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/logo%20mentech.png"
+                        alt="mentech"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/MSTD.png"
+                        alt="MSTD"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/Newface.png"
+                        alt="Newface">
+                </a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/SEOV.jpg"
+                        alt="SEOV"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/sirline.jpg"
+                        alt="sirline">
+                </a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/Skylight.png"
+                        alt="Skylight">
+                </a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/SMC.png"
+                        alt="SMC"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/Sunway%20logo.png"
+                        alt="Sunway logo"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
+                        src="{{ directory }}/images/LOGO/uti-logo-pAs4eETPyng42iOBorMD-1734340926_upscayl_1x_upscayl-lite-4x.png"
+                        alt="uti-logo-pAs4eETPyng42iOBorMD-1734340926 upscayl 1x upscayl-lite-4x"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/Vietnam%20Post.png"
+                        alt="Vietnam Post"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/Vitalink.png"
+                        alt="Vitalink">
+                </a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/xingtai.jpg"
+                        alt="xingtai">
+                </a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ directory }}/images/LOGO/Yingtong.png"
+                        alt="Yingtong">
+                </a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
+                        src="{{ directory }}/images/LOGO/z7799065766196_67c9803e6d07f35c8f5719df1f0178df_upscayl_2x_upscayl-lite-4x.png"
+                        alt="Khách hàng"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
+                        src="{{ directory }}/images/LOGO/z7873384190963_53625650bd525f2cbc8ccfdd0288a456.jpg" alt="Khách hàng"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
+                        src="{{ directory }}/images/LOGO/z7873384190970_99efab47d96b9c4d12314e3e117f35c3.jpg" alt="Khách hàng"></a>
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
+                        src="{{ directory }}/images/LOGO/z7873428053763_60a07cd5ab722fb32563af6238a09e35.jpg" alt="Khách hàng"></a>
+            </div>
+        </div>
+        <div class="container">
+            <div class="customers__carousel-wrap">
+                <div class="customers-testimonials owl-carousel">
+                    <blockquote class="testimonial-card">
+                        <img width="162" height="36" class="testimonial-card__logo" src="{{ directory }}/images/customers/brand-1.png"
+                            alt="Accton">
+                        <div class="testimonial-card__body">
+                            <p class="testimonial-card__text">Nhờ CNCTech Industrial, việc xây dựng nhà máy của chúng
+                                tôi bắt đầu vào tháng 10/2022 và trong vòng 4 tháng, chúng tôi đã sẵn sàng sản xuất.
+                                Sự hỗ trợ của họ trên nhiều lĩnh vực, từ đơn xin đầu tư đến hỗ trợ pháp lý, đã đóng
+                                vai trò quan trọng trong tiến trình nhanh chóng của chúng tôi.</p>
+                        </div>
+                        <div class="testimonial-card__author">
+                            <img width="68" height="68" class="testimonial-card__avatar"
+                                src="{{ directory }}/images/customers/avatar-1.jpg" alt="">
+                            <div>
+                                <cite class="testimonial-card__name">Mr. Jackel Lee</cite>
+                                <p class="testimonial-card__role">SVP of Product Supply & Demand</p>
+                            </div>
+                        </div>
+                    </blockquote>
+                    <blockquote class="testimonial-card testimonial-card--scroll">
+                        <div class="testimonial-card__logo-wrap">
+                            <img width="152" height="50" src="{{ directory }}/images/customers/brand-2.png" alt="New Protect">
+                        </div>
+                        <div class="testimonial-card__body">
+                            <p class="testimonial-card__text">CNCIndustrial đã đồng hành cùng New Protec Vina xuyên suốt
+                                quá trình triển khai nhà máy tại KCN Bá Thiện 1 – từ tư vấn đầu tư, lựa chọn vị trí đến
+                                xây dựng và hoàn thiện vận hành. Chỉ trong chưa đầy 1 năm, dự án đã đi vào hoạt động ổn
+                                định nhờ tiến độ triển khai nhanh chóng, tối ưu pháp lý và sự phối hợp chuyên nghiệp từ
+                                đội ngũ CNCIndustrial. Đây là đối tác đáng tin cậy cho các doanh nghiệp FDI khi đầu tư
+                                tại Việt Nam</p>
+                            <div class="testimonial-card__scrollbar">
+                                <span class="testimonial-card__scrollbar-thumb"></span>
+                            </div>
+                        </div>
+                        <div class="testimonial-card__author">
+                            <img width="68" height="68" class="testimonial-card__avatar"
+                                src="{{ directory }}/images/customers/avatar-2.jpg" alt="">
+                            <div class="testimonial-card__meta">
+                                <cite class="testimonial-card__name">Mr. Kwon Ki Woon</cite>
+                                <p class="testimonial-card__role">Tổng Giám đốc</p>
+                                <p class="testimonial-card__role">New Protect</p>
+                            </div>
+                        </div>
+                    </blockquote>
+                    <blockquote class="testimonial-card">
+                        <img width="162" height="51" class="testimonial-card__logo testimonial-card__logo--tall"
+                            src="{{ directory }}/images/customers/brand-3.png" alt="Glitter VietNam">
+                        <div class="testimonial-card__body">
+                            <p class="testimonial-card__text">Xét đến các lựa chọn như Bắc Ninh và Bắc Giang, Vĩnh Phúc
+                                nổi bật với lực lượng lao động ổn định và thủ tục hành chính gọn nhẹ. Vì vậy, chúng tôi
+                                đã nhanh chóng đưa ra quyết định chọn Vĩnh Phúc làm nơi khởi đầu cho hoạt động kinh
+                                doanh
+                                sản xuất tại Việt Nam</p>
+                        </div>
+                        <div class="testimonial-card__author">
+                            <img width="68" height="68" class="testimonial-card__avatar"
+                                src="{{ directory }}/images/customers/avatar-3.jpg" alt="">
+                            <div>
+                                <cite class="testimonial-card__name">Mr. Chen Jin Bao</cite>
+                                <p class="testimonial-card__role">CEO of Glitter VietNam</p>
+                            </div>
+                        </div>
+                    </blockquote>
+                    <blockquote class="testimonial-card">
+                        <img width="162" height="36" class="testimonial-card__logo" src="{{ directory }}/images/customers/brand-4.png"
+                            alt="Sirline VietNam">
+                        <div class="testimonial-card__body">
+                            <p class="testimonial-card__text">Khi lựa chọn địa điểm gần nhà máy Vĩnh Phúc, các dự án của
+                                CNCTech Industrial đã đáp ứng rất tốt nhu cầu về quy mô của chúng tôi. Các dịch vụ toàn
+                                diện của họ và môi trường thuận lợi của Vĩnh Phúc đã biến nơi đây thành điểm đến đầu tư
+                                lý tưởng cho các doanh nghiệp FDI.</p>
+                        </div>
+                        <div class="testimonial-card__author">
+                            <img width="68" height="68" class="testimonial-card__avatar"
+                                src="{{ directory }}/images/customers/avatar-4.jpg" alt="">
+                            <div>
+                                <cite class="testimonial-card__name">Mr. Jason Wu</cite>
+                                <p class="testimonial-card__role">CEO of Sirline VietNam</p>
+                            </div>
+                        </div>
+                    </blockquote>
+                </div>
+                <div class="customers__dots">
+                    <button type="button" class="is-active"></button>
+                    <button type="button"></button>
+                    <button type="button"></button>
+                    <button type="button"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section section--gray section--news">
+        <div class="container">
+            <h2 class="t-heading-1 section--news__title">Tin tức cập nhật</h2>
+            <div class="section--news__carousel-wrap">
+                <div class="news-carousel owl-carousel">
+                    <article class="news-card">
+                        <a class="news-card__media" href="{{ base_path }}tin-tuc-chi-tiet">
+                            <img width="420" height="288" class="news-card__img" src="{{ directory }}/images/news/news-1.jpg"
+                                alt="CNCIndustrial đón tiếp đoàn SingCham">
+                        </a>
+                        <div class="news-card__body">
+                            <span class="news-card__cat">Tin tức Doanh nghiệp</span>
+                            <h3 class="news-card__title"><a href="{{ base_path }}tin-tuc-chi-tiet">CNCIndustrial đón tiếp đoàn
+                                    SingCham: Mở rộng kết
+                                    nối đầu tư quốc tế.</a></h3>
+                            <time class="news-card__date" datetime="2025-12-10">10-12-2025</time>
+                        </div>
+                    </article>
+                    <article class="news-card">
+                        <a class="news-card__media" href="{{ base_path }}tin-tuc-chi-tiet">
+                            <img width="420" height="288" class="news-card__img" src="{{ directory }}/images/news/news-2.jpg"
+                                alt="Recap sự kiện Nam Bình Xuyên Green Park">
+                        </a>
+                        <div class="news-card__body">
+                            <span class="news-card__cat">Tin tức Doanh nghiệp</span>
+                            <h3 class="news-card__title"><a href="{{ base_path }}tin-tuc-chi-tiet">Recap: Sự kiện tham quan hạ
+                                    tầng và hệ thống xử lý
+                                    nước thải Nam Bình Xuyên Green Park.</a></h3>
+                            <time class="news-card__date" datetime="2025-12-10">10-12-2025</time>
+                        </div>
+                    </article>
+                    <article class="news-card">
+                        <a class="news-card__media" href="{{ base_path }}tin-tuc-chi-tiet">
+                            <img width="420" height="288" class="news-card__img" src="{{ directory }}/images/news/news-3.jpg"
+                                alt="Cnctech đồng hành FDI Connect 2026">
+                        </a>
+                        <div class="news-card__body">
+                            <span class="news-card__cat">Tin tức Doanh nghiệp</span>
+                            <h3 class="news-card__title"><a href="{{ base_path }}tin-tuc-chi-tiet">Cnctech đồng hành cùng FDI
+                                    Connect 2026 – thúc đẩy
+                                    kết nối trong chuỗi cung ứng toàn cầu.</a></h3>
+                            <time class="news-card__date" datetime="2025-12-10">10-12-2025</time>
+                        </div>
+                    </article>
+                </div>
+                <div class="news-carousel__dots">
+                    <button type="button" class="is-active"></button>
+                    <button type="button"></button>
+                    <button type="button"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="cta-banner" id="lien-he">
+        <div class="cta-banner__bg" aria-hidden="true">
+            <video class="cta-banner__video" muted loop playsinline preload="metadata" data-autoplay-in-view>
+                <source src="{{ directory }}/images/video-thuml.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="container">
+            <div class="cta-banner__content">
+                <div class="cta-banner__copy">
+                    <h2 class="t-heading-1 cta-banner__title">Bạn cần tìm nhà xưởng/nhà kho tại Việt Nam?</h2>
+                    <p class="cta-banner__lead">Hợp tác cùng chúng tôi để tạo ra giá trị kinh doanh thực chất thông qua
+                        chiến lược, công nghệ và hệ sinh thái kết nối hiệu quả.</p>
+                </div>
+                <div class="cta-banner__actions">
+                    <a class="cta-btn cta-btn--phone" href="tel:+84866505509">
+                        <span class="cta-btn__label">(+84) 866 505 509</span>
+                        <span class="cta-btn__icon"><i class="fa-regular fa-phone"></i></span>
+                    </a>
+                    <a class="cta-btn cta-btn--quote" href="{{ base_path }}lien-he">
+                        <span class="cta-btn__label">nhận báo giá</span>
+                        <span class="cta-btn__icon"><i class="fa-solid fa-arrow-right"></i></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="certifications" aria-label="Chứng nhận">
+        <div class="container">
+            <ul class="certifications__list">
+                <li class="certifications__item">
+                    <div class="certifications__badge">
+                        <img src="{{ directory }}/images/logo-2.png" alt="ISO 9001:2015">
+                    </div>
+                </li>
+                <li class="certifications__item">
+                    <div class="certifications__badge">
+                        <img src="{{ directory }}/images/logo-3.png" alt="ISO 14001:2015">
+                    </div>
+                </li>
+                <li class="certifications__item">
+                    <div class="certifications__badge">
+                        <img src="{{ directory }}/images/logo-4.png" alt="LEED">
+                    </div>
+                </li>
+                <li class="certifications__item">
+                    <div class="certifications__badge">
+                        <img src="{{ directory }}/images/log-1.png" alt="IATF 16949:2016">
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>

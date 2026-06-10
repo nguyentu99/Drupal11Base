@@ -5,11 +5,15 @@ core_version_requirement: ^10.3 || ^11.0
 base theme: bootstrap
 dependencies:
   - cassiopeia:cassiopeia
+regions:
+  status_messages: 'Status messages'
 libraries:
   - cassiopeia_theme/global-styling
 
-# Public site does not use Bootstrap Icons classes; skip the 84 KB font CSS.
 libraries-override:
+  bootstrap/global-styling: false
+  bootstrap/messages: false
+  core/jquery: cassiopeia_theme/jquery37
   bootstrap/bootstrap-icons:
     css:
       component:

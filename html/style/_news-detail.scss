@@ -1,0 +1,206 @@
+// ——— Chi tiết tin tức ———
+
+.article-hero {
+    align-items: center;
+    background: $green;
+    display: flex;
+    justify-content: center;
+    min-height: 420px;
+    padding: 64px 0;
+    position: relative;
+    text-align: center;
+
+    @media (min-width: 992px) {
+        min-height: 568px;
+        padding: 80px 0;
+    }
+
+    &::after {
+        background: url('../images/news/article-hero-pattern.jpg') center / cover no-repeat;
+        content: '';
+        inset: 0;
+        mix-blend-mode: color-dodge;
+        opacity: 0.45;
+        pointer-events: none;
+        position: absolute;
+        z-index: 0;
+    }
+
+    &__inner {
+        position: relative;
+        z-index: 1;
+    }
+
+    &__breadcrumb-nav {
+        margin-bottom: 24px;
+    }
+
+    &__breadcrumb {
+        --bs-breadcrumb-divider: "/";
+        --bs-breadcrumb-item-active-color: #fff;
+        --bs-breadcrumb-margin-bottom: 0;
+        --bs-breadcrumb-padding-x: 0;
+        --bs-breadcrumb-padding-y: 0;
+
+        @include Mona-Medium();
+        background: transparent;
+        font-size: 16px;
+        justify-content: center;
+        line-height: 22px;
+        margin-bottom: 0;
+        text-transform: uppercase;
+
+        .breadcrumb-item {
+            color: #fff;
+
+            &::before {
+                color: rgba(255, 255, 255, 0.8);
+                float: none;
+                padding-right: 0;
+            }
+
+            + .breadcrumb-item {
+                padding-left: 8px;
+
+                &::before {
+                    margin-right: 8px;
+                }
+            }
+
+            a {
+                color: #fff;
+                text-decoration: none;
+
+                &:hover {
+                    color: #fff;
+                    opacity: 0.85;
+                }
+            }
+
+            &.active {
+                color: #fff;
+            }
+        }
+    }
+
+    &__title {
+        @include Mona-SemiBold();
+        color: #fff;
+        font-size: clamp(28px, 4vw, 48px);
+        line-height: 1.17;
+        margin: 0 auto;
+        max-width: 1000px;
+    }
+
+    &__share {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        justify-content: center;
+        margin-top: 24px;
+    }
+}
+
+.article-share {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    &__link {
+        align-items: center;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+        color: $green;
+        display: inline-flex;
+        height: 40px;
+        justify-content: center;
+        text-decoration: none;
+        transition: transform 0.2s, box-shadow 0.2s;
+        width: 40px;
+
+        i {
+            font-size: 16px;
+        }
+
+        &:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            color: $green;
+            transform: translateY(-1px);
+        }
+    }
+}
+
+.news-article {
+    background: #f9fafb;
+    padding: 40px 0 56px;
+
+    &__content {
+        @include Mona-Regular();
+        color: #434343;
+        font-size: 16px;
+        line-height: 26px;
+        margin: 0 auto;
+        max-width: 1000px;
+
+        p {
+            margin: 0 0 20px;
+        }
+
+        ul {
+            margin: 0 0 20px;
+            padding-left: 1.25rem;
+
+            li {
+                margin-bottom: 8px;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        figure {
+            margin: 0 0 24px;
+
+            img {
+                border-radius: 12px;
+                display: block;
+                height: auto;
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #d8d8d8;
+            margin: 32px 0;
+            opacity: 1;
+        }
+
+        img {
+            max-width: 100%;
+        }
+    }
+
+    &__share-footer {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+}
+
+.news-related {
+    background: #f3f3f3;
+    padding: 64px 0;
+
+    &__grid {
+        --bs-gutter-x: 30px;
+
+        .news-card {
+            height: 100%;
+        }
+    }
+}

@@ -1,0 +1,155 @@
+// ——— Đối tác & khách hàng ———
+
+.partners-page {
+    &__stories {
+        padding: 64px 0;
+    }
+
+    &__features {
+        padding: 0 0 64px;
+    }
+
+    &__features-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 64px;
+    }
+
+    &__trusted {
+        padding: 0 0 64px;
+        text-align: center;
+    }
+
+    &__trusted-logos {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px;
+        justify-content: center;
+
+        img {
+            display: block;
+            height: auto;
+            max-height: 72px;
+            max-width: 188px;
+            object-fit: contain;
+            width: auto;
+        }
+    }
+}
+
+.customer-feature {
+    align-items: stretch;
+
+    &__media-wrap {
+        border-radius: 16px;
+        cursor: pointer;
+        overflow: hidden;
+        position: relative;
+
+        &.is-playing {
+            cursor: default;
+
+            .customer-feature__video {
+                display: block;
+            }
+        }
+    }
+
+    &__poster,
+    &__video {
+        border-radius: 16px;
+        display: block;
+        height: 380px;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    &__video {
+        background: #000;
+        display: none;
+    }
+
+    &__play {
+        align-items: center;
+        background: $red;
+        border: 0;
+        border-radius: 32px;
+        bottom: 24px;
+        color: #fff;
+        display: inline-flex;
+        height: 64px;
+        justify-content: center;
+        left: 24px;
+        position: absolute;
+        width: 64px;
+
+        i {
+            font-size: 20px;
+            margin-left: 2px;
+        }
+
+        &:hover {
+            background: #c93a1f;
+            color: #fff;
+        }
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        height: 100%;
+        padding-bottom: 32px;
+        padding-left: 32px;
+
+        @media (max-width: 991.98px) {
+            padding-left: 0;
+            padding-top: 24px;
+        }
+    }
+
+    &__logo {
+        display: block;
+        height: 64px;
+        object-fit: contain;
+        object-position: left center;
+        width: auto;
+        max-width: 203px;
+    }
+
+    &__name {
+        @include SemiBold();
+        color: $black;
+        font-size: 20px;
+        font-style: normal;
+        line-height: 28px;
+        margin: 0;
+    }
+
+    &__role {
+        @include Mona-Regular();
+        color: #434343;
+        font-size: 16px;
+        line-height: 24px;
+        margin: 0;
+    }
+
+    &__text {
+        @include Mona-Regular();
+        color: $black;
+        font-size: 16px;
+        line-height: 24px;
+        margin: 0;
+    }
+
+    &__rule {
+        border: 0;
+        border-top: 1px solid #d8d8d8;
+        margin: auto 0 0;
+        opacity: 1;
+        width: 100%;
+    }
+}
+
+

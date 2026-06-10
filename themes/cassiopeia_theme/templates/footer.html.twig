@@ -1,9 +1,153 @@
-<div id="footer-wrapper" class="footer-wrapper clearfix">
-  <div class="footer-wrapper-container">
-    <div id="footer" class="header">
-      <div class="footer-container">
-
-      </div>
-    </div>
-  </div>
-</div>
+{#
+/** Homepage section from html/index.html */
+#}
+<footer class="site-footer">
+        <div class="site-footer__topbar">
+            <div class="container">
+                <div class="contact-strip">
+                    <div class="contact-strip__left">
+                        <div class="contact-strip__item">
+                            <img width="32" height="32" class="contact-strip__icon"
+                                src="{{ directory }}/images/contact-strip/phone-red.svg" alt="">
+                            <div class="contact-strip__text">
+                                <span class="contact-strip__label">Điện thoại</span>
+                                <a class="contact-strip__value" href="tel:+84866505509">(+84) 866 505 509</a>
+                            </div>
+                        </div>
+                        <span class="contact-strip__divider" aria-hidden="true"></span>
+                        <div class="contact-strip__item">
+                            <img width="32" height="32" class="contact-strip__icon"
+                                src="{{ directory }}/images/contact-strip/map-red.svg" alt="">
+                            <div class="contact-strip__text">
+                                <span class="contact-strip__label">Email</span>
+                                <a class="contact-strip__value" href="mailto:hello@cisgroup.vn">hello@cisgroup.vn</a>
+                            </div>
+                        </div>
+                        <span class="contact-strip__divider" aria-hidden="true"></span>
+                        <div class="contact-strip__social-block">
+                            <span class="contact-strip__label">Kết nối với chúng tôi:</span>
+                            <div class="contact-strip__social">
+                                <a href="{{ base_path }}#" aria-label="Facebook"><img width="36" height="36"
+                                        src="{{ directory }}/images/contact-strip/facebook-logo.svg" alt=""></a>
+                                <a href="{{ base_path }}#" aria-label="YouTube"><img width="36" height="36"
+                                        src="{{ directory }}/images/contact-strip/youtube.svg" alt=""></a>
+                                <a href="{{ base_path }}#" aria-label="LinkedIn"><img width="36" height="36"
+                                        src="{{ directory }}/images/contact-strip/in-logo.svg" alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="contact-strip__map" href="{{ base_path }}#" target="_blank" rel="noopener noreferrer">
+                        <img width="32" height="32" class="contact-strip__icon" src="{{ directory }}/images/contact-strip/map-red.svg"
+                            alt="">
+                        <div class="contact-strip__text">
+                            <span class="contact-strip__label">google map</span>
+                            <p class="contact-strip__value">Lô F1-2-3, KCN Thăng Long Vĩnh Phúc,<br>Bình Nguyên, Phú
+                                Thọ, Việt Nam</p>
+                        </div>
+                        <img width="40" height="40" class="contact-strip__chevron"
+                            src="{{ directory }}/images/contact-strip/chevron.svg" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="site-footer__main">
+            <div class="container">
+                <div class="row align-items-start justify-content-between g-4 mb-4 pb-4 border-bottom">
+                    <div class="col-md-6 col-lg-5 d-flex flex-column align-items-start">
+                        <a class="site-footer__logo d-inline-block" href="{{ front_page }}">
+                            <img width="313" height="54" src="{{ directory }}/images/cnc-logo.png" alt="CNC Industrial">
+                        </a>
+                        <a class="site-footer__download d-inline-flex mt-3" href="{{ base_path }}#">
+                            Tải hồ sơ năng lực
+                            <i class="fa-regular fa-download" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <div class="col-md-6 col-lg-auto text-md-end">
+                        <div class="site-footer__brand-right d-inline-flex flex-column align-items-md-end gap-3">
+                            <p class="site-footer__group-label mb-0">một thành viên của CNCTech Group</p>
+                            <img width="186" height="48" class="site-footer__group-logo" src="{{ directory }}/images/logo-red.png"
+                                alt="CNCTech Group">
+                        </div>
+                    </div>
+                </div>
+                <nav class="site-footer__nav row g-4 g-lg-5 mb-4 pb-4 border-bottom" aria-label="Footer">
+                    <div class="col-6 col-md-4 col-lg px-2">
+                        <h3 class="site-footer__col-title">về chúng tôi</h3>
+                        <ul class="site-footer__links">
+                            <li><a href="{{ base_path }}#">Thông điệp HĐQT</a></li>
+                            <li><a href="{{ base_path }}#">Tầm nhìn - Sứ mệnh</a></li>
+                            <li><a href="{{ base_path }}#">Lịch sử</a></li>
+                            <li><a href="{{ base_path }}#">Văn hóa doanh nghiệp</a></li>
+                            <li><a href="{{ base_path }}#">Giải thưởng</a></li>
+                            <li><a href="{{ base_path }}#">ESG</a></li>
+                            <li><a href="{{ base_path }}#">Đơn vị thành viên</a></li>
+                            <li><a href="{{ base_path }}#">Đội ngũ lãnh đạo</a></li>
+                            <li><a href="{{ base_path }}mang-luoi-hoat-dong">Mạng lưới hoạt động</a></li>
+                            <li><a href="{{ base_path }}doi-tac-khach-hang">Đối tác và khách hàng</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg px-2">
+                        <h3 class="site-footer__col-title">Dịch vụ</h3>
+                        <ul class="site-footer__links">
+                            <li><a href="{{ base_path }}dich-vu">Giải pháp công nghiệp</a></li>
+                            <li><a href="{{ base_path }}giai-phap-ha-tang-kcn">Giải pháp hạ tầng KCN</a></li>
+                            <li><a href="{{ base_path }}thiet-ke-xay-dung-cong-trinh-cong-nghiep">Thiết kế và xây dựng công trình
+                                    CN</a></li>
+                            <li><a href="{{ base_path }}thiet-lap-he-thong-ky-thuat-noi-that-nha-xuong">Thiết kế thi công HTKT và
+                                    hoàn thiện nội thất nhà máy (Fitout)</a></li>
+                            <li><a href="{{ base_path }}thiet-ke-thi-cong-giai-phap-phong-chay-cong-nghiep">Thiết kế thi công giải
+                                    pháp phòng cháy công nghiệp</a></li>
+                            <li><a href="{{ base_path }}khai-thac-va-xuc-tien-dau-tu-kcn">Khai thác và xúc tiến đầu tư khu công
+                                    nghiệp</a></li>
+                            <li><a href="{{ base_path }}quan-ly-van-hanh-kcn">Quản lý, vận hành khu công nghiệp</a></li>
+                            <li><a href="{{ base_path }}tu-van-phap-ly-dau-tu">Tư vấn pháp lý đầu tư</a></li>
+                            <li><a href="{{ base_path }}tien-ich-nha-o-van-phong">Tiện ích nhà ở, văn phòng</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg px-2">
+                        <h3 class="site-footer__col-title">dự án</h3>
+                        <ul class="site-footer__links">
+                            <li><a href="{{ base_path }}kcn-nam-binh-xuyen-green-park">KCN Nam Bình Xuyên Green Park</a></li>
+                            <li><a href="{{ base_path }}tt-logistics-bac-giang">TT Logistics quốc tế Bắc Giang</a></li>
+                            <li><a href="{{ base_path }}cnctech-ba-thien-1">CNCTech Bá Thiện 1</a></li>
+                            <li><a href="{{ base_path }}cum-cong-nghiep-hop-thinh">Cụm công nghiệp Hợp Thịnh</a></li>
+                            <li><a href="{{ base_path }}cnctech-ha-nam">CNCTech Hà Nam</a></li>
+                            <li><a href="{{ base_path }}khu-cong-nghiep-binh-xuyen">Khu công nghiệp Bình Xuyên</a></li>
+                            <li><a href="{{ base_path }}kcn-thang-long-2">Khu công nghiệp Thăng Long 2</a></li>
+                            <li><a href="{{ base_path }}kcn-thang-long-3">KCN Thăng Long 3</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg px-2">
+                        <h3 class="site-footer__col-title">Tin tức</h3>
+                        <ul class="site-footer__links">
+                            <li><a href="{{ base_path }}tin-tuc-doanh-nghiep">Tin tức doanh nghiệp</a></li>
+                            <li><a href="{{ base_path }}#">Tin dự án</a></li>
+                            <li><a href="{{ base_path }}#">Sự kiện</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg px-2">
+                        <h3 class="site-footer__col-title mb-0">Happy CNCers</h3>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg px-2">
+                        <h3 class="site-footer__col-title mb-0">Cơ hội nghề nghiệp</h3>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg px-2">
+                        <h3 class="site-footer__col-title">Tài nguyên</h3>
+                        <ul class="site-footer__links">
+                            <li><a href="{{ base_path }}cam-nang-dau-tu">Cẩm nang đầu tư</a></li>
+                            <li><a href="{{ base_path }}nghien-cuu-thi-truong">Nghiên cứu thị trường</a></li>
+                            <li><a href="{{ base_path }}thu-vien-anh">Thư viện hình ảnh</a></li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="row align-items-center justify-content-between g-3">
+                    <div class="col-md">
+                        <p class="site-footer__copy mb-0">Copyright © 2026 CNC Industrial. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-auto">
+                        <a class="site-footer__privacy" href="{{ base_path }}#">Chính sách bảo mật</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>

@@ -1,0 +1,902 @@
+// ——— Chi tiết dự án ———
+
+.page-hero--project {
+    .page-hero__media {
+        object-fit: cover;
+    }
+
+    .page-hero__content {
+        bottom: 32px;
+    }
+
+    .page-hero__title {
+        margin-top: 8px;
+    }
+}
+
+.project-detail {
+    &__intro {
+        padding: 72px 0 64px;
+    }
+
+    &__intro-row {
+        --bs-gutter-x: 30px;
+        align-items: flex-start;
+    }
+
+    &__title {
+        @include Mona-SemiBold();
+        color: $black;
+        font-size: clamp(28px, 4vw, 40px);
+        line-height: 1.2;
+        margin: 0 0 16px;
+    }
+
+    &__loc {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        margin: 0 0 24px;
+
+        img {
+            flex-shrink: 0;
+            height: 32px;
+            width: 32px;
+        }
+
+        span {
+            @include Mona-Medium();
+            color: $black;
+            font-size: 18px;
+            line-height: 28px;
+        }
+    }
+
+    &__desc {
+        @include Mona-Regular();
+        color: #434343;
+        font-size: 16px;
+        line-height: 26px;
+        margin: 0 0 32px;
+        max-width: 808px;
+
+        +.project-detail__desc {
+            margin-top: -16px;
+        }
+    }
+
+    &__section {
+        padding: 0 0 64px;
+
+        &--zone {
+            background: #f3f4f4;
+            padding: 64px 0;
+        }
+
+        &--infra {
+            background: #fff;
+            padding: 64px 0 48px;
+        }
+
+        &--tech {
+            padding: 0 0 64px;
+        }
+
+        &--tax {
+            background: #fff;
+            padding: 0 0 64px;
+        }
+
+        &--customers {
+            padding: 64px 0 48px;
+        }
+
+        &--related {
+            padding: 0 0 80px;
+
+            .project-detail__section-title {
+                margin-bottom: 40px;
+            }
+        }
+    }
+
+    &__section-head {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        justify-content: space-between;
+        margin-bottom: 40px;
+    }
+
+    &__section-title {
+        margin: 0;
+        text-transform: uppercase;
+    }
+}
+
+.project-specs {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 32px;
+
+    &__highlight {
+        align-items: center;
+        display: flex;
+        gap: 16px;
+    }
+
+    &__icon {
+        flex-shrink: 0;
+        height: 64px;
+        width: 64px;
+    }
+
+    &__area-label {
+        @include Mona-Medium();
+        color: $green;
+        font-size: 16px;
+        line-height: 24px;
+        margin: 0;
+    }
+
+    &__area-value {
+        @include Mona-SemiBold();
+        color: $red;
+        font-size: 32px;
+        line-height: 40px;
+        margin: 0;
+    }
+
+    &__divider {
+        background: #d8d8d8;
+        border: 0;
+        height: 1px;
+        margin: 0;
+        width: 100%;
+    }
+
+    &__rows {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    &__row {
+        display: flex;
+        gap: 32px;
+    }
+
+    &__label {
+        @include SemiBold();
+        color: $black;
+        flex-shrink: 0;
+        font-size: 16px;
+        line-height: 24px;
+        width: 96px;
+    }
+
+    &__value {
+        @include Mona-Regular();
+        color: #434343;
+        flex: 1;
+        font-size: 16px;
+        line-height: 24px;
+        margin: 0;
+
+        &--price {
+            @include Mona-Medium();
+            color: $red;
+        }
+    }
+
+    &__download {
+        align-items: center;
+        display: inline-flex;
+        gap: 8px;
+        text-decoration: none;
+
+        img {
+            height: 24px;
+            width: 24px;
+        }
+
+        span {
+            @include SemiBold();
+            color: $green-600;
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+        &:hover span {
+            opacity: 0.85;
+        }
+    }
+}
+
+.project-gallery {
+    &__carousel {
+        margin: 0 -10px;
+        overflow: hidden;
+        padding: 0 10px;
+
+        &.owl-carousel .owl-item {
+            display: flex;
+        }
+    }
+
+    &__slide {
+        border-radius: 12px;
+        display: block;
+        overflow: hidden;
+        width: 100%;
+
+        img {
+            display: block;
+            width: 100%;
+        }
+    }
+
+    &__dots {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin-top: 24px;
+
+        button {
+            background: $green-200;
+            border: 0;
+            border-radius: 6px;
+            cursor: pointer;
+            display: block;
+            height: 10px;
+            padding: 0;
+            transition: width 0.25s ease, background-color 0.25s ease;
+            width: 10px;
+
+            &.is-active,
+            &:hover {
+                background: $green;
+                width: 37px;
+            }
+        }
+    }
+}
+
+.project-location {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(5, 97, 66, 0.15);
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    overflow: hidden;
+
+    @media (min-width: 992px) {
+        flex-direction: row;
+    }
+
+    &__map {
+        flex: 1;
+
+        img {
+            display: block;
+            width: 100%;
+        }
+    }
+
+    &__sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        padding: 40px 24px;
+
+        @media (min-width: 992px) {
+            flex-shrink: 0;
+            width: 439px;
+        }
+    }
+
+    &__address {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__address-row {
+        align-items: flex-start;
+        display: flex;
+        gap: 8px;
+
+        img {
+            flex-shrink: 0;
+            height: 20px;
+            margin-top: 2px;
+            width: 20px;
+        }
+
+        p {
+            @include Mona-Medium();
+            color: $black;
+            font-size: 16px;
+            line-height: 24px;
+            margin: 0;
+        }
+    }
+
+    &__map-link {
+        @include Mona-Medium();
+        border-bottom: 2px solid $red;
+        color: $red;
+        display: inline-block;
+        font-size: 16px;
+        line-height: 24px;
+        text-decoration: none;
+        width: fit-content;
+
+        &:hover {
+            opacity: 0.85;
+        }
+    }
+
+    &__distances {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+}
+
+.project-distance {
+    align-items: center;
+    background: rgba(101, 235, 119, 0.1);
+    display: flex;
+    gap: 16px;
+    min-height: 88px;
+    padding: 16px;
+    cursor: pointer;
+
+    &:hover {
+        background: rgba(101, 235, 119, 0.2);
+    }
+
+    &__icon {
+        align-items: center;
+        color: $green;
+        display: flex;
+        flex-shrink: 0;
+        font-size: 24px;
+        height: 32px;
+        justify-content: center;
+        width: 32px;
+
+        img {
+            display: block;
+            height: 32px;
+            object-fit: contain;
+            width: 32px;
+        }
+    }
+
+    &__label {
+        @include Mona-Medium();
+        color: $black;
+        font-size: 16px;
+        line-height: 24px;
+        margin: 0;
+    }
+
+    &__value {
+        @include Mona-SemiBold();
+        color: $green;
+        font-size: 20px;
+        line-height: 28px;
+        margin: 0;
+    }
+}
+
+.project-zone {
+    &__tabs {
+        &.nav-tabs {
+            background: #fff;
+            border: 0;
+            border-radius: 40px;
+            display: inline-flex;
+            flex-wrap: nowrap;
+            gap: 0;
+            padding: 4px;
+
+            .nav-item {
+                margin-bottom: 0;
+            }
+
+            .nav-link {
+                @include Mona-SemiBold();
+                background: transparent;
+                border: 0;
+                border-radius: 40px;
+                color: $green;
+                cursor: pointer;
+                font-size: 16px;
+                line-height: 24px;
+                margin-bottom: 0;
+                padding: 8px 24px;
+                text-transform: uppercase;
+                transition: background-color 0.2s ease, color 0.2s ease;
+                white-space: nowrap;
+
+                &:hover,
+                &:focus {
+                    border-color: transparent;
+                    color: $green;
+                    isolation: isolate;
+                }
+
+                &.active {
+                    background: $green;
+                    color: #fff;
+                }
+            }
+        }
+    }
+
+    &__tab-content {
+        border: 0;
+
+        > .tab-pane {
+            padding: 0;
+        }
+    }
+
+    &__map-wrap {
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: relative;
+    }
+
+    &__map {
+        display: block;
+        width: 100%;
+    }
+
+    &__stats {
+        background: rgba(228, 65, 25, 0.85);
+        border-top: 6px solid rgba(0, 0, 0, 0.6);
+        bottom: 0;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        left: 0;
+        width: 426px;
+        padding: 12px 32px;
+        position: absolute;
+
+        @media (max-width: 575.98px) {
+            max-width: none;
+            position: static;
+        }
+    }
+
+    &__stat-row {
+        align-items: center;
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+    }
+
+    &__stat-label {
+        @include Mona-Medium();
+        flex: 1;
+        font-size: 18px;
+        line-height: 26px;
+        margin: 0;
+    }
+
+    &__stat-value {
+        @include SemiBold();
+        flex: 1;
+        font-size: 20px;
+        line-height: 28px;
+        margin: 0;
+        text-align: right;
+    }
+}
+
+.project-tech-specs {
+    border: 1px solid $green;
+    border-radius: 12px;
+    overflow: hidden;
+
+    &__head {
+        background: $green;
+        padding: 12px 24px;
+    }
+
+    &__title {
+        @include Mona-SemiBold();
+        color: #fff;
+        font-size: clamp(28px, 4vw, 36px);
+        line-height: 44px;
+        margin: 0;
+        text-transform: uppercase;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__row {
+        align-items: center;
+        border-bottom: 0.5px solid #295e30;
+        display: flex;
+
+        &:nth-child(even) {
+            background: #f2f4f7;
+        }
+
+        &:nth-child(odd) {
+            background: #fff;
+        }
+
+        &--extra {
+            display: none;
+        }
+    }
+
+    &.is-expanded &__row--extra {
+        display: flex;
+    }
+
+    &__label,
+    &__value {
+        @include Mona-Medium();
+        font-size: 18px;
+        line-height: 26px;
+        margin: 0;
+        padding: 12px 16px;
+    }
+
+    &__label {
+        border-right: 0.5px solid #295e30;
+        color: #101010;
+        flex: 1;
+    }
+
+    &__value {
+        color: #295e30;
+        flex-shrink: 0;
+        padding-left: 32px;
+        padding-right: 32px;
+        width: 100%;
+
+        @media (min-width: 768px) {
+            width: min(712px, 54%);
+        }
+    }
+
+    &__expand {
+        @include SemiBold();
+        align-items: center;
+        background: #fff;
+        border: 0;
+        border-top: 0.5px solid #d9d9d9;
+        color: $green;
+        cursor: pointer;
+        display: flex;
+        font-size: 14px;
+        gap: 8px;
+        justify-content: center;
+        line-height: 22px;
+        opacity: 0.8;
+        padding: 12px 24px;
+        text-transform: uppercase;
+        width: 100%;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    &__expand-icon {
+        transition: transform 0.25s ease;
+    }
+
+    &.is-expanded &__expand-icon {
+        transform: rotate(180deg);
+    }
+}
+
+.project-infra {
+    padding: 64px 0 48px;
+
+    &__heading {
+        margin: 0 0 40px;
+        text-transform: uppercase;
+    }
+
+    &__grid {
+        --bs-gutter-x: 30px;
+        --bs-gutter-y: 30px;
+        margin-top: 0;
+    }
+
+    &__card {
+        background: #f5f5f7;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        height: 100%;
+        padding: 24px;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+
+        &:hover {
+            border-radius: 12px;
+            border: 1px solid $green;
+            background: #FFF;
+            box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.15);
+        }
+    }
+
+    &__head {
+        align-items: center;
+        display: flex;
+        gap: 16px;
+        min-height: 52px;
+    }
+
+    &__icon {
+        align-items: center;
+        color: $green;
+        display: flex;
+        flex-shrink: 0;
+        font-size: 28px;
+        height: 40px;
+        justify-content: center;
+        width: 40px;
+
+        img {
+            display: block;
+            height: 40px;
+            object-fit: contain;
+            width: 40px;
+        }
+    }
+
+    &__title {
+        @include Mona-SemiBold();
+        color: $green;
+        font-size: 20px;
+        line-height: 26px;
+        margin: 0;
+        text-transform: uppercase;
+    }
+
+    &__divider {
+        background: #d8d8d8;
+        border: 0;
+        height: 1px;
+        margin: 0;
+        width: 100%;
+    }
+
+    &__text {
+        @include Mona-Regular();
+        color: #434343;
+        font-size: 16px;
+        line-height: 24px;
+        margin: 0;
+
+        +.project-infra__text {
+            margin-top: 8px;
+        }
+    }
+}
+
+.project-tax {
+    align-items: center;
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        padding-right: 32px;
+        align-items: start;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin: 0;
+        padding: 0;
+    }
+
+    &__item {
+        align-items: flex-start;
+        display: flex;
+        gap: 20px;
+        list-style: none;
+    }
+
+    &__check {
+        align-items: center;
+        color: $green;
+        display: flex;
+        flex-shrink: 0;
+        font-size: 20px;
+        height: 24px;
+        justify-content: center;
+        width: 24px;
+    }
+
+    &__text {
+        @include Mona-Regular();
+        color: $black;
+        font-size: 16px;
+        line-height: 24px;
+        margin: 0;
+    }
+
+    &__media {
+        height: 400px;
+        position: relative;
+        width: 100%;
+
+        @media (max-width: 991.98px) {
+            height: 320px;
+            margin-top: 8px;
+        }
+
+        &::before {
+            background: #dceadc;
+            border-radius: 16px;
+            bottom: 0;
+            content: '';
+            left: 12.71%;
+            position: absolute;
+            right: 0;
+            top: 12.74%;
+            z-index: 0;
+        }
+    }
+
+    &__photo {
+        border-radius: 16px;
+        bottom: 3.85%;
+        display: block;
+        left: 0;
+        position: absolute;
+        right: 2.48%;
+        top: 0;
+        z-index: 1;
+    }
+}
+
+.project-customers {
+    &__logos {
+        margin-top: 40px;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    &__logos-track {
+        animation: customers-logos-marquee 55s linear infinite;
+        display: flex;
+        width: max-content;
+
+        &:hover {
+            animation-play-state: paused;
+        }
+    }
+
+    &__logos-group {
+        align-items: center;
+        display: flex;
+        flex-shrink: 0;
+        gap: 32px;
+        padding-right: 32px;
+    }
+
+    &__logo {
+        align-items: center;
+        display: inline-flex;
+        flex: 0 0 auto;
+        justify-content: center;
+        min-height: 62px;
+        width: 188px;
+
+        img {
+            display: block;
+            max-height: 62px;
+            max-width: 100%;
+            object-fit: contain;
+            width: auto;
+        }
+    }
+}
+
+.project-contact-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    &__head {
+        background: $green-600;
+        border-bottom: 1px solid #d8d8d8;
+        padding: 16px 24px;
+    }
+
+    &__title {
+        @include Mona-SemiBold();
+        color: #fff;
+        font-size: 24px;
+        line-height: 32px;
+        margin: 0;
+        text-transform: uppercase;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        padding: 24px 32px;
+
+        @media (min-width: 992px) {
+            flex-direction: row;
+        }
+    }
+
+    &__media {
+        border-radius: 8px;
+        flex: 1;
+        min-height: 280px;
+        overflow: hidden;
+
+        img {
+            display: block;
+            height: 100%;
+            object-fit: cover;
+            width: 100%;
+        }
+    }
+
+    &__form-wrap {
+        flex: 1;
+    }
+
+    &__note {
+        align-items: center;
+        display: flex;
+        font-size: 16px;
+        gap: 8px;
+        line-height: 24px;
+        margin-bottom: 16px;
+
+        i {
+            color: $red;
+            flex-shrink: 0;
+        }
+    }
+
+    .contact-form {
+        gap: 16px;
+        padding: 0;
+
+        .row.g-3 {
+            --bs-gutter-y: 16px;
+        }
+
+        &__submit {
+            margin-top: 16px;
+        }
+    }
+}
