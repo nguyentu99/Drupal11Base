@@ -22,6 +22,7 @@ class CassiopeiaAdminAdministratorBlockAddForm extends FormBase {
 
     $form['addBlock'] = [
       '#type' => 'container',
+      '#tree' => TRUE,
     ];
     $form['addBlock']['name'] = [
       '#type' => 'textfield',
@@ -53,7 +54,7 @@ class CassiopeiaAdminAdministratorBlockAddForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValue('addBlock') ?? [];
     if (!isset($values['position']) || !is_numeric($values['position'])) {
-      $form_state->setErrorByName('position', $this->t('Position must be an integer'));
+      $form_state->setError($form['addBlock']['position'], $this->t('Position must be an integer'));
     }
   }
 
@@ -67,7 +68,7 @@ class CassiopeiaAdminAdministratorBlockAddForm extends FormBase {
     $is_new = empty($block->id);
     $block->name = trim($values['name']);
     $block->icon = AdministratorFieldHelper::sanitizeIcon($values['icon']);
-    $block->position = $values['position'];
+    $block->position = (int) $values['position'];
     administrator_block_save($block);
     if ($is_new) {
       $this->messenger()->addMessage($this->t('Added new @name block', ['@name' => $values['name']]));

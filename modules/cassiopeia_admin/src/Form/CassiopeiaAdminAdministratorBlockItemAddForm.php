@@ -21,6 +21,7 @@ class CassiopeiaAdminAdministratorBlockItemAddForm extends FormBase {
 
     $form['item'] = [
       '#type' => 'container',
+      '#tree' => TRUE,
     ];
     $form['item']['name'] = [
       '#type' => 'textfield',
@@ -55,7 +56,7 @@ class CassiopeiaAdminAdministratorBlockItemAddForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValue('item') ?? [];
     if (!isset($values['position']) || !is_numeric($values['position'])) {
-      $form_state->setErrorByName('position', $this->t('Position must be an integer'));
+      $form_state->setError($form['item']['position'], $this->t('Position must be an integer'));
     }
     if (empty($values['link']) || !\Drupal::service('path.validator')->isValid($values['link'])) {
       $form_state->setErrorByName('link', $this->t('Incorrect link'));
@@ -70,7 +71,7 @@ class CassiopeiaAdminAdministratorBlockItemAddForm extends FormBase {
     $item->name = trim($values['name']);
     $item->link = trim($values['link']);
     $item->icon = AdministratorFieldHelper::sanitizeIcon($values['icon']);
-    $item->position = $values['position'];
+    $item->position = (int) $values['position'];
     $item->url_meta = AdministratorLinkMetadata::encodeStorage($item->link);
     administrator_block_item_save($item);
     $this->messenger()->addMessage($this->t('Added new @name symbol', ['@name' => $values['name']]));

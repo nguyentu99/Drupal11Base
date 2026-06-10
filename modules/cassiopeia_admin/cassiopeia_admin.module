@@ -86,6 +86,9 @@ function cassiopeia_admin_modules_uninstalled(array $modules, bool $is_sync): vo
 }
 
 function administrator_block_load($id) {
+  if (is_object($id) && isset($id->id)) {
+    return $id;
+  }
   return \Drupal::service('cassiopeia_admin.menu_repository')->loadBlock($id);
 }
 
@@ -126,6 +129,9 @@ function administrator_block_item_position_update($id, $position, $expected_bid 
 }
 
 function administrator_block_item_load($id) {
+  if (is_object($id) && isset($id->id)) {
+    return $id;
+  }
   return \Drupal::service('cassiopeia_admin.menu_repository')->loadItem($id);
 }
 

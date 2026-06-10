@@ -12,7 +12,9 @@ libraries:
 
 libraries-override:
   bootstrap/global-styling: false
-  bootstrap/messages: false
+  bootstrap/messages:
+    js:
+      js/messages.js: false
   core/jquery: cassiopeia_theme/jquery37
   bootstrap/bootstrap-icons:
     css:
