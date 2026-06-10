@@ -1,0 +1,11 @@
+{#
+/**
+ * @file
+ * tx_article term page — reuses module news.html.twig layout.
+ */
+#}
+{% if view_mode == 'full' and news_page %}
+  {% include '@cassiopeia/news.html.twig' with { news_page: news_page } only %}
+{% else %}
+  {{ content }}
+{% endif %}

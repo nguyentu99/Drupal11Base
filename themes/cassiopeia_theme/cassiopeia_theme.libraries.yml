@@ -19,10 +19,11 @@ owl-carousel:
     - core/jquery
 
 fontawesome:
-  version: 6.5.1
+  version: 6.4.0
   css:
     component:
-      https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css: { type: external }
+      # Pro CSS — webfonts live in ../webfonts/; disable aggregation so paths stay valid.
+      css/all.css: { weight: -10, preprocess: false }
 
 site-style:
   version: VERSION

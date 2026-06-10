@@ -7,6 +7,8 @@ dependencies:
   - drupal:user
   - drupal:file
   - drupal:node
+  - drupal:taxonomy
+  - drupal:views
   - drupal:block
 
 # Information added by Drupal.org packaging script on 2024-10-31

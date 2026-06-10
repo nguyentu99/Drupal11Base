@@ -7357,3 +7357,7 @@ body {
   border-top-right-radius: 32px;
   border-bottom-right-radius: 32px;
 }/*# sourceMappingURL=style.css.map */
+
+a {
+    text-decoration: none;
+}

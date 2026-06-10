@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
@@ -45,4 +46,46 @@ function cassiopeia_theme_preprocess_status_messages(array &$variables): void {
   foreach (array_keys($variables['message_list']) as $message_type) {
     $variables['title_ids'][$message_type] = Html::getUniqueId("message-$message_type-title");
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for node templates.
+ */
+function cassiopeia_theme_preprocess_node(array &$variables): void {
+  if (($variables['view_mode'] ?? '') !== 'full') {
+    return;
+  }
+  $node = $variables['node'];
+  if ($node->getType() === 'article') {
+    $variables['article'] = cassiopeia_article_detail_variables($node);
+  }
+  if ($node->getType() === 'market_research') {
+    $variables['market_research'] = cassiopeia_market_research_detail_variables($node);
+    $variables['#cache']['tags'][] = 'node_list:market_research';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for taxonomy term templates.
+ */
+function cassiopeia_theme_preprocess_taxonomy_term(array &$variables): void {
+  if (($variables['view_mode'] ?? '') !== 'full') {
+    return;
+  }
+  $term = $variables['term'] ?? NULL;
+  if (!$term instanceof TermInterface || $term->bundle() !== 'tx_article') {
+    return;
+  }
+  $variables['news_page'] = cassiopeia_news_page_variables($term);
+  $variables['#cache']['contexts'] = [
+    'url.query_args:q',
+    'url.query_args:page',
+    'languages:language_interface',
+    'languages:language_content',
+  ];
+  $variables['#cache']['tags'] = [
+    'node_list:article',
+    'taxonomy_term_list:tx_article',
+    'taxonomy_term:' . $term->id(),
+  ];
 }

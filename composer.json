@@ -20,6 +20,7 @@
         "drupal/core-project-message": "^11.0",
         "drupal/core-recommended": "^11.0",
         "drupal/core-vendor-hardening": "^11.0",
+        "drupal/paragraphs": "1.20",
         "drush/drush": "13",
         "phpmailer/phpmailer": "^6.9"
     },

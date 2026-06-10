@@ -1,0 +1,15 @@
+cassiopeia.news:
+  path: '/news'
+  defaults:
+    _controller: '\Drupal\cassiopeia\Controller\NewsController::content'
+    _title_callback: '\Drupal\cassiopeia\Controller\NewsController::title'
+  requirements:
+    _permission: 'access content'
+
+cassiopeia.market_research:
+  path: '/nghien-cuu-thi-truong'
+  defaults:
+    _controller: '\Drupal\cassiopeia\Controller\MarketResearchController::content'
+    _title_callback: '\Drupal\cassiopeia\Controller\MarketResearchController::title'
+  requirements:
+    _permission: 'access content'

@@ -4,3 +4,701 @@
  * @file
  * Primary module hooks for Cassiopeia base utilities.
  */
+
+use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+use Drupal\taxonomy\TermInterface;
+use Symfony\Component\HttpFoundation\Request;
+
+/**
+ * Implements hook_theme().
+ */
+function cassiopeia_theme($existing, $type, $theme, $path) {
+  return [
+    'cassiopeia_news' => [
+      'variables' => [
+        'news_page' => NULL,
+      ],
+      'template' => 'news',
+    ],
+    'cassiopeia_market_research' => [
+      'variables' => [
+        'market_page' => NULL,
+      ],
+      'template' => 'market-research',
+    ],
+  ];
+}
+
+/**
+ * Language-aware URL for the market research listing page.
+ */
+function cassiopeia_market_research_url(array $options = []): string {
+  $options += ['language' => \Drupal::languageManager()->getCurrentLanguage()];
+  return Url::fromRoute('cassiopeia.market_research', [], $options)->toString();
+}
+
+/**
+ * Language-aware URL for the all-news page.
+ */
+function cassiopeia_news_url(array $options = []): string {
+  $options += ['language' => \Drupal::languageManager()->getCurrentLanguage()];
+  return Url::fromRoute('cassiopeia.news', [], $options)->toString();
+}
+
+/**
+ * Builds variables for article detail templates.
+ */
+function cassiopeia_article_detail_variables(NodeInterface $node): array {
+  $date_formatter = \Drupal::service('date.formatter');
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $image_style_storage = \Drupal::entityTypeManager()->getStorage('image_style');
+  $image_style = $image_style_storage->load('wide') ?: $image_style_storage->load('large');
+
+  $title = $node->label();
+  $share_url = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
+
+  $body = '';
+  if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+    $body = Markup::create($node->get('body')->processed);
+  }
+
+  $category = '';
+  $category_url = '';
+  if ($node->hasField('field_tx_article') && !$node->get('field_tx_article')->isEmpty()) {
+    $term = $node->get('field_tx_article')->entity;
+    if ($term instanceof TermInterface) {
+      $category = $term->label();
+      $category_url = $term->toUrl()->toString();
+    }
+  }
+
+  $image = NULL;
+  if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
+    $image_item = $node->get('field_image')->first();
+    $file = $image_item?->entity;
+    if ($file) {
+      $uri = $file->getFileUri();
+      $image_url = $image_style
+        ? $file_url_generator->generateAbsoluteString($image_style->buildUri($uri))
+        : $file_url_generator->generateAbsoluteString($uri);
+      $image = [
+        'url' => $image_url,
+        'alt' => (string) ($image_item->alt ?: $title),
+        'width' => $image_item->width ?? NULL,
+        'height' => $image_item->height ?? NULL,
+      ];
+    }
+  }
+
+  $created = (int) $node->getCreatedTime();
+  $breadcrumb = [
+    [
+      'label' => t('Home'),
+      'url' => Url::fromRoute('<front>')->toString(),
+    ],
+    [
+      'label' => t('News'),
+      'url' => cassiopeia_news_url(),
+    ],
+  ];
+  if ($category !== '') {
+    $breadcrumb[] = [
+      'label' => $category,
+      'url' => $category_url ?: NULL,
+    ];
+  }
+  $breadcrumb[] = [
+    'label' => Unicode::truncate($title, 80, TRUE, TRUE),
+    'url' => NULL,
+  ];
+
+  return [
+    'title' => $title,
+    'body' => $body,
+    'category' => $category,
+    'category_url' => $category_url,
+    'date' => $date_formatter->format($created, 'custom', 'd-m-Y'),
+    'date_iso' => $date_formatter->format($created, 'html_date'),
+    'share_url' => $share_url,
+    'image' => $image,
+    'breadcrumb' => $breadcrumb,
+    'related' => cassiopeia_article_related_items($node),
+  ];
+}
+
+/**
+ * Loads related article cards.
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function cassiopeia_article_related_items(NodeInterface $node, int $limit = 3): array {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $query = $storage->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('type', 'article')
+    ->condition('status', 1)
+    ->condition('nid', $node->id(), '<>')
+    ->sort('created', 'DESC')
+    ->range(0, $limit);
+
+  if ($node->hasField('field_tx_article') && !$node->get('field_tx_article')->isEmpty()) {
+    $term_id = $node->get('field_tx_article')->target_id;
+    if ($term_id) {
+      $query->condition('field_tx_article.target_id', $term_id);
+    }
+  }
+
+  $nids = $query->execute();
+  if (!$nids) {
+    return [];
+  }
+
+  $date_formatter = \Drupal::service('date.formatter');
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+
+  $items = [];
+  /** @var \Drupal\node\NodeInterface[] $nodes */
+  $nodes = $storage->loadMultiple($nids);
+  foreach ($nodes as $related_node) {
+    $related_category = '';
+    if ($related_node->hasField('field_tx_article') && !$related_node->get('field_tx_article')->isEmpty()) {
+      $term = $related_node->get('field_tx_article')->entity;
+      if ($term instanceof TermInterface) {
+        $related_category = $term->label();
+      }
+    }
+
+    $related_image = NULL;
+    if ($related_node->hasField('field_image') && !$related_node->get('field_image')->isEmpty()) {
+      $image_item = $related_node->get('field_image')->first();
+      $file = $image_item?->entity;
+      if ($file) {
+        $uri = $file->getFileUri();
+        $related_image = [
+          'url' => $image_style
+            ? $file_url_generator->generateAbsoluteString($image_style->buildUri($uri))
+            : $file_url_generator->generateAbsoluteString($uri),
+          'alt' => (string) ($image_item->alt ?: $related_node->label()),
+          'width' => $image_item->width ?? NULL,
+          'height' => $image_item->height ?? NULL,
+        ];
+      }
+    }
+
+    $created = (int) $related_node->getCreatedTime();
+    $items[] = [
+      'title' => $related_node->label(),
+      'url' => $related_node->toUrl()->toString(),
+      'category' => $related_category,
+      'date' => $date_formatter->format($created, 'custom', 'd-m-Y'),
+      'date_iso' => $date_formatter->format($created, 'html_date'),
+      'image' => $related_image,
+    ];
+  }
+
+  return $items;
+}
+
+/**
+ * Base entity query for published article nodes.
+ */
+function cassiopeia_article_node_query(): QueryInterface {
+  return \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('type', 'article')
+    ->condition('status', 1);
+}
+
+/**
+ * Builds teaser data for an article node.
+ */
+function cassiopeia_article_teaser_data(
+  NodeInterface $node,
+  ?\Drupal\Core\Datetime\DateFormatterInterface $date_formatter = NULL,
+  ?\Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator = NULL,
+  $image_style = NULL,
+  bool $with_excerpt = FALSE,
+): array {
+  $date_formatter ??= \Drupal::service('date.formatter');
+  $file_url_generator ??= \Drupal::service('file_url_generator');
+  $image_style ??= \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+
+  $category = '';
+  if ($node->hasField('field_tx_article') && !$node->get('field_tx_article')->isEmpty()) {
+    $term = $node->get('field_tx_article')->entity;
+    if ($term instanceof TermInterface) {
+      $category = $term->label();
+    }
+  }
+
+  $image = NULL;
+  if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
+    $image_item = $node->get('field_image')->first();
+    $file = $image_item?->entity;
+    if ($file) {
+      $uri = $file->getFileUri();
+      $image = [
+        'url' => $image_style
+          ? $file_url_generator->generateAbsoluteString($image_style->buildUri($uri))
+          : $file_url_generator->generateAbsoluteString($uri),
+        'alt' => (string) ($image_item->alt ?: $node->label()),
+        'width' => $image_item->width ?? NULL,
+        'height' => $image_item->height ?? NULL,
+      ];
+    }
+  }
+
+  $created = (int) $node->getCreatedTime();
+  $item = [
+    'title' => $node->label(),
+    'url' => $node->toUrl()->toString(),
+    'category' => $category,
+    'date' => $date_formatter->format($created, 'custom', 'd-m-Y'),
+    'date_iso' => $date_formatter->format($created, 'html_date'),
+    'image' => $image,
+  ];
+
+  if ($with_excerpt) {
+    $item['excerpt'] = cassiopeia_article_excerpt($node);
+  }
+
+  return $item;
+}
+
+/**
+ * Returns a plain-text excerpt for an article node.
+ */
+function cassiopeia_article_excerpt(NodeInterface $node, int $length = 220): string {
+  if (!$node->hasField('body') || $node->get('body')->isEmpty()) {
+    return '';
+  }
+  $body = $node->get('body')->first();
+  $summary = trim((string) ($body->summary ?? ''));
+  if ($summary !== '') {
+    return Unicode::truncate($summary, $length, TRUE, TRUE);
+  }
+  $text = trim(strip_tags((string) $body->processed));
+  return Unicode::truncate($text, $length, TRUE, TRUE);
+}
+
+/**
+ * Builds variables for news listing pages (all articles or one term).
+ */
+function cassiopeia_news_page_variables(?TermInterface $term = NULL, ?Request $request = NULL): array {
+  $request ??= \Drupal::request();
+  $search = trim((string) $request->query->get('q', ''));
+  $page = max(0, (int) $request->query->get('page', 0));
+  $list_per_page = 10;
+  $featured_count = 3;
+  $language = \Drupal::languageManager()->getCurrentLanguage();
+
+  $base_query = cassiopeia_article_node_query();
+  if ($term !== NULL) {
+    $base_query->condition('field_tx_article.target_id', $term->id());
+  }
+  if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
+    $base_query->condition('langcode', $language->getId());
+  }
+  if ($search !== '') {
+    $like = '%' . \Drupal::database()->escapeLike($search) . '%';
+    $base_query->condition('title', $like, 'LIKE');
+  }
+
+  $featured_nids = array_values((clone $base_query)
+    ->sort('created', 'DESC')
+    ->range(0, $featured_count)
+    ->execute());
+
+  $count_query = clone $base_query;
+  $total = (int) $count_query->count()->execute();
+  $list_total = max(0, $total - count($featured_nids));
+
+  $list_query = clone $base_query;
+  if ($featured_nids !== []) {
+    $list_query->condition('nid', $featured_nids, 'NOT IN');
+  }
+  $list_nids = array_values($list_query
+    ->sort('created', 'DESC')
+    ->range($page * $list_per_page, $list_per_page)
+    ->execute());
+
+  $date_formatter = \Drupal::service('date.formatter');
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+
+  $featured = [];
+  if ($featured_nids !== []) {
+    $nodes = $storage->loadMultiple($featured_nids);
+    foreach ($featured_nids as $nid) {
+      if (isset($nodes[$nid])) {
+        $featured[] = cassiopeia_article_teaser_data($nodes[$nid], $date_formatter, $file_url_generator, $image_style);
+      }
+    }
+  }
+
+  $list_items = [];
+  if ($list_nids !== []) {
+    $nodes = $storage->loadMultiple($list_nids);
+    foreach ($list_nids as $nid) {
+      if (isset($nodes[$nid])) {
+        $list_items[] = cassiopeia_article_teaser_data($nodes[$nid], $date_formatter, $file_url_generator, $image_style, TRUE);
+      }
+    }
+  }
+
+  $list_columns = [[], []];
+  foreach ($list_items as $index => $item) {
+    $list_columns[$index % 2][] = $item;
+  }
+
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $filter_tids = $term_storage->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('vid', 'tx_article')
+    ->sort('name')
+    ->execute();
+  $filter_terms = $filter_tids ? $term_storage->loadMultiple($filter_tids) : [];
+  usort($filter_terms, static fn(TermInterface $a, TermInterface $b): int => strnatcasecmp($a->label(), $b->label()));
+
+  $news_landing_url = cassiopeia_news_url();
+  $filters = [
+    [
+      'label' => t('All'),
+      'url' => $news_landing_url,
+      'active' => $term === NULL,
+    ],
+  ];
+  foreach ($filter_terms as $filter_term) {
+    if ($filter_term instanceof TermInterface) {
+      $filters[] = [
+        'label' => $filter_term->label(),
+        'url' => $filter_term->toUrl('canonical', ['language' => $language])->toString(),
+        'active' => $term !== NULL && (int) $filter_term->id() === (int) $term->id(),
+      ];
+    }
+  }
+
+  $base_url = $term !== NULL
+    ? $term->toUrl('canonical', ['language' => $language])->toString()
+    : $news_landing_url;
+  $query_suffix = $search !== '' ? ['q' => $search] : [];
+  $total_pages = $list_total > 0 ? (int) ceil($list_total / $list_per_page) : 0;
+  $pager = [];
+  for ($i = 0; $i < $total_pages; $i++) {
+    $query = $query_suffix;
+    if ($i > 0) {
+      $query['page'] = $i;
+    }
+    $pager[] = [
+      'number' => $i + 1,
+      'url' => $query === [] ? $base_url : $base_url . '?' . http_build_query($query),
+      'active' => $i === $page,
+    ];
+  }
+
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $hero_image = '/' . $theme_path . '/images/news/hero-banner.jpg';
+
+  $breadcrumb = [
+    [
+      'label' => t('Home'),
+      'url' => Url::fromRoute('<front>', [], ['language' => $language])->toString(),
+    ],
+    [
+      'label' => t('News'),
+      'url' => $term === NULL ? NULL : $news_landing_url,
+    ],
+  ];
+  if ($term !== NULL) {
+    $breadcrumb[] = [
+      'label' => $term->label(),
+      'url' => NULL,
+    ];
+  }
+
+  return [
+    'title' => $term !== NULL ? $term->label() : t('News'),
+    'hero_image' => $hero_image,
+    'hero_image_alt' => $term !== NULL ? $term->label() : (string) t('News'),
+    'breadcrumb' => $breadcrumb,
+    'search_action' => $base_url,
+    'search_query' => $search,
+    'filters' => $filters,
+    'featured' => $featured,
+    'list_columns' => $list_columns,
+    'pager' => $pager,
+    'has_results' => $total > 0,
+    'empty_message' => $term !== NULL
+      ? (string) t('No articles found in this category.')
+      : (string) t('No articles found.'),
+  ];
+}
+
+/**
+ * Base entity query for published market_research nodes.
+ */
+function cassiopeia_market_research_node_query(): QueryInterface {
+  return \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('type', 'market_research')
+    ->condition('status', 1);
+}
+
+/**
+ * Builds teaser data for a market_research node.
+ */
+function cassiopeia_market_research_teaser_data(
+  NodeInterface $node,
+  ?\Drupal\Core\Datetime\DateFormatterInterface $date_formatter = NULL,
+  ?\Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator = NULL,
+  $image_style = NULL,
+  string $date_format = 'custom',
+  string $date_custom = 'd/m/Y',
+): array {
+  $date_formatter ??= \Drupal::service('date.formatter');
+  $file_url_generator ??= \Drupal::service('file_url_generator');
+  $image_style ??= \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+
+  $image = NULL;
+  if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
+    $image_item = $node->get('field_image')->first();
+    $file = $image_item?->entity;
+    if ($file) {
+      $uri = $file->getFileUri();
+      $image = [
+        'url' => $image_style
+          ? $file_url_generator->generateAbsoluteString($image_style->buildUri($uri))
+          : $file_url_generator->generateAbsoluteString($uri),
+        'alt' => (string) ($image_item->alt ?: $node->label()),
+        'width' => $image_item->width ?? NULL,
+        'height' => $image_item->height ?? NULL,
+      ];
+    }
+  }
+
+  $created = (int) $node->getCreatedTime();
+  return [
+    'title' => $node->label(),
+    'url' => $node->toUrl('canonical', ['language' => $node->language()])->toString(),
+    'date' => $date_formatter->format($created, $date_format, $date_custom),
+    'date_iso' => $date_formatter->format($created, 'html_date'),
+    'image' => $image,
+  ];
+}
+
+/**
+ * Builds variables for the market research listing page.
+ */
+function cassiopeia_market_research_page_variables(?Request $request = NULL): array {
+  $request ??= \Drupal::request();
+  $search = trim((string) $request->query->get('q', ''));
+  $page = max(0, (int) $request->query->get('page', 0));
+  $per_page = 12;
+  $language = \Drupal::languageManager()->getCurrentLanguage();
+
+  $base_query = cassiopeia_market_research_node_query();
+  if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
+    $base_query->condition('langcode', $language->getId());
+  }
+  if ($search !== '') {
+    $like = '%' . \Drupal::database()->escapeLike($search) . '%';
+    $base_query->condition('title', $like, 'LIKE');
+  }
+
+  $total = (int) (clone $base_query)->count()->execute();
+  $nids = array_values((clone $base_query)
+    ->sort('created', 'DESC')
+    ->range($page * $per_page, $per_page)
+    ->execute());
+
+  $date_formatter = \Drupal::service('date.formatter');
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+
+  $items = [];
+  if ($nids !== []) {
+    $nodes = $storage->loadMultiple($nids);
+    foreach ($nids as $nid) {
+      if (isset($nodes[$nid])) {
+        $items[] = cassiopeia_market_research_teaser_data($nodes[$nid], $date_formatter, $file_url_generator, $image_style);
+      }
+    }
+  }
+
+  $base_url = cassiopeia_market_research_url();
+  $query_suffix = $search !== '' ? ['q' => $search] : [];
+  $total_pages = $total > 0 ? (int) ceil($total / $per_page) : 0;
+  $pager = [];
+  for ($i = 0; $i < $total_pages; $i++) {
+    $query = $query_suffix;
+    if ($i > 0) {
+      $query['page'] = $i;
+    }
+    $pager[] = [
+      'number' => $i + 1,
+      'url' => $query === [] ? $base_url : $base_url . '?' . http_build_query($query),
+      'active' => $i === $page,
+    ];
+  }
+
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+
+  return [
+    'title' => t('Market research'),
+    'hero_image' => '/' . $theme_path . '/images/tai-lieu-banner.jpg',
+    'hero_image_alt' => (string) t('Market research'),
+    'breadcrumb' => [
+      [
+        'label' => t('Home'),
+        'url' => Url::fromRoute('<front>', [], ['language' => $language])->toString(),
+      ],
+      [
+        'label' => t('Resources'),
+        'url' => Url::fromUserInput('/cam-nang-dau-tu', ['language' => $language])->toString(),
+      ],
+      [
+        'label' => t('Market research'),
+        'url' => NULL,
+      ],
+    ],
+    'search_action' => $base_url,
+    'search_query' => $search,
+    'items' => $items,
+    'pager' => $pager,
+    'has_results' => $total > 0,
+    'empty_message' => (string) t('No market research reports found.'),
+  ];
+}
+
+/**
+ * Loads sidebar/related market_research cards.
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function cassiopeia_market_research_related_items(NodeInterface $node, int $limit = 4): array {
+  $query = cassiopeia_market_research_node_query()
+    ->condition('nid', $node->id(), '<>')
+    ->sort('created', 'DESC')
+    ->range(0, $limit);
+
+  if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
+    $query->condition('langcode', $node->language()->getId());
+  }
+
+  $nids = $query->execute();
+  if (!$nids) {
+    return [];
+  }
+
+  $date_formatter = \Drupal::service('date.formatter');
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+
+  $items = [];
+  $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
+  foreach ($nids as $nid) {
+    if (isset($nodes[$nid])) {
+      $items[] = cassiopeia_market_research_teaser_data(
+        $nodes[$nid],
+        $date_formatter,
+        $file_url_generator,
+        $image_style,
+        'custom',
+        'd-m-Y',
+      );
+    }
+  }
+
+  return $items;
+}
+
+/**
+ * Builds variables for market_research detail templates.
+ */
+function cassiopeia_market_research_detail_variables(NodeInterface $node): array {
+  $date_formatter = \Drupal::service('date.formatter');
+  $language = $node->language();
+  $title = $node->label();
+  $share_url = $node->toUrl('canonical', ['absolute' => TRUE, 'language' => $language])->toString();
+  $created = (int) $node->getCreatedTime();
+
+  $body = '';
+  if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+    $body = Markup::create($node->get('body')->processed);
+  }
+
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $list_url = cassiopeia_market_research_url(['language' => $language]);
+
+  return [
+    'title' => $title,
+    'body' => $body,
+    'date' => $date_formatter->format($created, 'custom', 'd-m-Y'),
+    'date_iso' => $date_formatter->format($created, 'html_date'),
+    'share_url' => $share_url,
+    'hero_image' => '/' . $theme_path . '/images/tai-lieu-banner.jpg',
+    'hero_image_alt' => $title,
+    'breadcrumb' => [
+      [
+        'label' => t('Home'),
+        'url' => Url::fromRoute('<front>', [], ['language' => $language])->toString(),
+      ],
+      [
+        'label' => t('Market reports'),
+        'url' => $list_url,
+      ],
+      [
+        'label' => Unicode::truncate($title, 80, TRUE, TRUE),
+        'url' => NULL,
+      ],
+    ],
+    'sidebar' => cassiopeia_market_research_related_items($node, 4),
+    'related' => cassiopeia_market_research_related_items($node, 9),
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for views_view templates.
+ *
+ * Hides default node teasers on tx_article term pages; layout comes from news.html.twig.
+ */
+function cassiopeia_preprocess_views_view(array &$variables): void {
+  if (!\Drupal::moduleHandler()->moduleExists('views')) {
+    return;
+  }
+
+  $view = $variables['view'];
+  if ($view->storage->id() !== 'taxonomy_term' || $view->current_display !== 'page_1') {
+    return;
+  }
+
+  $tid = (int) ($view->args[0] ?? 0);
+  if (!$tid) {
+    return;
+  }
+
+  $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid);
+  if (!$term instanceof TermInterface || $term->bundle() !== 'tx_article') {
+    return;
+  }
+
+  $variables['rows'] = [];
+  $variables['empty'] = '';
+  $variables['pager'] = [];
+  $variables['feed_icons'] = [];
+  $variables['more'] = '';
+  $variables['footer'] = '';
+}

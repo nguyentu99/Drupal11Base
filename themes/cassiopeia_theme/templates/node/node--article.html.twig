@@ -1,0 +1,107 @@
+{#
+/**
+ * @file
+ * Article detail page.
+ */
+#}
+{% if view_mode == 'full' and article %}
+  <div class="article-hero">
+    <div class="container article-hero__inner">
+      {% if article.breadcrumb %}
+        <nav class="article-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
+          <ol class="breadcrumb article-hero__breadcrumb">
+            {% for item in article.breadcrumb %}
+              {% if item.url %}
+                <li class="breadcrumb-item"><a href="{{ item.url }}">{{ item.label }}</a></li>
+              {% else %}
+                <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
+              {% endif %}
+            {% endfor %}
+          </ol>
+        </nav>
+      {% endif %}
+      <h1 class="article-hero__title">{{ article.title }}</h1>
+      {% if article.share_url %}
+        <div class="article-share article-hero__share" aria-label="{{ 'Share article'|t }}">
+          <a class="article-share__link" href="https://www.facebook.com/sharer/sharer.php?u={{ article.share_url|url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="{{ 'Share on Facebook'|t }}">
+            <i class="fa-brands fa-facebook-f" aria-hidden="true" style="color: #1877F2;"></i>
+          </a>
+          <a class="article-share__link" href="https://www.linkedin.com/sharing/share-offsite/?url={{ article.share_url|url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="{{ 'Share on LinkedIn'|t }}">
+            <i class="fa-brands fa-linkedin-in" aria-hidden="true" style="color: #3872BE;"></i>
+          </a>
+          <a class="article-share__link" href="https://zalo.me/share?url={{ article.share_url|url_encode }}" target="_blank" rel="noopener noreferrer" style="color: #1877F2; font-weight: 600;">
+            Zalo
+          </a>
+          <a class="article-share__link" href="{{ article.share_url }}" aria-label="{{ 'Copy link'|t }}">
+            <i class="fa-solid fa-link" aria-hidden="true" style="color: #FFAD0F;"></i>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <main class="news-article">
+    <div class="container">
+      <div class="news-article__content">
+        {{ article.body }}
+        <hr>
+        {% if article.share_url %}
+          <div class="news-article__share-footer">
+            <span>{{ 'Share'|t }}:</span>
+            <div class="article-share" aria-label="{{ 'Share article'|t }}">
+              <a class="article-share__link" href="https://www.facebook.com/sharer/sharer.php?u={{ article.share_url|url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="{{ 'Share on Facebook'|t }}">
+                <i class="fa-brands fa-facebook-f" aria-hidden="true" style="color: #1877F2;"></i>
+              </a>
+              <a class="article-share__link" href="https://www.linkedin.com/sharing/share-offsite/?url={{ article.share_url|url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="{{ 'Share on LinkedIn'|t }}">
+                <i class="fa-brands fa-linkedin-in" aria-hidden="true" style="color: #3872BE;"></i>
+              </a>
+              <a class="article-share__link" href="https://zalo.me/share?url={{ article.share_url|url_encode }}" target="_blank" rel="noopener noreferrer" style="color: #1877F2; font-weight: 600;">
+                Zalo
+              </a>
+              <a class="article-share__link" href="{{ article.share_url }}" aria-label="{{ 'Copy link'|t }}">
+                <i class="fa-solid fa-link" aria-hidden="true" style="color: #FFAD0F;"></i>
+              </a>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+
+  {% if article.related %}
+    <div class="news-related">
+      <div class="container">
+        <h2 class="t-heading-1 section--news__title">{{ 'Related news'|t }}</h2>
+        <div class="section--news__carousel-wrap">
+          <div class="news-carousel owl-carousel">
+            {% for item in article.related %}
+              <article class="news-card">
+                <a class="news-card__media" href="{{ item.url }}">
+                  {% if item.image %}
+                    <img class="news-card__img" src="{{ item.image.url }}" alt="{{ item.image.alt }}"{% if item.image.width %} width="{{ item.image.width }}"{% endif %}{% if item.image.height %} height="{{ item.image.height }}"{% endif %}>
+                  {% endif %}
+                </a>
+                <div class="news-card__body">
+                  {% if item.category %}
+                    <span class="news-card__cat">{{ item.category }}</span>
+                  {% endif %}
+                  <h3 class="news-card__title"><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                  {% if item.date %}
+                    <time class="news-card__date" datetime="{{ item.date_iso }}">{{ item.date }}</time>
+                  {% endif %}
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+          <div class="news-carousel__dots">
+            {% for item in article.related %}
+              <button type="button"{% if loop.first %} class="is-active"{% endif %} aria-label="{{ 'Related news @num'|t({'@num': loop.index}) }}"></button>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% else %}
+  {{ content }}
+{% endif %}

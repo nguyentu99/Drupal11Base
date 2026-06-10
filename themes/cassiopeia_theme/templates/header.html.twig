@@ -179,6 +179,7 @@
                                     <a class="nav-link dropdown-toggle" href="{{ base_path }}#" role="button" data-bs-toggle="dropdown"
                                         aria-expanded="false">Tin tức <i class="fa-solid fa-chevron-down"></i></a>
                                     <ul class="dropdown-menu site-header__submenu">
+                                        <li><a class="site-header__submenu-link" href="{{ path('cassiopeia.news') }}">{{ 'All'|t }}</a></li>
                                         <li><a class="site-header__submenu-link" href="{{ base_path }}tin-tuc-doanh-nghiep">Tin
                                                 tức doanh nghiệp</a></li>
                                         <li><a class="site-header__submenu-link" href="{{ base_path }}#">Tin dự án</a></li>
@@ -201,7 +202,7 @@
                                         <li><a class="site-header__submenu-link" href="{{ base_path }}cam-nang-dau-tu">Cẩm nang
                                                 đầu tư</a></li>
                                         <li><a class="site-header__submenu-link"
-                                                href="{{ base_path }}nghien-cuu-thi-truong">Nghiên cứu thị trường</a>
+                                                href="{{ path('cassiopeia.market_research') }}">Nghiên cứu thị trường</a>
                                         </li>
                                         <li><a class="site-header__submenu-link" href="{{ base_path }}thu-vien-anh">Thư viện hình
                                                 ảnh</a></li>
