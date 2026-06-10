@@ -1,39 +1,44 @@
 <div id="app-wrapper" class="app-wrapper">
-  {{ include('@cassiopeia_admin_theme/templates/header.html.twig', {
-    account: account,
-    account_avatar: account_avatar_header,
-  }) }}
-  {{ include('@cassiopeia_admin_theme/templates/appsidebar.html.twig', {
-    administrator_menu: administrator_menu,
-    account: account,
-    account_avatar: account_avatar_sidebar,
-  }) }}
-  <main class="app-main">
-    <div class="app-content-header">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-sm-6">
-            <h3 class="mb-0">{{ page['#title'] }}</h3>
-          </div>
-          <div class="col-sm-6">
-            <div class="float-sm-end">{{ page.breadcrumbs }}</div>
-          </div>
+    {{ include('@cassiopeia_admin_theme/templates/header.html.twig', {
+        account: account,
+        account_avatar: account_avatar_header,
+    }) }}
+    {{ include('@cassiopeia_admin_theme/templates/appsidebar.html.twig', {
+        administrator_menu: administrator_menu,
+        account: account,
+        account_avatar: account_avatar_sidebar,
+    }) }}
+    <main class="app-main">
+        <div class="app-content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h3 class="mb-0">{{ page['#title'] }}</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="float-sm-end">{{ page.breadcrumbs }}</div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="app-content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="app-page-status-messages">{{ page.status_messages }}</div>
-          {% set page_highlighted %}{% apply spaceless %}{{ page.highlighted }}{% endapply %}{% endset %}
-          {% if page_highlighted|trim|striptags('<!-- -->') %}
-            <div class="app-page-highlighted">{{ page.highlighted }}</div>
-          {% endif %}
-          <div class="app-page-content">{{ page.content }}</div>
+        <div class="app-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="app-page-status-messages">{{ page.status_messages }}</div>
+                    {% set page_highlighted %}{% apply spaceless %}{{ page.highlighted }}{% endapply %}{% endset %}
+                    {% if page_highlighted|trim|striptags('<!-- -->') %}
+                        <div class="app-page-highlighted">{{ page.highlighted }}</div>
+                    {% endif %}
+                    <div class="box box-solid">
+                        <div class="box-body">
+                            {{ page.content }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </main>
-  {{ include('@cassiopeia_admin_theme/templates/footer.html.twig') }}
-  {{ include('@cassiopeia_admin_theme/templates/controlsidebar.html.twig') }}
+    </main>
 </div>
+{{ include('@cassiopeia_admin_theme/templates/footer.html.twig') }}
+{{ include('@cassiopeia_admin_theme/templates/controlsidebar.html.twig') }}
+

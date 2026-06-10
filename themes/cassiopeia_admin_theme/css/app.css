@@ -57,3 +57,11 @@ small .admin-link::after {
   right: -5px;
   top: -2px;
 }
+
+.app-page-content .block-page-title-block {
+  display: none;
+}
+
+.app-content .description {
+  display: none;
+}

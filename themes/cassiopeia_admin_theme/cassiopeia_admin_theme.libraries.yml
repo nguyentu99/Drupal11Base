@@ -32,6 +32,21 @@ admin-app:
   dependencies:
     - cassiopeia_admin_theme/adminlte
 
+toast-messages:
+  version: VERSION
+  css:
+    component:
+      css/toast-messages.css: {}
+  js:
+    js/toast-messages.js:
+      attributes:
+        defer: true
+  dependencies:
+    - core/drupal
+    - core/drupal.message
+    - core/once
+    - cassiopeia/bootstrap
+
 global-styling:
   version: VERSION
   dependencies:
@@ -39,6 +54,7 @@ global-styling:
     - cassiopeia/bootstrap
     - cassiopeia_admin_theme/bootstrap-icons-subset
     - cassiopeia_admin_theme/admin-app
+    - cassiopeia_admin_theme/toast-messages
 
 overlayscrollbars:
   js:
