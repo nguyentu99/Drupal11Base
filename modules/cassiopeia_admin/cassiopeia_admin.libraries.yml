@@ -24,6 +24,9 @@ form.CassiopeiaAdminAdministratorBlockEditForm:
 
 form.CassiopeiaAdminAdministratorBlocksForm:
   version: VERSION
+  dependencies:
+    - core/drupal
+    - core/drupal.tabledrag
 
 form.CassiopeiaAdminAdministratorBlockItemAddForm:
   version: VERSION
