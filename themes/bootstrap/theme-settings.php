@@ -8,12 +8,14 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
+#[LegacyHook]
 function bootstrap_form_system_theme_settings_alter(&$form, FormStateInterface $form_state, $form_id = NULL) {
   $form['#attached']['library'][] = 'bootstrap/color-picker';
 
