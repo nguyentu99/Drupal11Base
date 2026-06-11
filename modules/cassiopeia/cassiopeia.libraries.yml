@@ -21,3 +21,10 @@ gallery:
     js/gallery.js: { preprocess: false }
   dependencies:
     - core/drupal
+
+contact-form:
+  version: VERSION
+  js:
+    js/contact-form.js: {}
+  dependencies:
+    - core/drupal

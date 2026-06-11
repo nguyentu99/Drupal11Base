@@ -45,3 +45,29 @@ cassiopeia.config:
     _title: 'Cassiopeia settings'
   requirements:
     _permission: 'administer cassiopeia site configuration'
+
+cassiopeia.contact_submissions:
+  path: '/admin/cassiopeia/contact-submissions'
+  defaults:
+    _controller: '\Drupal\cassiopeia\Controller\ContactSubmissionAdminController::listing'
+    _title: 'Contact submissions'
+  requirements:
+    _permission: 'administer cassiopeia contact submissions'
+
+cassiopeia.contact_submission_view:
+  path: '/admin/cassiopeia/contact-submissions/{id}'
+  defaults:
+    _controller: '\Drupal\cassiopeia\Controller\ContactSubmissionAdminController::view'
+    _title: 'Contact submission'
+  requirements:
+    _permission: 'administer cassiopeia contact submissions'
+    id: '\d+'
+
+cassiopeia.contact_submission_delete:
+  path: '/admin/cassiopeia/contact-submissions/{id}/delete'
+  defaults:
+    _form: '\Drupal\cassiopeia\Form\ContactSubmissionDeleteForm'
+    _title: 'Delete contact submission'
+  requirements:
+    _permission: 'administer cassiopeia contact submissions'
+    id: '\d+'

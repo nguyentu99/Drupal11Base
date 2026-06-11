@@ -119,3 +119,22 @@ cassiopeia.settings:
         address_map_url:
           type: string
           label: 'Address Google Maps URL'
+    contact_form:
+      type: mapping
+      label: 'Contact form'
+      mapping:
+        notify_email:
+          type: string
+          label: 'Notification email'
+        terms_url:
+          type: string
+          label: 'Terms URL'
+        consent_before:
+          type: string
+          label: 'Consent text before link'
+        consent_link_text:
+          type: string
+          label: 'Consent link text'
+        consent_after:
+          type: string
+          label: 'Consent text after link'

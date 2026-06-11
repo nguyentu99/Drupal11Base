@@ -3,6 +3,12 @@
  * Toast notifications — aligned with cassiopeia_admin_theme.
  */
 
+.placeholder {
+  vertical-align: unset;
+  background-color: transparent;
+  opacity: 1;
+}
+
 .app-toast-container {
   z-index: 1090;
   max-width: min(24rem, calc(100vw - 1.5rem));

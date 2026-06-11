@@ -1,3 +1,7 @@
 administer cassiopeia site configuration:
   title: 'Administer Cassiopeia site configuration'
   restrict access: true
+
+administer cassiopeia contact submissions:
+  title: 'Administer Cassiopeia contact submissions'
+  restrict access: true

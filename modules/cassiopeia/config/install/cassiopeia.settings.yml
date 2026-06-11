@@ -47,3 +47,9 @@ contact_page:
   office_name: 'Trụ sở CNCTech Group'
   address: 'Lô F1-2-3, KCN Thăng Long Vĩnh Phúc, Bình Nguyên, Phú Thọ, Việt Nam'
   address_map_url: ''
+contact_form:
+  notify_email: 'hello@cisgroup.vn'
+  terms_url: ''
+  consent_before: 'Tôi đồng ý với'
+  consent_link_text: 'điều khoản chấp thuận'
+  consent_after: 'cung cấp thông tin của CNC Industrial'

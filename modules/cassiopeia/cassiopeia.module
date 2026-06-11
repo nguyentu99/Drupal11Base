@@ -47,6 +47,7 @@ function cassiopeia_theme($existing, $type, $theme, $path) {
     'cassiopeia_contact' => [
       'variables' => [
         'contact_page' => NULL,
+        'contact_form' => NULL,
       ],
       'template' => 'contact',
     ],
@@ -1452,6 +1453,170 @@ function cassiopeia_contact_page_variables(): array {
       ],
     ],
   ];
+}
+
+/**
+ * Returns contact form settings (fixed labels + configurable consent/notify).
+ */
+function cassiopeia_contact_form_settings(): array {
+  $raw = \Drupal::config('cassiopeia.settings')->get('contact_form') ?: [];
+  $terms_url = trim((string) ($raw['terms_url'] ?? ''));
+  if ($terms_url !== '' && !str_starts_with($terms_url, 'http')) {
+    $terms_url = Url::fromUserInput($terms_url)->toString();
+  }
+
+  return [
+    'name_label' => (string) t('Full name'),
+    'name_placeholder' => (string) t('Full name'),
+    'email_label' => (string) t('Email'),
+    'email_placeholder' => (string) t('Email address'),
+    'phone_label' => (string) t('Phone number'),
+    'phone_placeholder' => (string) t('Phone number'),
+    'message_label' => (string) t('Consultation request'),
+    'message_placeholder' => (string) t('Enter your message…'),
+    'submit_label' => (string) t('Send information'),
+    'success_message' => (string) t('Thank you. We have received your request and will contact you soon.'),
+    'notify_email' => (string) ($raw['notify_email'] ?? ''),
+    'terms_url' => $terms_url,
+    'consent_before' => (string) ($raw['consent_before'] ?? (string) t('I agree to the')),
+    'consent_link_text' => (string) ($raw['consent_link_text'] ?? (string) t('terms of consent')),
+    'consent_after' => (string) ($raw['consent_after'] ?? (string) t('for providing information to CNC Industrial')),
+  ];
+}
+
+/**
+ * Builds consent checkbox title markup.
+ */
+function cassiopeia_contact_form_consent_title(array $settings): Markup {
+  $parts = [htmlspecialchars($settings['consent_before'], ENT_QUOTES, 'UTF-8')];
+  if ($settings['terms_url'] !== '') {
+    $parts[] = '<a href="' . htmlspecialchars($settings['terms_url'], ENT_QUOTES, 'UTF-8') . '">'
+      . htmlspecialchars($settings['consent_link_text'], ENT_QUOTES, 'UTF-8') . '</a>';
+  }
+  else {
+    $parts[] = htmlspecialchars($settings['consent_link_text'], ENT_QUOTES, 'UTF-8');
+  }
+  $parts[] = htmlspecialchars($settings['consent_after'], ENT_QUOTES, 'UTF-8');
+  return Markup::create(implode(' ', $parts));
+}
+
+/**
+ * Saves a contact submission and returns its ID.
+ */
+function cassiopeia_contact_submission_save(array $values): int {
+  $values += [
+    'message' => '',
+    'consent' => 0,
+    'status' => 'new',
+    'langcode' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
+    'created' => \Drupal::time()->getRequestTime(),
+  ];
+
+  return (int) \Drupal::database()->insert('cassiopeia_contact_submission')
+    ->fields([
+      'name' => $values['name'],
+      'email' => $values['email'],
+      'phone' => $values['phone'],
+      'message' => $values['message'],
+      'consent' => (int) $values['consent'],
+      'status' => $values['status'],
+      'langcode' => $values['langcode'],
+      'created' => (int) $values['created'],
+    ])
+    ->execute();
+}
+
+/**
+ * Loads a contact submission by ID.
+ */
+function cassiopeia_contact_submission_load(int $id): ?array {
+  $record = \Drupal::database()->select('cassiopeia_contact_submission', 'c')
+    ->fields('c')
+    ->condition('id', $id)
+    ->execute()
+    ->fetchAssoc();
+  return $record ?: NULL;
+}
+
+/**
+ * Updates a contact submission.
+ */
+function cassiopeia_contact_submission_update(int $id, array $values): void {
+  \Drupal::database()->update('cassiopeia_contact_submission')
+    ->fields($values)
+    ->condition('id', $id)
+    ->execute();
+}
+
+/**
+ * Deletes a contact submission.
+ */
+function cassiopeia_contact_submission_delete(int $id): void {
+  \Drupal::database()->delete('cassiopeia_contact_submission')
+    ->condition('id', $id)
+    ->execute();
+}
+
+/**
+ * Counts contact submissions.
+ */
+function cassiopeia_contact_submission_count(array $filters = []): int {
+  $query = \Drupal::database()->select('cassiopeia_contact_submission', 'c');
+  $query->addExpression('COUNT(*)');
+  if (!empty($filters['status'])) {
+    $query->condition('status', $filters['status']);
+  }
+  return (int) $query->execute()->fetchField();
+}
+
+/**
+ * Lists contact submissions.
+ *
+ * @return array{items: array<int, array<string, mixed>>, total: int}
+ */
+function cassiopeia_contact_submission_list(array $options = []): array {
+  $options += [
+    'status' => NULL,
+    'limit' => 25,
+    'offset' => 0,
+  ];
+
+  $filters = ['status' => $options['status']];
+  $total = cassiopeia_contact_submission_count($filters);
+
+  $query = \Drupal::database()->select('cassiopeia_contact_submission', 'c')
+    ->fields('c')
+    ->orderBy('created', 'DESC')
+    ->range($options['offset'], $options['limit']);
+  if ($options['status']) {
+    $query->condition('status', $options['status']);
+  }
+
+  return [
+    'items' => $query->execute()->fetchAll(\PDO::FETCH_ASSOC) ?: [],
+    'total' => $total,
+  ];
+}
+
+/**
+ * Implements hook_mail().
+ */
+function cassiopeia_mail($key, &$message, $params): void {
+  if ($key !== 'contact_submission' || empty($params['submission'])) {
+    return;
+  }
+
+  $submission = $params['submission'];
+  $message['subject'] = t('New contact submission from @name', [
+    '@name' => $submission['name'],
+  ]);
+  $message['body'][] = implode("\n", [
+    t('Name: @name', ['@name' => $submission['name']]),
+    t('Email: @email', ['@email' => $submission['email']]),
+    t('Phone: @phone', ['@phone' => $submission['phone']]),
+    t('Message: @message', ['@message' => $submission['message'] !== '' ? $submission['message'] : t('(empty)')]),
+    t('Submitted: @date', ['@date' => \Drupal::service('date.formatter')->format((int) $submission['created'], 'long')]),
+  ]);
 }
 
 /**

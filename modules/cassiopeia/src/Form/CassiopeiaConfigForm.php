@@ -262,6 +262,38 @@ class CassiopeiaConfigForm extends ConfigFormBase {
       '#default_value' => $config->get('contact_page.address_map_url'),
     ];
 
+    $form['contact_form'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Contact form'),
+      '#group' => 'tabs',
+    ];
+    $form['contact_form']['notify_email'] = [
+      '#type' => 'email',
+      '#title' => $this->t('Notification email'),
+      '#description' => $this->t('Leave empty to disable email notifications.'),
+      '#default_value' => $config->get('contact_form.notify_email'),
+    ];
+    $form['contact_form']['terms_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Terms URL'),
+      '#default_value' => $config->get('contact_form.terms_url'),
+    ];
+    $form['contact_form']['consent_before'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Consent text (before link)'),
+      '#default_value' => $config->get('contact_form.consent_before'),
+    ];
+    $form['contact_form']['consent_link_text'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Consent link text'),
+      '#default_value' => $config->get('contact_form.consent_link_text'),
+    ];
+    $form['contact_form']['consent_after'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Consent text (after link)'),
+      '#default_value' => $config->get('contact_form.consent_after'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -290,6 +322,7 @@ class CassiopeiaConfigForm extends ConfigFormBase {
       ->set('contact_strip', $values['contact_strip'])
       ->set('cta_banner', $values['cta_banner'])
       ->set('contact_page', $contact_page)
+      ->set('contact_form', $values['contact_form'])
       ->save();
   }
 

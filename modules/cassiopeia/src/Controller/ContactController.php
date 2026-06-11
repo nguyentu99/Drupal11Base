@@ -18,9 +18,11 @@ class ContactController extends ControllerBase {
     return [
       '#theme' => 'cassiopeia_contact',
       '#contact_page' => cassiopeia_contact_page_variables(),
+      '#contact_form' => $this->formBuilder()->getForm('Drupal\cassiopeia\Form\ContactForm'),
       '#cache' => [
         'tags' => ['config:cassiopeia.settings'],
-        'contexts' => ['languages:language_interface'],
+        'contexts' => ['languages:language_interface', 'session'],
+        'max-age' => 0,
       ],
     ];
   }
@@ -29,8 +31,9 @@ class ContactController extends ControllerBase {
    * Page title callback.
    */
   public function title(): string {
-    $config = cassiopeia_site_config('contact_page');
-    return $config['hero_title'] ?: (string) $this->t('Contact');
+    $page = cassiopeia_contact_page_variables();
+    $title = (string) ($page['hero_title'] ?? '');
+    return $title !== '' ? $title : (string) $this->t('Contact');
   }
 
 }

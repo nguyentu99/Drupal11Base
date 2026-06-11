@@ -1,6 +1,19 @@
+cassiopeia.admin:
+  title: 'Cassiopeia'
+  route_name: cassiopeia.config
+  parent: system.admin_config
+  weight: 50
+
 cassiopeia.config:
-  title: 'Cassiopeia settings'
+  title: 'Site settings'
   description: 'Configure contact strip, CTA banner and contact page content.'
   route_name: cassiopeia.config
-  parent: system.admin_config_system
-  weight: 50
+  parent: cassiopeia.admin
+  weight: 0
+
+cassiopeia.contact_submissions:
+  title: 'Contact submissions'
+  description: 'View and manage contact form registrations.'
+  route_name: cassiopeia.contact_submissions
+  parent: cassiopeia.admin
+  weight: 10

@@ -11,7 +11,67 @@
  * Legacy demo table removed; use config/content entities for new data.
  */
 function cassiopeia_schema(): array {
-  return [];
+  $schema['cassiopeia_contact_submission'] = [
+    'description' => 'Stores public contact form submissions.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'email' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'phone' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'message' => [
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ],
+      'consent' => [
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'status' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => TRUE,
+        'default' => 'new',
+      ],
+      'langcode' => [
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => 'vi',
+      ],
+      'created' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'created' => ['created'],
+      'status' => ['status'],
+      'email' => ['email'],
+    ],
+  ];
+
+  return $schema;
 }
 
 /**
@@ -57,4 +117,58 @@ function cassiopeia_update_11005(): void {
   if ($config->get('contact_form') !== NULL) {
     $config->clear('contact_form')->save();
   }
+}
+
+/**
+ * Re-enables contact form submissions storage and default settings.
+ */
+function cassiopeia_update_11006(): void {
+  $schema = cassiopeia_schema();
+  $db_schema = \Drupal::database()->schema();
+  if (!$db_schema->tableExists('cassiopeia_contact_submission')) {
+    $db_schema->createTable('cassiopeia_contact_submission', $schema['cassiopeia_contact_submission']);
+  }
+
+  $config = \Drupal::configFactory()->getEditable('cassiopeia.settings');
+  if ($config->get('contact_form')) {
+    return;
+  }
+
+  $path = \Drupal::service('extension.list.module')->getPath('cassiopeia') . '/config/install/cassiopeia.settings.yml';
+  if (!is_readable($path)) {
+    return;
+  }
+
+  $data = \Drupal\Component\Serialization\Yaml::decode((string) file_get_contents($path));
+  if (!empty($data['contact_form']) && is_array($data['contact_form'])) {
+    $config->set('contact_form', $data['contact_form'])->save();
+  }
+}
+
+/**
+ * Removes unused contact form label settings from config.
+ */
+function cassiopeia_update_11007(): void {
+  $config = \Drupal::configFactory()->getEditable('cassiopeia.settings');
+  $contact_form = $config->get('contact_form');
+  if (!is_array($contact_form)) {
+    return;
+  }
+
+  foreach ([
+    'name_label',
+    'name_placeholder',
+    'email_label',
+    'email_placeholder',
+    'phone_label',
+    'phone_placeholder',
+    'message_label',
+    'message_placeholder',
+    'submit_label',
+    'success_message',
+  ] as $key) {
+    unset($contact_form[$key]);
+  }
+
+  $config->set('contact_form', $contact_form)->save();
 }
