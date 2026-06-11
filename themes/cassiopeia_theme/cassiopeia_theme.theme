@@ -63,6 +63,10 @@ function cassiopeia_theme_preprocess_node(array &$variables): void {
     $variables['market_research'] = cassiopeia_market_research_detail_variables($node);
     $variables['#cache']['tags'][] = 'node_list:market_research';
   }
+  if ($node->getType() === 'investment_handbook') {
+    $variables['handbook'] = cassiopeia_investment_handbook_detail_variables($node);
+    $variables['#cache']['tags'][] = 'node_list:investment_handbook';
+  }
 }
 
 /**

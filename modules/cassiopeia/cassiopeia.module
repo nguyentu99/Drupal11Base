@@ -36,6 +36,12 @@ function cassiopeia_theme($existing, $type, $theme, $path) {
       ],
       'template' => 'gallery',
     ],
+    'cassiopeia_investment_handbook' => [
+      'variables' => [
+        'handbook_page' => NULL,
+      ],
+      'template' => 'investment-handbook',
+    ],
   ];
 }
 
@@ -53,6 +59,14 @@ function cassiopeia_market_research_url(array $options = []): string {
 function cassiopeia_gallery_url(array $options = []): string {
   $options += ['language' => \Drupal::languageManager()->getCurrentLanguage()];
   return Url::fromRoute('cassiopeia.gallery', [], $options)->toString();
+}
+
+/**
+ * Language-aware URL for the investment handbook listing page.
+ */
+function cassiopeia_investment_handbook_url(array $options = []): string {
+  $options += ['language' => \Drupal::languageManager()->getCurrentLanguage()];
+  return Url::fromRoute('cassiopeia.investment_handbook', [], $options)->toString();
 }
 
 /**
@@ -582,7 +596,7 @@ function cassiopeia_market_research_page_variables(?Request $request = NULL): ar
       ],
       [
         'label' => t('Resources'),
-        'url' => Url::fromUserInput('/cam-nang-dau-tu', ['language' => $language])->toString(),
+        'url' => cassiopeia_investment_handbook_url(['language' => $language]),
       ],
       [
         'label' => t('Market research'),
@@ -683,6 +697,276 @@ function cassiopeia_market_research_detail_variables(NodeInterface $node): array
     ],
     'sidebar' => cassiopeia_market_research_related_items($node, 4),
     'related' => cassiopeia_market_research_related_items($node, 9),
+  ];
+}
+
+/**
+ * Builds a URL fragment id for handbook paragraph sections.
+ */
+function cassiopeia_investment_handbook_section_id(string $title, int $delta, array &$used = []): string {
+  $transliteration = \Drupal::service('transliteration');
+  $slug = mb_strtolower($transliteration->transliterate($title, 'en', '-'));
+  $slug = preg_replace('/[^a-z0-9-]+/', '-', $slug);
+  $slug = trim($slug, '-');
+  if ($slug === '') {
+    $slug = 'section-' . $delta;
+  }
+  $base = $slug;
+  $suffix = 1;
+  while (isset($used[$slug])) {
+    $slug = $base . '-' . $suffix++;
+  }
+  $used[$slug] = TRUE;
+  return $slug;
+}
+
+/**
+ * Base entity query for published investment_handbook nodes.
+ */
+function cassiopeia_investment_handbook_node_query(): QueryInterface {
+  return \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('type', 'investment_handbook')
+    ->condition('status', 1);
+}
+
+/**
+ * Builds teaser data for an investment_handbook node.
+ */
+function cassiopeia_investment_handbook_teaser_data(NodeInterface $node, $image_style = NULL): array {
+  $image_style ??= \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+
+  $image = NULL;
+  if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
+    $image_item = $node->get('field_image')->first();
+    $file = $image_item?->entity;
+    if ($file) {
+      $uri = $file->getFileUri();
+      $image = [
+        'url' => cassiopeia_image_url($uri, $image_style),
+        'alt' => (string) ($image_item->alt ?: $node->label()),
+        'width' => $image_item->width ?? NULL,
+        'height' => $image_item->height ?? NULL,
+      ];
+    }
+  }
+
+  return [
+    'title' => $node->label(),
+    'url' => $node->toUrl('canonical', ['language' => $node->language()])->toString(),
+    'image' => $image,
+  ];
+}
+
+/**
+ * Parses paragraph sections for handbook detail pages.
+ *
+ * @return array{sections: array<int, array<string, mixed>>, nav: array<int, array<string, mixed>>}
+ */
+function cassiopeia_investment_handbook_sections(NodeInterface $node): array {
+  $sections = [];
+  $nav = [];
+  $used = [];
+
+  if (!$node->hasField('field_para_content') || $node->get('field_para_content')->isEmpty()) {
+    return ['sections' => [], 'nav' => []];
+  }
+
+  $delta = 0;
+  foreach ($node->get('field_para_content') as $item) {
+    $paragraph = $item->entity;
+    if (!$paragraph) {
+      continue;
+    }
+
+    $nav_title = '';
+    if ($paragraph->hasField('field_title') && !$paragraph->get('field_title')->isEmpty()) {
+      $nav_title = (string) $paragraph->get('field_title')->value;
+    }
+
+    $body = '';
+    if ($paragraph->hasField('field_body') && !$paragraph->get('field_body')->isEmpty()) {
+      $body = Markup::create($paragraph->get('field_body')->processed);
+    }
+
+    if ($nav_title === '' && $body === '') {
+      continue;
+    }
+
+    $id = cassiopeia_investment_handbook_section_id(
+      $nav_title !== '' ? $nav_title : 'section-' . $delta,
+      $delta,
+      $used,
+    );
+
+    $sections[] = [
+      'id' => $id,
+      'nav_title' => $nav_title,
+      'body' => $body,
+    ];
+
+    if ($nav_title !== '') {
+      $nav[] = [
+        'id' => $id,
+        'title' => $nav_title,
+        'url' => '#' . $id,
+        'active' => $delta === 0,
+      ];
+    }
+
+    $delta++;
+  }
+
+  return ['sections' => $sections, 'nav' => $nav];
+}
+
+/**
+ * Builds variables for the investment handbook listing page.
+ */
+function cassiopeia_investment_handbook_page_variables(?Request $request = NULL): array {
+  $request ??= \Drupal::request();
+  $search = trim((string) $request->query->get('q', ''));
+  $language = \Drupal::languageManager()->getCurrentLanguage();
+
+  $base_query = cassiopeia_investment_handbook_node_query();
+  if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
+    $base_query->condition('langcode', $language->getId());
+  }
+  if ($search !== '') {
+    $like = '%' . \Drupal::database()->escapeLike($search) . '%';
+    $base_query->condition('title', $like, 'LIKE');
+  }
+
+  $nids = array_values((clone $base_query)
+    ->sort('title', 'ASC')
+    ->execute());
+
+  $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+
+  $items = [];
+  if ($nids !== []) {
+    $nodes = $storage->loadMultiple($nids);
+    foreach ($nids as $nid) {
+      if (isset($nodes[$nid])) {
+        $items[] = cassiopeia_investment_handbook_teaser_data($nodes[$nid], $image_style);
+      }
+    }
+  }
+
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $base_url = cassiopeia_investment_handbook_url(['language' => $language]);
+
+  return [
+    'title' => t('Investment handbook'),
+    'hero_image' => '/' . $theme_path . '/images/banner-mang-luoi.jpg',
+    'hero_image_alt' => (string) t('Investment handbook'),
+    'breadcrumb' => [
+      [
+        'label' => t('Home'),
+        'url' => Url::fromRoute('<front>', [], ['language' => $language])->toString(),
+      ],
+      [
+        'label' => t('Resources'),
+        'url' => $base_url,
+      ],
+      [
+        'label' => t('Investment handbook'),
+        'url' => NULL,
+      ],
+    ],
+    'search_action' => $base_url,
+    'search_query' => $search,
+    'items' => $items,
+    'has_results' => $items !== [],
+    'empty_message' => (string) t('No documents found.'),
+    'cta_bg' => '/' . $theme_path . '/images/resources/project-cta-bg.jpg',
+    'cta_photo' => '/' . $theme_path . '/images/resources/project-cta-photo.jpg',
+    'contact_url' => Url::fromUserInput('/lien-he', ['language' => $language])->toString(),
+  ];
+}
+
+/**
+ * Loads related investment_handbook cards.
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function cassiopeia_investment_handbook_related_items(NodeInterface $node, int $limit = 3): array {
+  $query = cassiopeia_investment_handbook_node_query()
+    ->condition('nid', $node->id(), '<>')
+    ->sort('title', 'ASC')
+    ->range(0, $limit);
+
+  if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
+    $query->condition('langcode', $node->language()->getId());
+  }
+
+  $nids = $query->execute();
+  if (!$nids) {
+    return [];
+  }
+
+  $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+
+  $items = [];
+  $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
+  foreach ($nids as $nid) {
+    if (isset($nodes[$nid])) {
+      $items[] = cassiopeia_investment_handbook_teaser_data($nodes[$nid], $image_style);
+    }
+  }
+
+  return $items;
+}
+
+/**
+ * Builds variables for investment_handbook detail templates.
+ */
+function cassiopeia_investment_handbook_detail_variables(NodeInterface $node): array {
+  $language = $node->language();
+  $title = $node->label();
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $list_url = cassiopeia_investment_handbook_url(['language' => $language]);
+  $parsed = cassiopeia_investment_handbook_sections($node);
+
+  $download_url = NULL;
+  if ($node->hasField('field_file') && !$node->get('field_file')->isEmpty()) {
+    $file = $node->get('field_file')->entity;
+    if ($file) {
+      $download_url = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+    }
+  }
+
+  return [
+    'title' => $title,
+    'hero_image' => '/' . $theme_path . '/images/tai-lieu-banner.jpg',
+    'hero_image_alt' => $title,
+    'list_url' => $list_url,
+    'breadcrumb' => [
+      [
+        'label' => t('Home'),
+        'url' => Url::fromRoute('<front>', [], ['language' => $language])->toString(),
+      ],
+      [
+        'label' => t('Resources'),
+        'url' => $list_url,
+      ],
+      [
+        'label' => t('Investment handbook'),
+        'url' => $list_url,
+      ],
+      [
+        'label' => Unicode::truncate($title, 80, TRUE, TRUE),
+        'url' => NULL,
+      ],
+    ],
+    'sections' => $parsed['sections'],
+    'nav' => $parsed['nav'],
+    'download_url' => $download_url,
+    'related' => cassiopeia_investment_handbook_related_items($node, 3),
   ];
 }
 
@@ -823,7 +1107,7 @@ function cassiopeia_gallery_page_variables(?Request $request = NULL): array {
       ],
       [
         'label' => t('Resources'),
-        'url' => Url::fromUserInput('/cam-nang-dau-tu', ['language' => $language])->toString(),
+        'url' => cassiopeia_investment_handbook_url(['language' => $language]),
       ],
       [
         'label' => t('Photo gallery'),

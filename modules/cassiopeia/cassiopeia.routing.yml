@@ -21,3 +21,11 @@ cassiopeia.gallery:
     _title_callback: '\Drupal\cassiopeia\Controller\GalleryController::title'
   requirements:
     _permission: 'access content'
+
+cassiopeia.investment_handbook:
+  path: '/cam-nang-dau-tu'
+  defaults:
+    _controller: '\Drupal\cassiopeia\Controller\InvestmentHandbookController::content'
+    _title_callback: '\Drupal\cassiopeia\Controller\InvestmentHandbookController::title'
+  requirements:
+    _permission: 'access content'

@@ -1,0 +1,81 @@
+{#
+/**
+ * @file
+ * Investment handbook listing page (/cam-nang-dau-tu).
+ */
+#}
+<div class="page-hero">
+  <img class="page-hero__media" src="{{ handbook_page.hero_image }}" alt="{{ handbook_page.hero_image_alt }}">
+  <div class="page-hero__content">
+    <div class="container">
+      {% if handbook_page.breadcrumb %}
+        <nav class="page-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
+          <ol class="breadcrumb page-hero__breadcrumb">
+            {% for item in handbook_page.breadcrumb %}
+              {% if item.url %}
+                <li class="breadcrumb-item"><a href="{{ item.url }}">{{ item.label }}</a></li>
+              {% else %}
+                <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
+              {% endif %}
+            {% endfor %}
+          </ol>
+        </nav>
+      {% endif %}
+      <h1 class="page-hero__title">{{ handbook_page.title }}</h1>
+    </div>
+  </div>
+</div>
+
+<main class="handbook-page">
+  <div class="container">
+    <div class="handbook-page__intro">
+      <h2 class="t-heading-1">{{ 'Documents'|t }}</h2>
+      <form class="news-page__search" action="{{ handbook_page.search_action }}" method="get" role="search">
+        <input type="search" name="q" value="{{ handbook_page.search_query }}" placeholder="{{ 'Search documents…'|t }}" aria-label="{{ 'Search documents'|t }}">
+        <button type="submit" class="news-page__search-btn" aria-label="{{ 'Search'|t }}">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        </button>
+      </form>
+    </div>
+
+    {% if handbook_page.items %}
+      <div class="row handbook-page__grid g-4">
+        {% for item in handbook_page.items %}
+          <div class="col-12 col-md-4">
+            <article>
+              <a href="{{ item.url }}" class="text-decoration-none doc-card">
+                <div class="doc-card__media">
+                  {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.image.alt }}"{% if item.image.width %} width="{{ item.image.width }}"{% endif %}{% if item.image.height %} height="{{ item.image.height }}"{% endif %}>
+                  {% endif %}
+                </div>
+                <div class="doc-card__label">
+                  <h3 class="doc-card__title">{{ item.title }}</h3>
+                </div>
+              </a>
+            </article>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="news-page__empty">{{ handbook_page.empty_message }}</p>
+    {% endif %}
+
+    <div class="project-cta">
+      <div class="project-cta__bg" aria-hidden="true">
+        <img src="{{ handbook_page.cta_bg }}" alt="">
+      </div>
+      <img class="project-cta__photo" src="{{ handbook_page.cta_photo }}" alt="{{ 'CNC Industrial industrial park'|t }}">
+      <div class="project-cta__panel">
+        <div class="project-cta__copy">
+          <p class="project-cta__eyebrow">{{ 'Contact us'|t }}</p>
+          <h2 class="t-heading-1 project-cta__title">{{ 'Would you like more details about this project?'|t }}</h2>
+        </div>
+        <a class="cta-btn cta-btn--phone" href="{{ handbook_page.contact_url }}">
+          <span class="cta-btn__label">{{ 'Contact us for advice'|t }}</span>
+          <span class="cta-btn__icon"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</main>

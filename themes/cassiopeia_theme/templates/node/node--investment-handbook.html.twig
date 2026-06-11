@@ -1,0 +1,94 @@
+{#
+/**
+ * @file
+ * Investment handbook detail page.
+ */
+#}
+{% if view_mode == 'full' and handbook %}
+  <div class="page-hero">
+    <img class="page-hero__media" src="{{ handbook.hero_image }}" alt="{{ handbook.hero_image_alt }}">
+    <div class="page-hero__content">
+      <div class="container">
+        {% if handbook.breadcrumb %}
+          <nav class="page-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
+            <ol class="breadcrumb page-hero__breadcrumb">
+              {% for item in handbook.breadcrumb %}
+                {% if item.url %}
+                  <li class="breadcrumb-item"><a href="{{ item.url }}">{{ item.label }}</a></li>
+                {% else %}
+                  <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
+                {% endif %}
+              {% endfor %}
+            </ol>
+          </nav>
+        {% endif %}
+        <h1 class="page-hero__title">{{ handbook.title }}</h1>
+      </div>
+    </div>
+  </div>
+
+  <main class="handbook-doc">
+    <div class="container">
+      <div class="handbook-doc__header">
+        <h2 class="t-heading-1 handbook-doc__title">{{ handbook.title }}</h2>
+        <span class="handbook-doc__accent" aria-hidden="true"></span>
+      </div>
+
+      <div class="row handbook-doc__layout">
+        <div class="col-12 col-lg-9 order-1">
+          <div class="handbook-doc__content">
+            {% for section in handbook.sections %}
+              <div{% if section.id %} id="{{ section.id }}"{% endif %}>
+                {{ section.body }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        {% if handbook.nav or handbook.download_url %}
+          <aside class="col-12 col-lg-3 handbook-doc__sidebar order-lg-2">
+            <nav class="handbook-doc__nav" aria-label="{{ 'Document table of contents'|t }}">
+              {% for item in handbook.nav %}
+                <a class="handbook-doc__nav-link{% if item.active %} is-active{% endif %}" href="{{ item.url }}">{{ item.title }}</a>
+              {% endfor %}
+              {% if handbook.download_url %}
+                <a class="handbook-doc__nav-link handbook-doc__nav-link--download" href="{{ handbook.download_url }}" download>
+                  <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i>
+                  {{ 'Download'|t }}
+                </a>
+              {% endif %}
+            </nav>
+          </aside>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+
+  {% if handbook.related %}
+    <div class="handbook-related">
+      <div class="container">
+        <h2 class="t-heading-1 handbook-related__title">{{ 'Related documents'|t }}</h2>
+        <div class="row handbook-related__grid g-4">
+          {% for item in handbook.related %}
+            <div class="col-12 col-md-4">
+              <article>
+                <a href="{{ item.url }}" class="text-decoration-none doc-card">
+                  <div class="doc-card__media">
+                    {% if item.image %}
+                      <img src="{{ item.image.url }}" alt="{{ item.image.alt }}"{% if item.image.width %} width="{{ item.image.width }}"{% endif %}{% if item.image.height %} height="{{ item.image.height }}"{% endif %}>
+                    {% endif %}
+                  </div>
+                  <div class="doc-card__label">
+                    <h3 class="doc-card__title">{{ item.title }}</h3>
+                  </div>
+                </a>
+              </article>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% else %}
+  {{ content }}
+{% endif %}
