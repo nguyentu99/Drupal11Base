@@ -85,6 +85,13 @@ function cassiopeia_theme_preprocess_node(array &$variables): void {
     $variables['#cache']['tags'][] = 'node_list:investment_handbook';
     $variables['#cache']['tags'][] = 'node_list:banner';
   }
+  if ($node->getType() === 'active_network') {
+    $variables['active_network'] = cassiopeia_active_network_detail_variables($node);
+    $variables['#attached']['library'][] = 'cassiopeia_theme/network-page';
+    $variables['#cache']['tags'][] = 'node_list:active_network';
+    $variables['#cache']['tags'][] = 'node_list:banner';
+    $variables['#cache']['tags'][] = 'node:' . $node->id();
+  }
 }
 
 /**

@@ -1,0 +1,108 @@
+{#
+/**
+ * @file
+ * Active network (mạng lưới hoạt động) detail page.
+ */
+#}
+{% if view_mode == 'full' and active_network %}
+  <section class="page-hero">
+    <img class="page-hero__media" src="{{ active_network.hero_image }}" alt="{{ active_network.hero_image_alt }}">
+    <div class="page-hero__content">
+      <div class="container">
+        {% if active_network.breadcrumb %}
+          <nav class="page-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
+            <ol class="breadcrumb page-hero__breadcrumb">
+              {% for item in active_network.breadcrumb %}
+                {% if item.url %}
+                  <li class="breadcrumb-item"><a href="{{ item.url }}">{{ item.label }}</a></li>
+                {% else %}
+                  <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
+                {% endif %}
+              {% endfor %}
+            </ol>
+          </nav>
+        {% endif %}
+        <h1 class="page-hero__title">{{ active_network.title }}</h1>
+      </div>
+    </div>
+  </section>
+
+  <main class="network-page">
+    <div class="container">
+      <div class="row g-4 g-xl-5 align-items-start">
+        <div class="col-lg-5 network-page__map-wrap order-lg-0 order-1">
+          <img class="network-page__map" src="{{ active_network.map_image }}" alt="{{ active_network.map_alt }}">
+        </div>
+        <div class="col-lg-7 order-lg-1 order-0">
+          <div class="network-page__panel">
+            {% if active_network.filter_provinces %}
+              <select class="network-page__filter" aria-label="{{ 'Filter locations'|t }}">
+                <option value="" selected>{{ active_network.filter_all_label }}</option>
+                {% for province in active_network.filter_provinces %}
+                  <option value="{{ province }}">{{ province }}</option>
+                {% endfor %}
+              </select>
+            {% endif %}
+
+            {% if active_network.offices %}
+              <h2 class="t-heading-1">{{ active_network.offices_title }}</h2>
+              <div class="network-page__groups">
+                {% for region in active_network.offices %}
+                  <div class="network-region-block" data-province="{{ region.province }}">
+                    <div class="network-region">
+                      <h3 class="network-region__name">{{ region.province }}</h3>
+                      <div class="network-region__body">
+                        {% if region.addresses %}
+                          <ul class="network-region__list">
+                            {% for address in region.addresses %}
+                              <li>{{ address }}</li>
+                            {% endfor %}
+                          </ul>
+                        {% endif %}
+                      </div>
+                    </div>
+                    {% if not loop.last %}
+                      <hr class="network-divider">
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            {% if active_network.projects %}
+              <h2 class="t-heading-1">{{ active_network.projects_title }}</h2>
+              <div class="network-page__groups">
+                {% for region in active_network.projects %}
+                  <div class="network-region-block" data-province="{{ region.province }}">
+                    <div class="network-region">
+                      <h3 class="network-region__name">{{ region.province }}</h3>
+                      <div class="network-region__body">
+                        {% if region.projects %}
+                          <div class="network-region__projects">
+                            {% for project in region.projects %}
+                              <div class="network-project">
+                                {% if project.name %}
+                                  <p class="network-project__name">{{ project.name }}</p>
+                                {% endif %}
+                                {% if project.area %}
+                                  <p class="network-project__area">{{ project.area }}</p>
+                                {% endif %}
+                              </div>
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                    {% if not loop.last %}
+                      <hr class="network-divider">
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endif %}

@@ -59,6 +59,16 @@ toast-messages:
     - core/once
     - cassiopeia/bootstrap
 
+network-page:
+  version: VERSION
+  js:
+    js/network-page.js:
+      attributes:
+        defer: true
+  dependencies:
+    - core/drupal
+    - core/once
+
 global-styling:
   version: VERSION
   dependencies:

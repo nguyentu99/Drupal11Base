@@ -12,6 +12,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
+use Drupal\paragraphs\ParagraphInterface;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -206,6 +207,11 @@ function cassiopeia_banner_page_registry(): array {
       'route' => 'cassiopeia.gallery',
       'content_types' => ['gallery'],
       'fallback_image' => 'images/tai-lieu-banner.jpg',
+    ],
+    'active_network' => [
+      'paths' => ['/mang-luoi-hoat-dong'],
+      'content_types' => ['active_network'],
+      'fallback_image' => 'images/banner-mang-luoi.jpg',
     ],
   ];
 }
@@ -1696,6 +1702,172 @@ function cassiopeia_mail($key, &$message, $params): void {
     t('Message: @message', ['@message' => $submission['message'] !== '' ? $submission['message'] : t('(empty)')]),
     t('Submitted: @date', ['@date' => \Drupal::service('date.formatter')->format((int) $submission['created'], 'long')]),
   ]);
+}
+
+/**
+ * Groups office headquarters paragraphs by province.
+ *
+ * @return array<int, array{province: string, addresses: string[]}>
+ */
+function cassiopeia_active_network_office_regions(NodeInterface $node): array {
+  if (!$node->hasField('field_tsvp') || $node->get('field_tsvp')->isEmpty()) {
+    return [];
+  }
+
+  $regions = [];
+  $index = [];
+  foreach ($node->get('field_tsvp') as $item) {
+    $paragraph = $item->entity;
+    if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'para_office_headquarters') {
+      continue;
+    }
+    $province = trim((string) ($paragraph->get('field_province')->value ?? ''));
+    $address = trim((string) ($paragraph->get('field_address')->value ?? ''));
+    if ($province === '') {
+      continue;
+    }
+    if (!isset($index[$province])) {
+      $index[$province] = count($regions);
+      $regions[] = [
+        'province' => $province,
+        'addresses' => [],
+      ];
+    }
+    if ($address !== '') {
+      $regions[$index[$province]]['addresses'][] = $address;
+    }
+  }
+
+  return $regions;
+}
+
+/**
+ * Groups project paragraphs by province.
+ *
+ * @return array<int, array{province: string, projects: array<int, array{name: string, area: string}>}>
+ */
+function cassiopeia_active_network_project_regions(NodeInterface $node): array {
+  if (!$node->hasField('field_da') || $node->get('field_da')->isEmpty()) {
+    return [];
+  }
+
+  $regions = [];
+  $index = [];
+  foreach ($node->get('field_da') as $item) {
+    $paragraph = $item->entity;
+    if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'cac_du_an') {
+      continue;
+    }
+    $province = trim((string) ($paragraph->get('field_province')->value ?? ''));
+    if ($province === '') {
+      continue;
+    }
+
+    $projects = [];
+    if ($paragraph->hasField('field_para_para_content') && !$paragraph->get('field_para_para_content')->isEmpty()) {
+      foreach ($paragraph->get('field_para_para_content') as $child_item) {
+        $child = $child_item->entity;
+        if (!$child instanceof ParagraphInterface || $child->bundle() !== 'vi_tri') {
+          continue;
+        }
+        $name = trim((string) ($child->get('field_address')->value ?? ''));
+        $area = trim((string) ($child->get('field_unit')->value ?? ''));
+        if ($name === '' && $area === '') {
+          continue;
+        }
+        $projects[] = [
+          'name' => $name,
+          'area' => $area,
+        ];
+      }
+    }
+
+    if (!isset($index[$province])) {
+      $index[$province] = count($regions);
+      $regions[] = [
+        'province' => $province,
+        'projects' => $projects,
+      ];
+    }
+    else {
+      $regions[$index[$province]]['projects'] = array_merge(
+        $regions[$index[$province]]['projects'],
+        $projects,
+      );
+    }
+  }
+
+  return $regions;
+}
+
+/**
+ * Builds unique province filter options from office and project regions.
+ *
+ * @return string[]
+ */
+function cassiopeia_active_network_filter_provinces(array $offices, array $projects): array {
+  $provinces = [];
+  foreach (array_merge($offices, $projects) as $region) {
+    $province = (string) ($region['province'] ?? '');
+    if ($province !== '' && !in_array($province, $provinces, TRUE)) {
+      $provinces[] = $province;
+    }
+  }
+  return $provinces;
+}
+
+/**
+ * Builds variables for active_network detail templates.
+ */
+function cassiopeia_active_network_detail_variables(NodeInterface $node): array {
+  $language = $node->language();
+  $title = $node->label();
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $banner = cassiopeia_page_banner('active_network', $title, $language);
+
+  $map_image = '/' . $theme_path . '/images/network/map-mang-luoi.svg';
+  $map_alt = (string) t('CNC Industrial active network map in Vietnam');
+  if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
+    $file = $node->get('field_image')->entity;
+    if ($file instanceof File) {
+      $map_image = cassiopeia_image_url($file->getFileUri());
+      $alt = trim((string) ($node->get('field_image')->alt ?? ''));
+      if ($alt !== '') {
+        $map_alt = $alt;
+      }
+    }
+  }
+
+  $offices = cassiopeia_active_network_office_regions($node);
+  $projects = cassiopeia_active_network_project_regions($node);
+
+  return [
+    'title' => $title,
+    'hero_image' => $banner['hero_image'],
+    'hero_image_alt' => $banner['hero_image_alt'],
+    'map_image' => $map_image,
+    'map_alt' => $map_alt,
+    'offices_title' => (string) t('Office headquarters'),
+    'projects_title' => (string) t('Projects'),
+    'filter_all_label' => (string) t('All locations'),
+    'filter_provinces' => cassiopeia_active_network_filter_provinces($offices, $projects),
+    'offices' => $offices,
+    'projects' => $projects,
+    'breadcrumb' => [
+      [
+        'label' => t('Home'),
+        'url' => Url::fromRoute('<front>', [], ['language' => $language])->toString(),
+      ],
+      [
+        'label' => t('About us'),
+        'url' => NULL,
+      ],
+      [
+        'label' => $title,
+        'url' => NULL,
+      ],
+    ],
+  ];
 }
 
 /**
