@@ -10,6 +10,7 @@ use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
+use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +43,12 @@ function cassiopeia_theme($existing, $type, $theme, $path) {
         'handbook_page' => NULL,
       ],
       'template' => 'investment-handbook',
+    ],
+    'cassiopeia_contact' => [
+      'variables' => [
+        'contact_page' => NULL,
+      ],
+      'template' => 'contact',
     ],
   ];
 }
@@ -1055,7 +1062,7 @@ function cassiopeia_investment_handbook_page_variables(?Request $request = NULL)
     'empty_message' => (string) t('No documents found.'),
     'cta_bg' => '/' . $theme_path . '/images/resources/project-cta-bg.jpg',
     'cta_photo' => '/' . $theme_path . '/images/resources/project-cta-photo.jpg',
-    'contact_url' => Url::fromUserInput('/lien-he', ['language' => $language])->toString(),
+    'contact_url' => cassiopeia_contact_url(['language' => $language]),
   ];
 }
 
@@ -1291,6 +1298,168 @@ function cassiopeia_gallery_page_variables(?Request $request = NULL): array {
     'has_results' => $total > 0,
     'empty_message' => (string) t('No photo albums found.'),
   ];
+}
+
+/**
+ * Language-aware URL for the contact page.
+ */
+function cassiopeia_contact_url(array $options = []): string {
+  $options += ['language' => \Drupal::languageManager()->getCurrentLanguage()];
+  return Url::fromRoute('cassiopeia.contact', [], $options)->toString();
+}
+
+/**
+ * Returns a public URL for a config-managed file ID.
+ */
+function cassiopeia_config_file_url(int $fid, ?string $fallback = NULL): ?string {
+  if ($fid > 0) {
+    $file = File::load($fid);
+    if ($file) {
+      return \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+    }
+  }
+  return $fallback;
+}
+
+/**
+ * Normalizes a phone number for tel: links.
+ */
+function cassiopeia_normalize_phone_link(string $phone, string $fallback = ''): string {
+  $link = preg_replace('/\D+/', '', $phone) ?? '';
+  return $link !== '' ? $link : $fallback;
+}
+
+/**
+ * Builds processed site configuration for templates.
+ */
+function cassiopeia_site_config(?string $section = NULL): array {
+  static $built;
+  if ($built === NULL) {
+    $config = \Drupal::config('cassiopeia.settings');
+    $theme_path = '/' . \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+    $strip = $config->get('contact_strip') ?: [];
+    $cta = $config->get('cta_banner') ?: [];
+
+    $phone_link = $strip['phone_link'] ?? '';
+    if ($phone_link === '' && !empty($strip['phone'])) {
+      $phone_link = cassiopeia_normalize_phone_link((string) $strip['phone']);
+    }
+
+    $cta_phone_link = $cta['phone_link'] ?? '';
+    if ($cta_phone_link === '' && !empty($cta['phone'])) {
+      $cta_phone_link = cassiopeia_normalize_phone_link((string) $cta['phone']);
+    }
+
+    $quote_url = trim((string) ($cta['quote_url'] ?? ''));
+    if ($quote_url === '') {
+      $quote_url = cassiopeia_contact_url();
+    }
+    elseif (!str_starts_with($quote_url, 'http')) {
+      $quote_url = Url::fromUserInput($quote_url)->toString();
+    }
+
+    $map_url = trim((string) ($strip['map_url'] ?? ''));
+    if ($map_url !== '' && !str_starts_with($map_url, 'http')) {
+      $map_url = Url::fromUserInput($map_url)->toString();
+    }
+
+    $built = [
+      'contact_strip' => [
+        'phone_label' => (string) ($strip['phone_label'] ?? ''),
+        'phone' => (string) ($strip['phone'] ?? ''),
+        'phone_link' => $phone_link,
+        'email_label' => (string) ($strip['email_label'] ?? ''),
+        'email' => (string) ($strip['email'] ?? ''),
+        'social_label' => (string) ($strip['social_label'] ?? ''),
+        'facebook_url' => (string) ($strip['facebook_url'] ?? ''),
+        'youtube_url' => (string) ($strip['youtube_url'] ?? ''),
+        'linkedin_url' => (string) ($strip['linkedin_url'] ?? ''),
+        'map_label' => (string) ($strip['map_label'] ?? ''),
+        'address' => (string) ($strip['address'] ?? ''),
+        'map_url' => $map_url,
+      ],
+      'cta_banner' => [
+        'title' => (string) ($cta['title'] ?? ''),
+        'lead' => (string) ($cta['lead'] ?? ''),
+        'phone' => (string) ($cta['phone'] ?? ''),
+        'phone_link' => $cta_phone_link,
+        'quote_url' => $quote_url,
+        'video_path' => (string) ($cta['video_path'] ?? $theme_path . '/images/video-thuml.mp4'),
+      ],
+    ];
+  }
+
+  if ($section !== NULL) {
+    return $built[$section] ?? [];
+  }
+  return $built;
+}
+
+/**
+ * Builds variables for the contact page template.
+ */
+function cassiopeia_contact_page_variables(): array {
+  $config = \Drupal::config('cassiopeia.settings');
+  $raw = $config->get('contact_page') ?: [];
+  $strip = cassiopeia_site_config('contact_strip');
+  $theme_path = '/' . \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $language = \Drupal::languageManager()->getCurrentLanguage();
+
+  $qr_codes = [];
+  foreach ($raw['qr_codes'] ?? [] as $item) {
+    $image = cassiopeia_config_file_url((int) ($item['image'] ?? 0));
+    $logo = cassiopeia_config_file_url((int) ($item['logo'] ?? 0));
+    if (($item['label'] ?? '') === '' && $image === NULL) {
+      continue;
+    }
+    $qr_codes[] = [
+      'label' => (string) ($item['label'] ?? ''),
+      'image' => $image,
+      'logo' => $logo,
+    ];
+  }
+
+  $address_map_url = trim((string) ($raw['address_map_url'] ?? ''));
+  if ($address_map_url !== '' && !str_starts_with($address_map_url, 'http')) {
+    $address_map_url = Url::fromUserInput($address_map_url)->toString();
+  }
+
+  return [
+    'hero_title' => (string) ($raw['hero_title'] ?? ''),
+    'hero_lead' => (string) ($raw['hero_lead'] ?? ''),
+    'hero_image' => cassiopeia_config_file_url((int) ($raw['hero_image'] ?? 0), $theme_path . '/images/contact/hero.jpg'),
+    'aside_title' => (string) ($raw['aside_title'] ?? ''),
+    'aside_description' => (string) ($raw['aside_description'] ?? ''),
+    'aside_image' => cassiopeia_config_file_url((int) ($raw['aside_image'] ?? 0), $theme_path . '/images/contact/panel-bg.jpg'),
+    'phone' => $strip['phone'],
+    'phone_link' => $strip['phone_link'],
+    'email' => $strip['email'],
+    'address' => (string) ($raw['address'] ?? $strip['address']),
+    'map_embed' => (string) ($raw['map_embed'] ?? ''),
+    'intl_section_title' => (string) ($raw['intl_section_title'] ?? ''),
+    'qr_codes' => $qr_codes,
+    'address_title' => (string) ($raw['address_title'] ?? ''),
+    'office_name' => (string) ($raw['office_name'] ?? ''),
+    'address_map_url' => $address_map_url,
+    'breadcrumb' => [
+      [
+        'label' => t('Home'),
+        'url' => Url::fromRoute('<front>', [], ['language' => $language])->toString(),
+      ],
+      [
+        'label' => (string) ($raw['hero_title'] ?? t('Contact')),
+        'url' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for page templates.
+ */
+function cassiopeia_preprocess_page(array &$variables): void {
+  $variables['site_config'] = cassiopeia_site_config();
+  $variables['#cache']['tags'][] = 'config:cassiopeia.settings';
 }
 
 /**

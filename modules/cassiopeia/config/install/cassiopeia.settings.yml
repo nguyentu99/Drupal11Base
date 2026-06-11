@@ -1,0 +1,49 @@
+contact_strip:
+  phone_label: 'Điện thoại'
+  phone: '(+84) 866 505 509'
+  phone_link: '+84866505509'
+  email_label: 'Email'
+  email: 'hello@cisgroup.vn'
+  social_label: 'Kết nối với chúng tôi:'
+  facebook_url: ''
+  youtube_url: ''
+  linkedin_url: ''
+  map_label: 'google map'
+  address: 'Lô F1-2-3, KCN Thăng Long Vĩnh Phúc, Bình Nguyên, Phú Thọ, Việt Nam'
+  map_url: ''
+cta_banner:
+  title: 'Bạn cần tìm nhà xưởng/nhà kho tại Việt Nam?'
+  lead: 'Hợp tác cùng chúng tôi để tạo ra giá trị kinh doanh thực chất thông qua chiến lược, công nghệ và hệ sinh thái kết nối hiệu quả.'
+  phone: '(+84) 866 505 509'
+  phone_link: '+84866505509'
+  quote_url: '/lien-he'
+  video_path: '/themes/cassiopeia_theme/images/video-thuml.mp4'
+contact_page:
+  hero_title: 'Liên hệ'
+  hero_lead: 'Cảm ơn bạn đã ghé thăm trang CNCIndustrial. Nếu bạn cần thêm thông tin về chúng tôi, xin vui lòng liên hệ theo thông tin bên dưới.'
+  hero_image: 0
+  aside_title: "Đầu tư Việt Nam – Dễ dàng hơn bao giờ hết.\nLiên hệ ngay!"
+  aside_description: 'Khởi đầu hành trình đầu tư hoàn hảo tại Việt Nam cùng CNCIndustrial. Với đội ngũ chuyên nghiệp và am hiểu về Việt Nam, chúng tôi sẽ hỗ trợ bạn vượt qua mọi rào cản, đón đầu xu hướng thị trường và khai thác những cơ hội tiềm năng. Liên hệ ngay để khám phá tiềm năng đầu tư tuyệt vời tại Việt Nam!'
+  aside_image: 0
+  map_embed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14867.155960062279!2d105.65569091377279!3d21.31935257585194!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3134e590fe630957%3A0xddf65fd7a8dfd81e!2sCNCTech%20Th%C4%83ng%20Long!5e0!3m2!1svi!2s!4v1780633678668!5m2!1svi!2s'
+  intl_section_title: 'liên hệ quốc tế'
+  qr_codes:
+    - label: Zalo
+      image: 0
+      logo: 0
+    - label: WeChat
+      image: 0
+      logo: 0
+    - label: Line
+      image: 0
+      logo: 0
+    - label: WhatsApp
+      image: 0
+      logo: 0
+    - label: Kakaotalk
+      image: 0
+      logo: 0
+  address_title: 'Địa chỉ'
+  office_name: 'Trụ sở CNCTech Group'
+  address: 'Lô F1-2-3, KCN Thăng Long Vĩnh Phúc, Bình Nguyên, Phú Thọ, Việt Nam'
+  address_map_url: ''

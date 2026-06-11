@@ -1,0 +1,6 @@
+cassiopeia.config:
+  title: 'Cassiopeia settings'
+  description: 'Configure contact strip, CTA banner and contact page content.'
+  route_name: cassiopeia.config
+  parent: system.admin_config_system
+  weight: 50

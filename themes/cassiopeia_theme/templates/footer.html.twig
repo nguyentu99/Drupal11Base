@@ -1,52 +1,70 @@
 {#
 /** Homepage section from html/index.html */
 #}
+{% set strip = site_config.contact_strip %}
 <footer class="site-footer">
         <div class="site-footer__topbar">
             <div class="container">
                 <div class="contact-strip">
                     <div class="contact-strip__left">
+                        {% if strip.phone %}
                         <div class="contact-strip__item">
                             <img width="32" height="32" class="contact-strip__icon"
                                 src="/themes/cassiopeia_theme/images/contact-strip/phone-red.svg" alt="">
                             <div class="contact-strip__text">
-                                <span class="contact-strip__label">Điện thoại</span>
-                                <a class="contact-strip__value" href="tel:+84866505509">(+84) 866 505 509</a>
+                                <span class="contact-strip__label">{{ strip.phone_label }}</span>
+                                <a class="contact-strip__value" href="tel:{{ strip.phone_link }}">{{ strip.phone }}</a>
                             </div>
                         </div>
+                        {% endif %}
+                        {% if strip.phone and strip.email %}
                         <span class="contact-strip__divider" aria-hidden="true"></span>
+                        {% endif %}
+                        {% if strip.email %}
                         <div class="contact-strip__item">
                             <img width="32" height="32" class="contact-strip__icon"
                                 src="/themes/cassiopeia_theme/images/contact-strip/map-red.svg" alt="">
                             <div class="contact-strip__text">
-                                <span class="contact-strip__label">Email</span>
-                                <a class="contact-strip__value" href="mailto:hello@cisgroup.vn">hello@cisgroup.vn</a>
+                                <span class="contact-strip__label">{{ strip.email_label }}</span>
+                                <a class="contact-strip__value" href="mailto:{{ strip.email }}">{{ strip.email }}</a>
                             </div>
                         </div>
+                        {% endif %}
+                        {% if strip.email and (strip.facebook_url or strip.youtube_url or strip.linkedin_url) %}
                         <span class="contact-strip__divider" aria-hidden="true"></span>
+                        {% endif %}
+                        {% if strip.facebook_url or strip.youtube_url or strip.linkedin_url %}
                         <div class="contact-strip__social-block">
-                            <span class="contact-strip__label">Kết nối với chúng tôi:</span>
+                            <span class="contact-strip__label">{{ strip.social_label }}</span>
                             <div class="contact-strip__social">
-                                <a href="{{ base_path }}#" aria-label="Facebook"><img width="36" height="36"
+                                {% if strip.facebook_url %}
+                                <a href="{{ strip.facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><img width="36" height="36"
                                         src="/themes/cassiopeia_theme/images/contact-strip/facebook-logo.svg" alt=""></a>
-                                <a href="{{ base_path }}#" aria-label="YouTube"><img width="36" height="36"
+                                {% endif %}
+                                {% if strip.youtube_url %}
+                                <a href="{{ strip.youtube_url }}" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><img width="36" height="36"
                                         src="/themes/cassiopeia_theme/images/contact-strip/youtube.svg" alt=""></a>
-                                <a href="{{ base_path }}#" aria-label="LinkedIn"><img width="36" height="36"
+                                {% endif %}
+                                {% if strip.linkedin_url %}
+                                <a href="{{ strip.linkedin_url }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><img width="36" height="36"
                                         src="/themes/cassiopeia_theme/images/contact-strip/in-logo.svg" alt=""></a>
+                                {% endif %}
                             </div>
                         </div>
+                        {% endif %}
                     </div>
-                    <a class="contact-strip__map" href="{{ base_path }}#" target="_blank" rel="noopener noreferrer">
+                    {% if strip.address %}
+                    <a class="contact-strip__map" href="{{ strip.map_url ?: '#' }}"{% if strip.map_url %} target="_blank" rel="noopener noreferrer"{% endif %}>
                         <img width="32" height="32" class="contact-strip__icon" src="/themes/cassiopeia_theme/images/contact-strip/map-red.svg"
                             alt="">
                         <div class="contact-strip__text">
-                            <span class="contact-strip__label">google map</span>
-                            <p class="contact-strip__value">Lô F1-2-3, KCN Thăng Long Vĩnh Phúc,<br>Bình Nguyên, Phú
-                                Thọ, Việt Nam</p>
+                            <span class="contact-strip__label">{{ strip.map_label }}</span>
+                            <p class="contact-strip__value">{{ strip.address|nl2br }}</p>
                         </div>
                         <img width="40" height="40" class="contact-strip__chevron"
                             src="/themes/cassiopeia_theme/images/contact-strip/chevron.svg" alt="">
                     </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

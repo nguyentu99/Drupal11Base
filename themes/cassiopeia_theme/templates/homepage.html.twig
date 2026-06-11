@@ -785,25 +785,31 @@
         </div>
     </div>
 
+    {% set cta = site_config.cta_banner %}
     <section class="cta-banner" id="lien-he">
         <div class="cta-banner__bg" aria-hidden="true">
             <video class="cta-banner__video" muted loop playsinline preload="metadata" data-autoplay-in-view>
-                <source src="/themes/cassiopeia_theme/images/video-thuml.mp4" type="video/mp4">
+                <source src="{{ cta.video_path }}" type="video/mp4">
             </video>
         </div>
         <div class="container">
             <div class="cta-banner__content">
                 <div class="cta-banner__copy">
-                    <h2 class="t-heading-1 cta-banner__title">Bạn cần tìm nhà xưởng/nhà kho tại Việt Nam?</h2>
-                    <p class="cta-banner__lead">Hợp tác cùng chúng tôi để tạo ra giá trị kinh doanh thực chất thông qua
-                        chiến lược, công nghệ và hệ sinh thái kết nối hiệu quả.</p>
+                    {% if cta.title %}
+                    <h2 class="t-heading-1 cta-banner__title">{{ cta.title }}</h2>
+                    {% endif %}
+                    {% if cta.lead %}
+                    <p class="cta-banner__lead">{{ cta.lead }}</p>
+                    {% endif %}
                 </div>
                 <div class="cta-banner__actions">
-                    <a class="cta-btn cta-btn--phone" href="tel:+84866505509">
-                        <span class="cta-btn__label">(+84) 866 505 509</span>
+                    {% if cta.phone %}
+                    <a class="cta-btn cta-btn--phone" href="tel:{{ cta.phone_link }}">
+                        <span class="cta-btn__label">{{ cta.phone }}</span>
                         <span class="cta-btn__icon"><i class="fa-regular fa-phone"></i></span>
                     </a>
-                    <a class="cta-btn cta-btn--quote" href="{{ base_path }}lien-he">
+                    {% endif %}
+                    <a class="cta-btn cta-btn--quote" href="{{ cta.quote_url }}">
                         <span class="cta-btn__label">nhận báo giá</span>
                         <span class="cta-btn__icon"><i class="fa-solid fa-arrow-right"></i></span>
                     </a>

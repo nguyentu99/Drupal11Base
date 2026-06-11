@@ -1,0 +1,181 @@
+{#
+/**
+ * @file
+ * Contact page (/lien-he).
+ */
+#}
+<div class="page-hero page-hero--contact">
+  {% if contact_page.hero_image %}
+    <img class="page-hero__media" src="{{ contact_page.hero_image }}" alt="{{ contact_page.hero_title }}">
+  {% endif %}
+  <div class="page-hero__content">
+    <div class="container">
+      {% if contact_page.breadcrumb %}
+        <nav class="page-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
+          <ol class="breadcrumb page-hero__breadcrumb">
+            {% for item in contact_page.breadcrumb %}
+              {% if item.url %}
+                <li class="breadcrumb-item"><a href="{{ item.url }}">{{ item.label }}</a></li>
+              {% else %}
+                <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
+              {% endif %}
+            {% endfor %}
+          </ol>
+        </nav>
+      {% endif %}
+      <h1 class="page-hero__title">{{ contact_page.hero_title }}</h1>
+      {% if contact_page.hero_lead %}
+        <p class="page-hero__lead">{{ contact_page.hero_lead }}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<main class="contact-page">
+  <div class="contact-page__intro">
+    <div class="container">
+      <div class="contact-panel row g-0">
+        <div class="col-lg-6">
+          <form class="contact-form" action="#" method="post">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label" for="contact-name">{{ 'Full name'|t }} <span class="contact-form__required" aria-hidden="true">*</span></label>
+                <input class="form-control" type="text" id="contact-name" name="name" placeholder="{{ 'Full name'|t }}" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="contact-email">{{ 'Email'|t }} <span class="contact-form__required" aria-hidden="true">*</span></label>
+                <input class="form-control" type="email" id="contact-email" name="email" placeholder="{{ 'Email address'|t }}" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="contact-phone">{{ 'Phone number'|t }} <span class="contact-form__required" aria-hidden="true">*</span></label>
+                <input class="form-control" type="tel" id="contact-phone" name="phone" placeholder="{{ 'Phone number'|t }}" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="contact-message">{{ 'Consultation request'|t }}</label>
+                <textarea class="form-control" id="contact-message" name="message" placeholder="{{ 'Enter your message…'|t }}" rows="4"></textarea>
+              </div>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="consent" id="contact-consent" required>
+              <label class="form-check-label" for="contact-consent">{{ 'I agree to CNC Industrial terms for providing information'|t }}</label>
+            </div>
+            <button type="submit" class="btn-see-more btn-see-more--solid contact-form__submit">
+              {{ 'Send information'|t }}
+              <span class="btn-see-more__icon btn-see-more__icon--sm"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+            </button>
+          </form>
+        </div>
+        <div class="col-lg-6">
+          <div class="contact-aside">
+            {% if contact_page.aside_image %}
+              <img class="contact-aside__bg" src="{{ contact_page.aside_image }}" alt="">
+            {% endif %}
+            <span class="contact-aside__overlay" aria-hidden="true"></span>
+            <div class="contact-aside__head">
+              {% if contact_page.aside_title %}
+                <h2 class="contact-aside__title">{{ contact_page.aside_title|nl2br }}</h2>
+              {% endif %}
+              {% if contact_page.aside_description %}
+                <p class="contact-aside__desc">{{ contact_page.aside_description }}</p>
+              {% endif %}
+            </div>
+            <div class="contact-aside__details">
+              {% if contact_page.phone %}
+                <a class="contact-aside__item" href="tel:{{ contact_page.phone_link }}">
+                  <i class="fa-regular fa-phone" aria-hidden="true"></i>
+                  <span>{{ contact_page.phone }}</span>
+                </a>
+              {% endif %}
+              {% if contact_page.email %}
+                <a class="contact-aside__item" href="mailto:{{ contact_page.email }}">
+                  <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+                  <span>{{ contact_page.email }}</span>
+                </a>
+              {% endif %}
+              {% if contact_page.address %}
+                <div class="contact-aside__item">
+                  <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                  <span>{{ contact_page.address }}</span>
+                </div>
+              {% endif %}
+            </div>
+            {% if contact_page.map_embed %}
+              <div class="contact-aside__map ratio ratio-16x9">
+                <iframe src="{{ contact_page.map_embed }}" width="600" height="450" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="{{ 'Location map'|t }}"></iframe>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if contact_page.qr_codes %}
+    <div class="contact-page__intl">
+      <div class="container">
+        {% if contact_page.intl_section_title %}
+          <h2 class="t-heading-1 contact-page__section-title">{{ contact_page.intl_section_title }}</h2>
+        {% endif %}
+        <div class="row contact-qr g-3">
+          {% for item in contact_page.qr_codes %}
+            {% if item.label or item.image %}
+              <div class="col-6 col-md-4 col-xl">
+                <div class="contact-qr__item">
+                  <div class="contact-qr__code">
+                    {% if item.image %}
+                      <img src="{{ item.image }}" alt="{{ item.label }}">
+                    {% endif %}
+                    {% if item.logo %}
+                      <img class="contact-qr__logo" src="{{ item.logo }}" alt="">
+                    {% endif %}
+                  </div>
+                  {% if item.label %}
+                    <p class="contact-qr__label">{{ item.label }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="contact-page__address">
+    <div class="container">
+      <div class="contact-address row g-4 align-items-center">
+        <div class="col-lg-6">
+          <div class="d-flex flex-column align-items-start gap-4">
+            {% if contact_page.address_title %}
+              <h2 class="t-heading-1 contact-address__title">{{ contact_page.address_title }}</h2>
+            {% endif %}
+            <div class="d-flex flex-column gap-3">
+              {% if contact_page.office_name %}
+                <h3 class="contact-address__office">{{ contact_page.office_name }}</h3>
+              {% endif %}
+              {% if contact_page.address %}
+                <div class="contact-address__location">
+                  <img src="/themes/cassiopeia_theme/images/svg/location-green.svg" alt="">
+                  <p>{{ contact_page.address }}</p>
+                </div>
+              {% endif %}
+            </div>
+            {% if contact_page.address_map_url %}
+              <a class="btn-see-more btn-see-more--solid" href="{{ contact_page.address_map_url }}" target="_blank" rel="noopener noreferrer">
+                {{ 'Google map'|t }}
+                <span class="btn-see-more__icon btn-see-more__icon--sm"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-lg-6">
+          {% if contact_page.map_embed %}
+            <div class="contact-address__map ratio ratio-16x9">
+              <iframe src="{{ contact_page.map_embed }}" width="600" height="450" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="{{ 'Office location map'|t }}"></iframe>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

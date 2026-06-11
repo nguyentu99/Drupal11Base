@@ -23,3 +23,38 @@ function cassiopeia_update_11001(): void {
     $schema->dropTable('test');
   }
 }
+
+/**
+ * Installs default Cassiopeia site settings configuration.
+ */
+function cassiopeia_update_11002(): void {
+  $config = \Drupal::configFactory()->getEditable('cassiopeia.settings');
+  if (!$config->isNew()) {
+    return;
+  }
+
+  $path = \Drupal::service('extension.list.module')->getPath('cassiopeia') . '/config/install/cassiopeia.settings.yml';
+  if (!is_readable($path)) {
+    return;
+  }
+
+  $data = \Drupal\Component\Serialization\Yaml::decode((string) file_get_contents($path));
+  if (is_array($data)) {
+    $config->setData($data)->save();
+  }
+}
+
+/**
+ * Removes contact form submission storage and settings.
+ */
+function cassiopeia_update_11005(): void {
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('cassiopeia_contact_submission')) {
+    $schema->dropTable('cassiopeia_contact_submission');
+  }
+
+  $config = \Drupal::configFactory()->getEditable('cassiopeia.settings');
+  if ($config->get('contact_form') !== NULL) {
+    $config->clear('contact_form')->save();
+  }
+}

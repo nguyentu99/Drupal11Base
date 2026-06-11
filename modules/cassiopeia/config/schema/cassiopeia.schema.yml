@@ -1,0 +1,121 @@
+cassiopeia.settings:
+  type: config_object
+  label: 'Cassiopeia site settings'
+  mapping:
+    contact_strip:
+      type: mapping
+      label: 'Contact strip'
+      mapping:
+        phone_label:
+          type: label
+          label: 'Phone label'
+        phone:
+          type: string
+          label: 'Phone number'
+        phone_link:
+          type: string
+          label: 'Phone link (tel:)'
+        email_label:
+          type: label
+          label: 'Email label'
+        email:
+          type: string
+          label: 'Email address'
+        social_label:
+          type: label
+          label: 'Social label'
+        facebook_url:
+          type: string
+          label: 'Facebook URL'
+        youtube_url:
+          type: string
+          label: 'YouTube URL'
+        linkedin_url:
+          type: string
+          label: 'LinkedIn URL'
+        map_label:
+          type: label
+          label: 'Map label'
+        address:
+          type: text
+          label: 'Address'
+        map_url:
+          type: string
+          label: 'Google Maps URL'
+    cta_banner:
+      type: mapping
+      label: 'CTA banner'
+      mapping:
+        title:
+          type: text
+          label: 'Title'
+        lead:
+          type: text
+          label: 'Lead text'
+        phone:
+          type: string
+          label: 'Phone number'
+        phone_link:
+          type: string
+          label: 'Phone link (tel:)'
+        quote_url:
+          type: string
+          label: 'Quote button URL'
+        video_path:
+          type: string
+          label: 'Background video path'
+    contact_page:
+      type: mapping
+      label: 'Contact page'
+      mapping:
+        hero_title:
+          type: label
+          label: 'Hero title'
+        hero_lead:
+          type: text
+          label: 'Hero lead'
+        hero_image:
+          type: integer
+          label: 'Hero image file ID'
+        aside_title:
+          type: text
+          label: 'Aside title'
+        aside_description:
+          type: text
+          label: 'Aside description'
+        aside_image:
+          type: integer
+          label: 'Aside background image file ID'
+        map_embed:
+          type: string
+          label: 'Google Maps embed URL'
+        intl_section_title:
+          type: label
+          label: 'International contact section title'
+        qr_codes:
+          type: sequence
+          label: 'QR codes'
+          sequence:
+            type: mapping
+            mapping:
+              label:
+                type: label
+                label: 'Label'
+              image:
+                type: integer
+                label: 'QR image file ID'
+              logo:
+                type: integer
+                label: 'Optional logo file ID'
+        address_title:
+          type: label
+          label: 'Address section title'
+        office_name:
+          type: label
+          label: 'Office name'
+        address:
+          type: text
+          label: 'Address'
+        address_map_url:
+          type: string
+          label: 'Address Google Maps URL'

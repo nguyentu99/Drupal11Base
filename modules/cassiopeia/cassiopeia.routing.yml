@@ -29,3 +29,19 @@ cassiopeia.investment_handbook:
     _title_callback: '\Drupal\cassiopeia\Controller\InvestmentHandbookController::title'
   requirements:
     _permission: 'access content'
+
+cassiopeia.contact:
+  path: '/lien-he'
+  defaults:
+    _controller: '\Drupal\cassiopeia\Controller\ContactController::content'
+    _title_callback: '\Drupal\cassiopeia\Controller\ContactController::title'
+  requirements:
+    _permission: 'access content'
+
+cassiopeia.config:
+  path: '/admin/config/cassiopeia/settings'
+  defaults:
+    _form: '\Drupal\cassiopeia\Form\CassiopeiaConfigForm'
+    _title: 'Cassiopeia settings'
+  requirements:
+    _permission: 'administer cassiopeia site configuration'

@@ -1,0 +1,3 @@
+administer cassiopeia site configuration:
+  title: 'Administer Cassiopeia site configuration'
+  restrict access: true
