@@ -25,7 +25,7 @@ class MarketResearchController extends ControllerBase {
           'languages:language_interface',
           'languages:language_content',
         ],
-        'tags' => ['node_list:market_research'],
+        'tags' => ['node_list:market_research', 'node_list:banner'],
       ],
     ];
   }

@@ -62,10 +62,12 @@ function cassiopeia_theme_preprocess_node(array &$variables): void {
   if ($node->getType() === 'market_research') {
     $variables['market_research'] = cassiopeia_market_research_detail_variables($node);
     $variables['#cache']['tags'][] = 'node_list:market_research';
+    $variables['#cache']['tags'][] = 'node_list:banner';
   }
   if ($node->getType() === 'investment_handbook') {
     $variables['handbook'] = cassiopeia_investment_handbook_detail_variables($node);
     $variables['#cache']['tags'][] = 'node_list:investment_handbook';
+    $variables['#cache']['tags'][] = 'node_list:banner';
   }
 }
 
@@ -89,6 +91,7 @@ function cassiopeia_theme_preprocess_taxonomy_term(array &$variables): void {
   ];
   $variables['#cache']['tags'] = [
     'node_list:article',
+    'node_list:banner',
     'taxonomy_term_list:tx_article',
     'taxonomy_term:' . $term->id(),
   ];

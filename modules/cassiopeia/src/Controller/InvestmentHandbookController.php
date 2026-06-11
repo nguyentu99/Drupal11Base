@@ -24,7 +24,7 @@ class InvestmentHandbookController extends ControllerBase {
           'languages:language_interface',
           'languages:language_content',
         ],
-        'tags' => ['node_list:investment_handbook'],
+        'tags' => ['node_list:investment_handbook', 'node_list:banner'],
       ],
     ];
   }

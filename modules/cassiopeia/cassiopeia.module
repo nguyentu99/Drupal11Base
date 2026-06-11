@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
@@ -85,6 +86,175 @@ function cassiopeia_image_url(string $uri, $image_style = NULL): string {
     return $image_style->buildUrl($uri);
   }
   return \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
+}
+
+/**
+ * Maps list pages and content types to banner configuration.
+ *
+ * Banner nodes use field_link with a page path (e.g. /news) or registry key.
+ */
+function cassiopeia_banner_page_registry(): array {
+  return [
+    'news' => [
+      'paths' => ['/news'],
+      'route' => 'cassiopeia.news',
+      'content_types' => ['article'],
+      'term_vocabularies' => ['tx_article'],
+      'fallback_image' => 'images/news/hero-banner.jpg',
+    ],
+    'market_research' => [
+      'paths' => ['/nghien-cuu-thi-truong'],
+      'route' => 'cassiopeia.market_research',
+      'content_types' => ['market_research'],
+      'fallback_image' => 'images/tai-lieu-banner.jpg',
+    ],
+    'investment_handbook' => [
+      'paths' => ['/cam-nang-dau-tu'],
+      'route' => 'cassiopeia.investment_handbook',
+      'content_types' => ['investment_handbook'],
+      'fallback_image' => 'images/banner-mang-luoi.jpg',
+    ],
+    'gallery' => [
+      'paths' => ['/thu-vien-anh'],
+      'route' => 'cassiopeia.gallery',
+      'content_types' => ['gallery'],
+      'fallback_image' => 'images/tai-lieu-banner.jpg',
+    ],
+  ];
+}
+
+/**
+ * Resolves a banner field_link value to a registry key.
+ */
+function cassiopeia_banner_resolve_link_key(string $link): ?string {
+  $link = trim($link);
+  if ($link === '') {
+    return NULL;
+  }
+
+  foreach (cassiopeia_banner_page_registry() as $key => $info) {
+    if ($link === $key) {
+      return $key;
+    }
+    if (!empty($info['route']) && $link === $info['route']) {
+      return $key;
+    }
+    foreach ($info['paths'] as $path) {
+      $normalized = '/' . trim($path, '/');
+      $variants = [
+        $path,
+        $normalized,
+        ltrim($normalized, '/'),
+        trim($path, '/'),
+      ];
+      if (in_array($link, $variants, TRUE)) {
+        return $key;
+      }
+    }
+  }
+
+  return NULL;
+}
+
+/**
+ * Returns published banner nodes indexed by page registry key.
+ *
+ * @return array<string, \Drupal\node\NodeInterface>
+ */
+function cassiopeia_banner_index(?LanguageInterface $language = NULL): array {
+  static $index = [];
+
+  $language ??= \Drupal::languageManager()->getCurrentLanguage();
+  $langcode = $language->getId();
+  if (isset($index[$langcode])) {
+    return $index[$langcode];
+  }
+
+  $index[$langcode] = [];
+  $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('type', 'banner')
+    ->condition('status', 1);
+  if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
+    $query->condition('langcode', $langcode);
+  }
+
+  $nids = $query->execute();
+  if (!$nids) {
+    return $index[$langcode];
+  }
+
+  /** @var \Drupal\node\NodeInterface[] $nodes */
+  $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
+  foreach ($nodes as $node) {
+    if (!$node->hasField('field_link') || $node->get('field_link')->isEmpty()) {
+      continue;
+    }
+    $key = cassiopeia_banner_resolve_link_key((string) $node->get('field_link')->value);
+    if ($key !== NULL && !isset($index[$langcode][$key])) {
+      $index[$langcode][$key] = $node;
+    }
+  }
+
+  return $index[$langcode];
+}
+
+/**
+ * Builds hero banner variables for a list page.
+ */
+function cassiopeia_page_banner(string $link_key, ?string $alt_fallback = NULL, ?LanguageInterface $language = NULL): array {
+  $language ??= \Drupal::languageManager()->getCurrentLanguage();
+  $registry = cassiopeia_banner_page_registry();
+  $info = $registry[$link_key] ?? NULL;
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $fallback_image = '/' . $theme_path . '/' . ($info['fallback_image'] ?? 'images/banner.jpg');
+  $fallback_alt = (string) ($alt_fallback ?? '');
+
+  $banner_node = cassiopeia_banner_index($language)[$link_key] ?? NULL;
+  if ($banner_node instanceof NodeInterface) {
+    $alt = $banner_node->label();
+    if ($banner_node->hasField('field_image') && !$banner_node->get('field_image')->isEmpty()) {
+      $image_item = $banner_node->get('field_image')->first();
+      $file = $image_item?->entity;
+      if ($file) {
+        return [
+          'hero_image' => cassiopeia_image_url($file->getFileUri()),
+          'hero_image_alt' => (string) ($image_item->alt ?: $alt),
+          'banner_title' => $banner_node->label(),
+        ];
+      }
+    }
+  }
+
+  return [
+    'hero_image' => $fallback_image,
+    'hero_image_alt' => $fallback_alt,
+    'banner_title' => NULL,
+  ];
+}
+
+/**
+ * Resolves the banner registry key for a content node detail page.
+ */
+function cassiopeia_banner_link_key_for_node(NodeInterface $node): ?string {
+  foreach (cassiopeia_banner_page_registry() as $key => $info) {
+    if (in_array($node->bundle(), $info['content_types'] ?? [], TRUE)) {
+      return $key;
+    }
+  }
+  return NULL;
+}
+
+/**
+ * Resolves the banner registry key for a taxonomy term page.
+ */
+function cassiopeia_banner_link_key_for_term(TermInterface $term): ?string {
+  foreach (cassiopeia_banner_page_registry() as $key => $info) {
+    if (in_array($term->bundle(), $info['term_vocabularies'] ?? [], TRUE)) {
+      return $key;
+    }
+  }
+  return NULL;
 }
 
 /**
@@ -437,8 +607,8 @@ function cassiopeia_news_page_variables(?TermInterface $term = NULL, ?Request $r
     ];
   }
 
-  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
-  $hero_image = '/' . $theme_path . '/images/news/hero-banner.jpg';
+  $hero_alt = $term !== NULL ? $term->label() : (string) t('News');
+  $banner = cassiopeia_page_banner('news', $hero_alt, $language);
 
   $breadcrumb = [
     [
@@ -459,8 +629,8 @@ function cassiopeia_news_page_variables(?TermInterface $term = NULL, ?Request $r
 
   return [
     'title' => $term !== NULL ? $term->label() : t('News'),
-    'hero_image' => $hero_image,
-    'hero_image_alt' => $term !== NULL ? $term->label() : (string) t('News'),
+    'hero_image' => $banner['hero_image'],
+    'hero_image_alt' => $banner['hero_image_alt'],
     'breadcrumb' => $breadcrumb,
     'search_action' => $base_url,
     'search_query' => $search,
@@ -583,12 +753,12 @@ function cassiopeia_market_research_page_variables(?Request $request = NULL): ar
     ];
   }
 
-  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $banner = cassiopeia_page_banner('market_research', (string) t('Market research'), $language);
 
   return [
     'title' => t('Market research'),
-    'hero_image' => '/' . $theme_path . '/images/tai-lieu-banner.jpg',
-    'hero_image_alt' => (string) t('Market research'),
+    'hero_image' => $banner['hero_image'],
+    'hero_image_alt' => $banner['hero_image_alt'],
     'breadcrumb' => [
       [
         'label' => t('Home'),
@@ -670,8 +840,8 @@ function cassiopeia_market_research_detail_variables(NodeInterface $node): array
     $body = Markup::create($node->get('body')->processed);
   }
 
-  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
   $list_url = cassiopeia_market_research_url(['language' => $language]);
+  $banner = cassiopeia_page_banner('market_research', $title, $language);
 
   return [
     'title' => $title,
@@ -679,8 +849,8 @@ function cassiopeia_market_research_detail_variables(NodeInterface $node): array
     'date' => $date_formatter->format($created, 'custom', 'd-m-Y'),
     'date_iso' => $date_formatter->format($created, 'html_date'),
     'share_url' => $share_url,
-    'hero_image' => '/' . $theme_path . '/images/tai-lieu-banner.jpg',
-    'hero_image_alt' => $title,
+    'hero_image' => $banner['hero_image'],
+    'hero_image_alt' => $banner['hero_image_alt'],
     'breadcrumb' => [
       [
         'label' => t('Home'),
@@ -858,11 +1028,12 @@ function cassiopeia_investment_handbook_page_variables(?Request $request = NULL)
 
   $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
   $base_url = cassiopeia_investment_handbook_url(['language' => $language]);
+  $banner = cassiopeia_page_banner('investment_handbook', (string) t('Investment handbook'), $language);
 
   return [
     'title' => t('Investment handbook'),
-    'hero_image' => '/' . $theme_path . '/images/banner-mang-luoi.jpg',
-    'hero_image_alt' => (string) t('Investment handbook'),
+    'hero_image' => $banner['hero_image'],
+    'hero_image_alt' => $banner['hero_image_alt'],
     'breadcrumb' => [
       [
         'label' => t('Home'),
@@ -928,9 +1099,9 @@ function cassiopeia_investment_handbook_related_items(NodeInterface $node, int $
 function cassiopeia_investment_handbook_detail_variables(NodeInterface $node): array {
   $language = $node->language();
   $title = $node->label();
-  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
   $list_url = cassiopeia_investment_handbook_url(['language' => $language]);
   $parsed = cassiopeia_investment_handbook_sections($node);
+  $banner = cassiopeia_page_banner('investment_handbook', $title, $language);
 
   $download_url = NULL;
   if ($node->hasField('field_file') && !$node->get('field_file')->isEmpty()) {
@@ -942,8 +1113,8 @@ function cassiopeia_investment_handbook_detail_variables(NodeInterface $node): a
 
   return [
     'title' => $title,
-    'hero_image' => '/' . $theme_path . '/images/tai-lieu-banner.jpg',
-    'hero_image_alt' => $title,
+    'hero_image' => $banner['hero_image'],
+    'hero_image_alt' => $banner['hero_image_alt'],
     'list_url' => $list_url,
     'breadcrumb' => [
       [
@@ -1094,11 +1265,12 @@ function cassiopeia_gallery_page_variables(?Request $request = NULL): array {
   }
 
   $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $banner = cassiopeia_page_banner('gallery', (string) t('Photo gallery'), $language);
 
   return [
     'title' => t('Photo gallery'),
-    'hero_image' => '/' . $theme_path . '/images/tai-lieu-banner.jpg',
-    'hero_image_alt' => (string) t('Photo gallery'),
+    'hero_image' => $banner['hero_image'],
+    'hero_image_alt' => $banner['hero_image_alt'],
     'album_icon' => '/' . $theme_path . '/images/svg/album-icon.svg',
     'breadcrumb' => [
       [

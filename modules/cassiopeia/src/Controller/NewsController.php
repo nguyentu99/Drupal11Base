@@ -25,7 +25,7 @@ class NewsController extends ControllerBase {
           'languages:language_interface',
           'languages:language_content',
         ],
-        'tags' => ['node_list:article', 'taxonomy_term_list:tx_article'],
+        'tags' => ['node_list:article', 'node_list:banner', 'taxonomy_term_list:tx_article'],
       ],
     ];
   }

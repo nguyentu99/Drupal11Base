@@ -35,7 +35,7 @@ class GalleryController extends ControllerBase {
           'languages:language_interface',
           'languages:language_content',
         ],
-        'tags' => ['node_list:gallery'],
+        'tags' => ['node_list:gallery', 'node_list:banner'],
       ],
     ];
   }
