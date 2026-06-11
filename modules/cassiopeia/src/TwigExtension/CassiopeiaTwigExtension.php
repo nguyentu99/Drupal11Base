@@ -41,6 +41,7 @@ class CassiopeiaTwigExtension extends AbstractExtension {
       new TwigFunction('cassiopeia_form', [$this, 'cassiopeia_form']),
       new TwigFunction('drupal_form', [$this, 'drupal_form']),
       new TwigFunction('cassiopeia_menu', [$this, 'cassiopeia_menu']),
+      new TwigFunction('cassiopeia_language_switcher', [$this, 'cassiopeia_language_switcher']),
     ];
   }
 
@@ -170,6 +171,10 @@ class CassiopeiaTwigExtension extends AbstractExtension {
   public static function cassiopeia_form(string $form_id, ...$args): array {
     $callback = [\Drupal::formBuilder(), 'getForm'];
     return call_user_func_array($callback, func_get_args());
+  }
+
+  public static function cassiopeia_language_switcher(): array {
+    return cassiopeia_language_switcher();
   }
 
   public static function cassiopeia_menu(string $menu_name, int $level = 1, int $depth = 0, bool $expand = FALSE): ?array {

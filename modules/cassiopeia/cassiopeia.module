@@ -87,6 +87,85 @@ function cassiopeia_news_url(array $options = []): string {
 }
 
 /**
+ * Builds language switcher data for the site header.
+ *
+ * Uses Drupal's language negotiation (URL prefix, domain, or session).
+ */
+function cassiopeia_language_switcher(): array {
+  $language_manager = \Drupal::languageManager();
+  if (!$language_manager->isMultilingual()) {
+    return ['current' => NULL, 'languages' => []];
+  }
+
+  $route_match = \Drupal::routeMatch();
+  $path_matcher = \Drupal::service('path.matcher');
+  if ($path_matcher->isFrontPage() || !$route_match->getRouteObject()) {
+    $url = Url::fromRoute('<front>');
+  }
+  else {
+    $url = Url::fromRouteMatch($route_match);
+  }
+
+  $type = LanguageInterface::TYPE_INTERFACE;
+  $switch_links = $language_manager->getLanguageSwitchLinks($type, $url);
+  if (!$switch_links || empty($switch_links->links)) {
+    return ['current' => NULL, 'languages' => []];
+  }
+
+  $current_langcode = $language_manager->getCurrentLanguage($type)->getId();
+  $flags = [
+    'vi' => '/themes/cassiopeia_theme/images/vietnam.svg',
+    'en' => '/themes/cassiopeia_theme/images/english.png',
+  ];
+  $short_labels = [
+    'vi' => 'VN',
+    'en' => 'EN',
+  ];
+
+  $languages = [];
+  $current = NULL;
+  foreach ($switch_links->links as $langcode => $link) {
+    $language = $link['language'] ?? $language_manager->getLanguage($langcode);
+    if (!$language) {
+      continue;
+    }
+
+    $link_url = clone $link['url'];
+    $options = $link_url->getOptions();
+    if (!empty($link['query'])) {
+      $options['query'] = $link['query'];
+    }
+    if (isset($link['language'])) {
+      $options['language'] = $link['language'];
+    }
+    $link_url->setOptions($options);
+
+    $is_active = $langcode === $current_langcode;
+    $item = [
+      'id' => $langcode,
+      'title' => $link['title'] ?? $language->getName(),
+      'url' => $link_url->toString(),
+      'flag' => $flags[$langcode] ?? '',
+      'short_label' => $short_labels[$langcode] ?? strtoupper($langcode),
+      'is_active' => $is_active,
+    ];
+    $languages[] = $item;
+    if ($is_active) {
+      $current = $item;
+    }
+  }
+
+  if ($current === NULL && $languages !== []) {
+    $current = $languages[0];
+  }
+
+  return [
+    'current' => $current,
+    'languages' => $languages,
+  ];
+}
+
+/**
  * Returns a public URL for a file URI, optionally via an image style.
  */
 function cassiopeia_image_url(string $uri, $image_style = NULL): string {

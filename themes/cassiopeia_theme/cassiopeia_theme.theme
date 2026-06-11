@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Cache\Cache;
 use Drupal\taxonomy\TermInterface;
 
 /**
@@ -25,6 +26,21 @@ function cassiopeia_theme_preprocess_page(array &$variables): void {
   if (!empty($variables['is_front'])) {
     $variables['page']['content'] = [];
   }
+
+  // Header menu + language switcher cache metadata.
+  $variables['#cache']['contexts'] = Cache::mergeContexts($variables['#cache']['contexts'] ?? [], [
+    'languages:language_interface',
+    'languages:language_content',
+    'route.menu_active_trails:main',
+    'url.path',
+    'url.query_args',
+    'url.site',
+  ]);
+  $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache']['tags'] ?? [], [
+    'config:system.menu.main',
+    'config:configurable_language_list',
+    'config:language.negotiation',
+  ]);
 }
 
 /**

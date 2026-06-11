@@ -1,0 +1,35 @@
+{#
+/**
+ * @file
+ * Language switcher dropdown for site header.
+ */
+#}
+{% set lang_switcher = cassiopeia_language_switcher() %}
+{% if lang_switcher.languages %}
+  <div class="dropdown site-header__lang">
+    <button type="button" class="site-header__lang-toggle dropdown-toggle"
+      data-bs-toggle="dropdown" aria-expanded="false">
+      {% if lang_switcher.current.flag %}
+        <img width="20" height="20" class="site-header__lang-flag"
+          src="{{ lang_switcher.current.flag }}"
+          alt="{{ lang_switcher.current.title }}">
+      {% endif %}
+      <span class="site-header__lang-label">{{ lang_switcher.current.short_label }}</span>
+    </button>
+    <ul class="dropdown-menu site-header__lang-menu">
+      {% for lang in lang_switcher.languages %}
+        <li>
+          <a class="dropdown-item site-header__lang-option{{ lang.is_active ? ' is-active' : '' }}"
+            href="{{ lang.url }}" hreflang="{{ lang.id }}"
+            lang="{{ lang.id }}"{{ lang.is_active ? ' aria-current="true"' : '' }}>
+            {% if lang.flag %}
+              <img width="20" height="20" class="site-header__lang-flag"
+                src="{{ lang.flag }}" alt="">
+            {% endif %}
+            {{ lang.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

@@ -1,0 +1,62 @@
+{#
+/**
+ * @file
+ * Main navigation for site header (admin/structure/menu/manage/main).
+ *
+ * Menu link CSS classes from admin are merged into submenu links.
+ * Use "site-header__submenu-link--group" on external/group items when needed.
+ */
+#}
+{% import _self as menus %}
+
+{{ menus.menu_links(items, attributes, 0) }}
+
+{% macro menu_links(items, attributes, menu_level) %}
+  {% import _self as menus %}
+  {% if items %}
+    {% if menu_level == 0 %}
+      <ul class="navbar-nav site-header__nav ul-reset justify-content-lg-end">
+    {% else %}
+      <ul class="dropdown-menu site-header__submenu">
+    {% endif %}
+    {% for item in items %}
+      {% if menu_level == 0 %}
+        {% if item.below %}
+          <li class="nav-item dropdown nav-item--dropdown{{ item.in_active_trail ? ' active' : '' }}">
+            <a href="{{ item.url }}" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+              role="button" aria-expanded="false">
+              {{ item.title }}
+              <i class="fa-solid fa-chevron-down"></i>
+            </a>
+            {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+          </li>
+        {% else %}
+          <li class="nav-item{{ item.in_active_trail ? ' active' : '' }}">
+            {{ link(item.title, item.url, { 'class': ['nav-link'] }) }}
+          </li>
+        {% endif %}
+      {% else %}
+        {% set item_attributes = item.url.getOption('attributes')|default({}) %}
+        {% set link_classes = ['site-header__submenu-link'] %}
+        {% if item_attributes.class is defined %}
+          {% if item_attributes.class is iterable %}
+            {% set link_classes = link_classes|merge(item_attributes.class) %}
+          {% else %}
+            {% set link_classes = link_classes|merge([item_attributes.class]) %}
+          {% endif %}
+        {% endif %}
+        {% set link_options = { 'class': link_classes } %}
+        {% if item_attributes.target is defined %}
+          {% set link_options = link_options|merge({ 'target': item_attributes.target }) %}
+        {% endif %}
+        {% if item_attributes.rel is defined %}
+          {% set link_options = link_options|merge({ 'rel': item_attributes.rel }) %}
+        {% endif %}
+        <li>
+          {{ link(item.title, item.url, link_options) }}
+        </li>
+      {% endif %}
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}

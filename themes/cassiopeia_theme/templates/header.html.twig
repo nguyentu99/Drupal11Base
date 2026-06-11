@@ -13,30 +13,7 @@
                             <i class="fa-regular fa-magnifying-glass"></i>
                         </button>
                         <span class="site-header__vsep"></span>
-                        <div class="dropdown site-header__lang">
-                            <button type="button" class="site-header__lang-toggle dropdown-toggle"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <img width="20" height="20" class="site-header__lang-flag" src="/themes/cassiopeia_theme/images/vietnam.svg"
-                                    alt="">
-                                <span class="site-header__lang-label">VN</span>
-                            </button>
-                            <ul class="dropdown-menu site-header__lang-menu">
-                                <li>
-                                    <a class="dropdown-item site-header__lang-option is-active" href="{{ base_path }}#">
-                                        <img width="20" height="20" class="site-header__lang-flag"
-                                            src="/themes/cassiopeia_theme/images/vietnam.svg" alt="">
-                                        Tiếng Việt
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item site-header__lang-option" href="{{ base_path }}#">
-                                        <img width="20" height="20" class="site-header__lang-flag"
-                                            src="/themes/cassiopeia_theme/images/english.png" alt="">
-                                        English
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                        {{ include('@cassiopeia_theme/templates/header-lang-switcher.html.twig') }}
                         <a class="site-header__cta" href="{{ path('cassiopeia.contact') }}">Đặt lịch tham quan</a>
                     </div>
                     <div class="site-header__mobile-bar d-flex d-lg-none align-items-center">
@@ -44,30 +21,7 @@
                             <i class="fa-regular fa-magnifying-glass"></i>
                         </button>
                         <span class="site-header__vsep"></span>
-                        <div class="dropdown site-header__lang">
-                            <button type="button" class="site-header__lang-toggle dropdown-toggle"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <img width="20" height="20" class="site-header__lang-flag" src="/themes/cassiopeia_theme/images/vietnam.svg"
-                                    alt="">
-                                <span class="site-header__lang-label">VN</span>
-                            </button>
-                            <ul class="dropdown-menu site-header__lang-menu">
-                                <li>
-                                    <a class="dropdown-item site-header__lang-option is-active" href="{{ base_path }}#">
-                                        <img width="20" height="20" class="site-header__lang-flag"
-                                            src="/themes/cassiopeia_theme/images/vietnam.svg" alt="">
-                                        Tiếng Việt
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item site-header__lang-option" href="{{ base_path }}#">
-                                        <img width="20" height="20" class="site-header__lang-flag"
-                                            src="/themes/cassiopeia_theme/images/english.png" alt="">
-                                        English
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                        {{ include('@cassiopeia_theme/templates/header-lang-switcher.html.twig') }}
                         <button class="site-header__menu-toggle navbar-toggler border-0 shadow-none" type="button"
                             data-bs-toggle="collapse" data-bs-target=".main-nav" aria-label="Menu">
                             <span class="navbar-toggler-icon"></span>
@@ -79,136 +33,7 @@
                                 data-bs-target=".main-nav" aria-label="Đóng menu">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
-                            <ul class="navbar-nav site-header__nav ul-reset justify-content-lg-end">
-                                <li class="nav-item dropdown nav-item--dropdown">
-                                    <a class="nav-link dropdown-toggle  " href="{{ base_path }}#" role="button"
-                                        data-bs-toggle="dropdown" aria-expanded="false">Về chúng tôi <i
-                                            class="fa-solid fa-chevron-down"></i></a>
-                                    <ul class="dropdown-menu site-header__submenu">
-                                        <li><a class="site-header__submenu-link site-header__submenu-link--group"
-                                                href="https://cnctech.com.vn" target="_blank"
-                                                rel="noopener noreferrer">Thông điệp HĐQT</a></li>
-                                        <li><a class="site-header__submenu-link site-header__submenu-link--group"
-                                                href="https://cnctech.com.vn" target="_blank"
-                                                rel="noopener noreferrer">Tầm nhìn - Sứ mệnh</a></li>
-                                        <li><a class="site-header__submenu-link site-header__submenu-link--group"
-                                                href="https://cnctech.com.vn" target="_blank"
-                                                rel="noopener noreferrer">Lịch sử</a></li>
-                                        <li><a class="site-header__submenu-link site-header__submenu-link--group"
-                                                href="https://cnctech.com.vn" target="_blank"
-                                                rel="noopener noreferrer">Văn hóa doanh nghiệp</a></li>
-                                        <li><a class="site-header__submenu-link site-header__submenu-link--group"
-                                                href="https://cnctech.com.vn" target="_blank"
-                                                rel="noopener noreferrer">Giải thưởng</a></li>
-                                        <li><a class="site-header__submenu-link site-header__submenu-link--group"
-                                                href="https://cnctech.com.vn" target="_blank"
-                                                rel="noopener noreferrer">ESG</a></li>
-                                        <li><a class="site-header__submenu-link site-header__submenu-link--group"
-                                                href="https://cnctech.com.vn" target="_blank"
-                                                rel="noopener noreferrer">Đơn vị thành viên</a></li>
-                                        <li><a class="site-header__submenu-link site-header__submenu-link--group"
-                                                href="https://cnctech.com.vn" target="_blank"
-                                                rel="noopener noreferrer">Đội ngũ lãnh đạo</a></li>
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}mang-luoi-hoat-dong">Mạng
-                                                lưới hoạt động</a>
-                                        </li>
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}doi-tac-khach-hang">Đối tác
-                                                &amp; Khách hàng</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown nav-item--dropdown">
-                                    <a class="nav-link dropdown-toggle" href="{{ base_path }}#" role="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">Dịch vụ <i class="fa-solid fa-chevron-down"></i></a>
-                                    <ul class="dropdown-menu site-header__submenu">
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}giai-phap-ha-tang-kcn">Giải
-                                                pháp hạ tầng khu
-                                                công nghiệp</a></li>
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}dich-vu">Giải pháp công
-                                                nghiệp</a></li>
-                                        <li><a class="site-header__submenu-link"
-                                                href="{{ base_path }}thiet-ke-xay-dung-cong-trinh-cong-nghiep">Thiết kế và xây
-                                                dựng
-                                                công trình công nghiệp</a></li>
-                                        <li><a class="site-header__submenu-link"
-                                                href="{{ base_path }}thiet-lap-he-thong-ky-thuat-noi-that-nha-xuong">Thiết kế thi
-                                                công hệ
-                                                thống kỹ thuật và hoàn thiện nội thất nhà máy (Fitout)</a></li>
-                                        <li><a class="site-header__submenu-link"
-                                                href="{{ base_path }}thiet-ke-thi-cong-giai-phap-phong-chay-cong-nghiep">Thiết kế
-                                                thi công giải
-                                                pháp phòng cháy công nghiệp</a></li>
-                                        <li><a class="site-header__submenu-link"
-                                                href="{{ base_path }}khai-thac-va-xuc-tien-dau-tu-kcn">Khai thác và xúc tiến
-                                                đầu tư khu công nghiệp</a></li>
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}quan-ly-van-hanh-kcn">Quản
-                                                lý, vận hành khu
-                                                công nghiệp</a></li>
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}tu-van-phap-ly-dau-tu">Tư
-                                                vấn pháp lý đầu
-                                                tư</a></li>
-                                        <li><a class="site-header__submenu-link"
-                                                href="{{ base_path }}tien-ich-nha-o-van-phong">Tiện ích nhà ở, văn
-                                                phòng</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown nav-item--dropdown">
-                                    <a class="nav-link dropdown-toggle" href="{{ base_path }}#" role="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">Dự án <i class="fa-solid fa-chevron-down"></i></a>
-                                    <ul class="dropdown-menu site-header__submenu">
-                                        <li><a class="site-header__submenu-link"
-                                                href="{{ base_path }}kcn-nam-binh-xuyen-green-park">KCN Nam Bình Xuyên Green
-                                                Park</a></li>
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}cnctech-ba-thien-1">CNCTech
-                                                Bá Thiện 1</a></li>
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}tt-logistics-bac-giang">TT
-                                                Logistics quốc tế Bắc Giang</a></li>
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}kcn-thang-long-3">KCN Thăng
-                                                Long 3</a></li>
-                                        <li><a class="site-header__submenu-link"
-                                                href="{{ base_path }}khu-cong-nghiep-binh-xuyen">Khu công nghiệp Bình Xuyên</a>
-                                        </li>
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}kcn-thang-long-2">Khu công
-                                                nghiệp Thăng Long 2</a></li>
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}cnctech-ha-nam">Hà Nam
-                                                IC</a></li>
-                                        <li><a class="site-header__submenu-link"
-                                                href="{{ base_path }}cum-cong-nghiep-hop-thinh">Cụm công nghiệp Hợp Thịnh</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown nav-item--dropdown">
-                                    <a class="nav-link dropdown-toggle" href="{{ base_path }}#" role="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">Tin tức <i class="fa-solid fa-chevron-down"></i></a>
-                                    <ul class="dropdown-menu site-header__submenu">
-                                        <li><a class="site-header__submenu-link" href="{{ path('cassiopeia.news') }}">{{ 'All'|t }}</a></li>
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}tin-tuc-doanh-nghiep">Tin
-                                                tức doanh nghiệp</a></li>
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}#">Tin dự án</a></li>
-                                        <li><a class="site-header__submenu-link" href="{{ base_path }}#">Sự kiện</a></li>
-                                        <li><a class="site-header__submenu-link site-header__submenu-link--group"
-                                                href="https://cnctech.com.vn" target="_blank"
-                                                rel="noopener noreferrer">Tin tức sự kiện</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ base_path }}#happy-cncers">Happy CNCers</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ base_path }}#tuyen-dung">Cơ hội nghề nghiệp</a>
-                                </li>
-                                <li class="nav-item dropdown nav-item--dropdown">
-                                    <a class="nav-link dropdown-toggle" href="{{ base_path }}#" role="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">Tài nguyên <i class="fa-solid fa-chevron-down"></i></a>
-                                    <ul class="dropdown-menu site-header__submenu">
-                                        <li><a class="site-header__submenu-link" href="{{ path('cassiopeia.investment_handbook') }}">Cẩm nang
-                                                đầu tư</a></li>
-                                        <li><a class="site-header__submenu-link"
-                                                href="{{ path('cassiopeia.market_research') }}">Nghiên cứu thị trường</a>
-                                        </li>
-                                        <li><a class="site-header__submenu-link" href="{{ path('cassiopeia.gallery') }}">Thư viện hình
-                                                ảnh</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
+                            {{ cassiopeia_menu('main', 1, 0, true) }}
                             <div class="site-header__mobile-cta d-lg-none mt-3 pt-3 border-top">
                                 <a class="site-header__cta" href="{{ path('cassiopeia.contact') }}">Đặt lịch tham quan</a>
                             </div>
