@@ -30,6 +30,12 @@ function cassiopeia_theme($existing, $type, $theme, $path) {
       ],
       'template' => 'market-research',
     ],
+    'cassiopeia_gallery' => [
+      'variables' => [
+        'gallery_page' => NULL,
+      ],
+      'template' => 'gallery',
+    ],
   ];
 }
 
@@ -42,11 +48,29 @@ function cassiopeia_market_research_url(array $options = []): string {
 }
 
 /**
+ * Language-aware URL for the photo gallery listing page.
+ */
+function cassiopeia_gallery_url(array $options = []): string {
+  $options += ['language' => \Drupal::languageManager()->getCurrentLanguage()];
+  return Url::fromRoute('cassiopeia.gallery', [], $options)->toString();
+}
+
+/**
  * Language-aware URL for the all-news page.
  */
 function cassiopeia_news_url(array $options = []): string {
   $options += ['language' => \Drupal::languageManager()->getCurrentLanguage()];
   return Url::fromRoute('cassiopeia.news', [], $options)->toString();
+}
+
+/**
+ * Returns a public URL for a file URI, optionally via an image style.
+ */
+function cassiopeia_image_url(string $uri, $image_style = NULL): string {
+  if ($image_style) {
+    return $image_style->buildUrl($uri);
+  }
+  return \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
 }
 
 /**
@@ -82,9 +106,7 @@ function cassiopeia_article_detail_variables(NodeInterface $node): array {
     $file = $image_item?->entity;
     if ($file) {
       $uri = $file->getFileUri();
-      $image_url = $image_style
-        ? $file_url_generator->generateAbsoluteString($image_style->buildUri($uri))
-        : $file_url_generator->generateAbsoluteString($uri);
+      $image_url = cassiopeia_image_url($uri, $image_style);
       $image = [
         'url' => $image_url,
         'alt' => (string) ($image_item->alt ?: $title),
@@ -181,9 +203,7 @@ function cassiopeia_article_related_items(NodeInterface $node, int $limit = 3): 
       if ($file) {
         $uri = $file->getFileUri();
         $related_image = [
-          'url' => $image_style
-            ? $file_url_generator->generateAbsoluteString($image_style->buildUri($uri))
-            : $file_url_generator->generateAbsoluteString($uri),
+          'url' => cassiopeia_image_url($uri, $image_style),
           'alt' => (string) ($image_item->alt ?: $related_node->label()),
           'width' => $image_item->width ?? NULL,
           'height' => $image_item->height ?? NULL,
@@ -245,9 +265,7 @@ function cassiopeia_article_teaser_data(
     if ($file) {
       $uri = $file->getFileUri();
       $image = [
-        'url' => $image_style
-          ? $file_url_generator->generateAbsoluteString($image_style->buildUri($uri))
-          : $file_url_generator->generateAbsoluteString($uri),
+        'url' => cassiopeia_image_url($uri, $image_style),
         'alt' => (string) ($image_item->alt ?: $node->label()),
         'width' => $image_item->width ?? NULL,
         'height' => $image_item->height ?? NULL,
@@ -476,9 +494,7 @@ function cassiopeia_market_research_teaser_data(
     if ($file) {
       $uri = $file->getFileUri();
       $image = [
-        'url' => $image_style
-          ? $file_url_generator->generateAbsoluteString($image_style->buildUri($uri))
-          : $file_url_generator->generateAbsoluteString($uri),
+        'url' => cassiopeia_image_url($uri, $image_style),
         'alt' => (string) ($image_item->alt ?: $node->label()),
         'width' => $image_item->width ?? NULL,
         'height' => $image_item->height ?? NULL,
@@ -667,6 +683,157 @@ function cassiopeia_market_research_detail_variables(NodeInterface $node): array
     ],
     'sidebar' => cassiopeia_market_research_related_items($node, 4),
     'related' => cassiopeia_market_research_related_items($node, 9),
+  ];
+}
+
+/**
+ * Base entity query for published gallery nodes.
+ */
+function cassiopeia_gallery_node_query(): QueryInterface {
+  return \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('type', 'gallery')
+    ->condition('status', 1);
+}
+
+/**
+ * Builds album card data for a gallery node.
+ */
+function cassiopeia_gallery_album_data(NodeInterface $node, $thumb_style = NULL, $full_style = NULL): array {
+  $thumb_style ??= \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+
+  $images = [];
+  if ($node->hasField('field_anh') && !$node->get('field_anh')->isEmpty()) {
+    foreach ($node->get('field_anh') as $item) {
+      $file = $item->entity;
+      if ($file) {
+        $uri = $file->getFileUri();
+        $images[] = [
+          'url' => cassiopeia_image_url($uri, $full_style),
+          'alt' => (string) ($item->alt ?: $node->label()),
+        ];
+      }
+    }
+  }
+
+  if ($images === [] && $node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
+    $item = $node->get('field_image')->first();
+    $file = $item?->entity;
+    if ($file) {
+      $uri = $file->getFileUri();
+      $images[] = [
+        'url' => cassiopeia_image_url($uri, $full_style),
+        'alt' => (string) ($item->alt ?: $node->label()),
+      ];
+    }
+  }
+
+  $cover = NULL;
+  if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
+    $item = $node->get('field_image')->first();
+    $file = $item?->entity;
+    if ($file) {
+      $uri = $file->getFileUri();
+      $cover = [
+        'url' => cassiopeia_image_url($uri, $thumb_style),
+        'alt' => (string) ($item->alt ?: $node->label()),
+      ];
+    }
+  }
+  if ($cover === NULL && $images !== []) {
+    $cover = [
+      'url' => cassiopeia_image_url(
+        $node->get('field_anh')->first()->entity->getFileUri(),
+        $thumb_style,
+      ),
+      'alt' => $images[0]['alt'],
+    ];
+  }
+
+  $group = 'gallery-' . $node->id();
+
+  return [
+    'id' => $node->id(),
+    'title' => $node->label(),
+    'fancybox_group' => $group,
+    'cover' => $cover,
+    'images' => $images,
+    'count' => count($images),
+  ];
+}
+
+/**
+ * Builds variables for the gallery listing page.
+ */
+function cassiopeia_gallery_page_variables(?Request $request = NULL): array {
+  $request ??= \Drupal::request();
+  $page = max(0, (int) $request->query->get('page', 0));
+  $per_page = 12;
+  $language = \Drupal::languageManager()->getCurrentLanguage();
+
+  $base_query = cassiopeia_gallery_node_query();
+  if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
+    $base_query->condition('langcode', $language->getId());
+  }
+
+  $total = (int) (clone $base_query)->count()->execute();
+  $nids = array_values((clone $base_query)
+    ->sort('created', 'DESC')
+    ->range($page * $per_page, $per_page)
+    ->execute());
+
+  $thumb_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+
+  $items = [];
+  if ($nids !== []) {
+    $nodes = $storage->loadMultiple($nids);
+    foreach ($nids as $nid) {
+      if (isset($nodes[$nid])) {
+        $items[] = cassiopeia_gallery_album_data($nodes[$nid], $thumb_style);
+      }
+    }
+  }
+
+  $base_url = cassiopeia_gallery_url();
+  $total_pages = $total > 0 ? (int) ceil($total / $per_page) : 0;
+  $pager = [];
+  for ($i = 0; $i < $total_pages; $i++) {
+    $query = $i > 0 ? ['page' => $i] : [];
+    $pager[] = [
+      'number' => $i + 1,
+      'url' => $query === [] ? $base_url : $base_url . '?' . http_build_query($query),
+      'active' => $i === $page,
+    ];
+  }
+
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+
+  return [
+    'title' => t('Photo gallery'),
+    'hero_image' => '/' . $theme_path . '/images/tai-lieu-banner.jpg',
+    'hero_image_alt' => (string) t('Photo gallery'),
+    'album_icon' => '/' . $theme_path . '/images/svg/album-icon.svg',
+    'breadcrumb' => [
+      [
+        'label' => t('Home'),
+        'url' => Url::fromRoute('<front>', [], ['language' => $language])->toString(),
+      ],
+      [
+        'label' => t('Resources'),
+        'url' => Url::fromUserInput('/cam-nang-dau-tu', ['language' => $language])->toString(),
+      ],
+      [
+        'label' => t('Photo gallery'),
+        'url' => NULL,
+      ],
+    ],
+    'items' => $items,
+    'pager' => $pager,
+    'has_results' => $total > 0,
+    'empty_message' => (string) t('No photo albums found.'),
   ];
 }
 

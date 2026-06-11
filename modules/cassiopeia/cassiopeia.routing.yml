@@ -13,3 +13,11 @@ cassiopeia.market_research:
     _title_callback: '\Drupal\cassiopeia\Controller\MarketResearchController::title'
   requirements:
     _permission: 'access content'
+
+cassiopeia.gallery:
+  path: '/thu-vien-anh'
+  defaults:
+    _controller: '\Drupal\cassiopeia\Controller\GalleryController::content'
+    _title_callback: '\Drupal\cassiopeia\Controller\GalleryController::title'
+  requirements:
+    _permission: 'access content'

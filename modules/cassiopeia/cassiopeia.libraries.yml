@@ -10,3 +10,14 @@ bootstrap:
       /libraries/bootstrap/dist/css/bootstrap.min.css: { weight: -50 }
   dependencies:
     - core/jquery
+
+gallery:
+  version: 5.0.36
+  css:
+    component:
+      https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css: { type: external, minified: true, preprocess: false }
+  js:
+    https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js: { type: external, minified: true, weight: -10, preprocess: false }
+    js/gallery.js: { preprocess: false }
+  dependencies:
+    - core/drupal

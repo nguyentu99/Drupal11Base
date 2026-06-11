@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * Gallery nodes have no detail page — redirect to listing with album open.
+ */
+#}
+{% if view_mode == 'full' %}
+  <div class="visually-hidden" data-gallery-redirect="{{ path('cassiopeia.gallery', [], { query: { album: node.id } }) }}"></div>
+  <script>
+    (function () {
+      var el = document.querySelector('[data-gallery-redirect]');
+      if (el) {
+        window.location.replace(el.getAttribute('data-gallery-redirect'));
+      }
+    })();
+  </script>
+{% else %}
+  {{ content }}
+{% endif %}

@@ -1,0 +1,80 @@
+{#
+/**
+ * @file
+ * Photo gallery listing page (/thu-vien-anh).
+ */
+#}
+<div class="page-hero">
+  <img class="page-hero__media" src="{{ gallery_page.hero_image }}" alt="{{ gallery_page.hero_image_alt }}">
+  <div class="page-hero__content">
+    <div class="container">
+      {% if gallery_page.breadcrumb %}
+        <nav class="page-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
+          <ol class="breadcrumb page-hero__breadcrumb">
+            {% for item in gallery_page.breadcrumb %}
+              {% if item.url %}
+                <li class="breadcrumb-item"><a href="{{ item.url }}">{{ item.label }}</a></li>
+              {% else %}
+                <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
+              {% endif %}
+            {% endfor %}
+          </ol>
+        </nav>
+      {% endif %}
+      <h1 class="page-hero__title">{{ gallery_page.title }}</h1>
+    </div>
+  </div>
+</div>
+
+<main class="gallery-page">
+  <div class="container">
+    {% if gallery_page.items %}
+      <div class="row gallery-page__grid g-4">
+        {% for item in gallery_page.items %}
+          {% if item.images %}
+            <div class="col-md-4">
+              <article class="gallery-card" id="gallery-album-{{ item.id }}">
+                <a class="gallery-card__media" href="{{ item.images[0].url }}" data-fancybox="{{ item.fancybox_group }}" data-caption="{{ item.title }}" role="button">
+                  {% if item.cover %}
+                    <img class="gallery-card__img" src="{{ item.cover.url }}" alt="{{ item.cover.alt }}">
+                  {% endif %}
+                  <span class="gallery-card__overlay" aria-hidden="true"></span>
+                  <span class="gallery-card__hover">
+                    <span class="gallery-card__hover-icon" aria-hidden="true"><i class="fa-light fa-magnifying-glass-plus"></i></span>
+                    <span class="gallery-card__hover-label">{{ 'View album'|t }}</span>
+                  </span>
+                  <span class="gallery-card__count">
+                    <img src="{{ gallery_page.album_icon }}" alt="" width="20" height="20">
+                    <span>{{ item.count }}</span>
+                  </span>
+                </a>
+                <div class="gallery-card__sources visually-hidden" aria-hidden="true">
+                  {% for image in item.images %}
+                    <a href="{{ image.url }}" data-fancybox="{{ item.fancybox_group }}" data-caption="{{ image.alt ?: item.title }}" tabindex="-1">{{ image.alt ?: item.title }}</a>
+                  {% endfor %}
+                </div>
+                <h2 class="gallery-card__title">
+                  <a href="{{ item.images[0].url }}" data-fancybox="{{ item.fancybox_group }}" data-caption="{{ item.title }}" role="button">{{ item.title }}</a>
+                </h2>
+              </article>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="news-page__empty">{{ gallery_page.empty_message }}</p>
+    {% endif %}
+
+    {% if gallery_page.pager %}
+      <nav class="news-page__pagination" aria-label="{{ 'Gallery pagination'|t }}">
+        <ul class="pagination">
+          {% for page_item in gallery_page.pager %}
+            <li class="page-item{% if page_item.active %} active{% endif %}"{% if page_item.active %} aria-current="page"{% endif %}>
+              <a class="page-link" href="{{ page_item.url }}">{{ page_item.number }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+</main>
