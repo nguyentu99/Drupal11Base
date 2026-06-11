@@ -1,0 +1,43 @@
+{#
+/**
+ * @file
+ * Main menu rendered as footer columns (admin/structure/menu/manage/main).
+ */
+#}
+{% import _self as menus %}
+
+<nav class="site-footer__nav row g-4 g-lg-5 mb-4 pb-4 border-bottom" aria-label="{{ 'Footer'|t }}">
+  {% for item in items %}
+    <div class="col-6 col-md-4 col-lg px-2">
+      {% if item.below %}
+        <h3 class="site-footer__col-title">{{ item.title }}</h3>
+        <ul class="site-footer__links">
+          {% for child in item.below %}
+            <li>{{ menus.footer_link(child) }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        {% set is_nolink = item.url.isRouted() and item.url.getRouteName() == '<nolink>' %}
+        <h3 class="site-footer__col-title mb-0">
+          {% if not is_nolink %}
+            <a href="{{ item.url }}">{{ item.title }}</a>
+          {% else %}
+            {{ item.title }}
+          {% endif %}
+        </h3>
+      {% endif %}
+    </div>
+  {% endfor %}
+</nav>
+
+{% macro footer_link(item) %}
+  {% set item_attributes = item.url.getOption('attributes')|default({}) %}
+  {% set link_options = {} %}
+  {% if item_attributes.target is defined %}
+    {% set link_options = link_options|merge({ 'target': item_attributes.target }) %}
+  {% endif %}
+  {% if item_attributes.rel is defined %}
+    {% set link_options = link_options|merge({ 'rel': item_attributes.rel }) %}
+  {% endif %}
+  {{ link(item.title, item.url, link_options) }}
+{% endmacro %}

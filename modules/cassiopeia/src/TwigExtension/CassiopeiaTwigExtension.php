@@ -177,7 +177,7 @@ class CassiopeiaTwigExtension extends AbstractExtension {
     return cassiopeia_language_switcher();
   }
 
-  public static function cassiopeia_menu(string $menu_name, int $level = 1, int $depth = 0, bool $expand = FALSE): ?array {
+  public static function cassiopeia_menu(string $menu_name, int $level = 1, int $depth = 0, bool $expand = FALSE, ?string $theme = NULL): ?array {
     $menu_tree = \Drupal::menuTree();
     $parameters = $menu_tree->getCurrentRouteMenuTreeParameters($menu_name);
     $parameters->setMinDepth($level);
@@ -194,6 +194,9 @@ class CassiopeiaTwigExtension extends AbstractExtension {
     ];
     $tree = $menu_tree->transform($tree, $manipulators);
     $build = $menu_tree->build($tree);
+    if ($theme !== NULL) {
+      $build['#theme'] = $theme;
+    }
     return $build;
   }
   //  public static function cuttomFilter(string $string) {

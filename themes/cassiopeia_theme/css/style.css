@@ -1854,6 +1854,13 @@
   margin: 0 0 16px;
   text-transform: uppercase;
 }
+.site-footer__col-title a {
+  color: inherit;
+  text-decoration: none;
+}
+.site-footer__col-title a:hover {
+  color: #066042;
+}
 .site-footer__links {
   font-family: "Mona-Regular";
   font-size: 16px;
