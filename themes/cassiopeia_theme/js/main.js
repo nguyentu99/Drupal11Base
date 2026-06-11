@@ -259,10 +259,10 @@
     });
 
     /* ------------------------------------------------------------------------
-       7. doi-tac-khach-hang.html — customer-feature-video
-       Section: Video khách hàng (.customer-feature__media-wrap)
+       7. doi-tac-khach-hang.html — customer-feature-video (mp4 inline)
+       YouTube popup: themes/cassiopeia_theme/js/partner-video.js
        ------------------------------------------------------------------------ */
-    $('.customer-feature__media-wrap').each(function () {
+    $('.customer-feature__media-wrap').not('.customer-feature__media-wrap--youtube').each(function () {
         var $wrap = $(this);
         var $poster = $wrap.find('.customer-feature__poster');
         var $play = $wrap.find('.customer-feature__play');

@@ -1,0 +1,163 @@
+{#
+/**
+ * @file
+ * Partners & customers page (Đối tác & khách hàng).
+ */
+#}
+{% if view_mode == 'full' and partner %}
+  <section class="page-hero">
+    <img class="page-hero__media" src="{{ partner.hero_image }}" alt="{{ partner.hero_image_alt }}">
+    <div class="page-hero__content">
+      <div class="container">
+        {% if partner.breadcrumb %}
+          <nav class="page-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
+            <ol class="breadcrumb page-hero__breadcrumb">
+              {% for item in partner.breadcrumb %}
+                {% if item.url %}
+                  <li class="breadcrumb-item"><a href="{{ item.url }}">{{ item.label }}</a></li>
+                {% else %}
+                  <li class="breadcrumb-item{{ loop.last ? ' active' : '' }}"{{ loop.last ? ' aria-current="page"' : '' }}>{{ item.label }}</li>
+                {% endif %}
+              {% endfor %}
+            </ol>
+          </nav>
+        {% endif %}
+        <h1 class="page-hero__title">{{ partner.title }}</h1>
+      </div>
+    </div>
+  </section>
+
+  <main class="partners-page">
+    {% if partner.stories %}
+      <section class="partners-page__stories">
+        <div class="container">
+          <h2 class="t-heading-1 text-center mb-lg-5 mb-3">{{ partner.stories_title }}</h2>
+          <div class="customers__carousel-wrap gap-5">
+            <div class="customers-testimonials owl-carousel">
+              {% for story in partner.stories %}
+                <blockquote class="testimonial-card{{ story.is_scroll ? ' testimonial-card--scroll' : '' }}">
+                  {% if story.logo %}
+                    {% if story.is_scroll %}
+                      <div class="testimonial-card__logo-wrap">
+                        <img class="testimonial-card__logo" src="{{ story.logo.url }}" alt="{{ story.logo.alt }}">
+                      </div>
+                    {% else %}
+                      <img class="testimonial-card__logo" src="{{ story.logo.url }}" alt="{{ story.logo.alt }}">
+                    {% endif %}
+                  {% endif %}
+                  {% if story.text %}
+                    <div class="testimonial-card__body">
+                      <p class="testimonial-card__text">{{ story.text }}</p>
+                      {% if story.is_scroll %}
+                        <div class="testimonial-card__scrollbar">
+                          <span class="testimonial-card__scrollbar-thumb"></span>
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                  {% if story.name or story.avatar %}
+                    <div class="testimonial-card__author">
+                      {% if story.avatar %}
+                        <img class="testimonial-card__avatar" src="{{ story.avatar.url }}" alt="{{ story.avatar.alt }}">
+                      {% endif %}
+                      <div{{ story.is_scroll ? ' class="testimonial-card__meta"' : '' }}>
+                        {% if story.name %}
+                          <cite class="testimonial-card__name">{{ story.name }}</cite>
+                        {% endif %}
+                        {% if story.role %}
+                          <p class="testimonial-card__role">{{ story.role }}</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endif %}
+                </blockquote>
+              {% endfor %}
+            </div>
+            {% if partner.stories|length > 1 %}
+              <div class="customers__dots">
+                {% for story in partner.stories %}
+                  <button type="button" class="{{ loop.first ? 'is-active' : '' }}"></button>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if partner.video_stories %}
+      <section class="partners-page__features">
+        <div class="container partners-page__features-inner">
+          {% for story in partner.video_stories %}
+            <div class="row customer-feature g-4 g-xl-5 align-items-stretch">
+              <div class="col-lg-6">
+                <div class="customer-feature__media-wrap{{ story.youtube_embed ? ' customer-feature__media-wrap--youtube' : '' }}"
+                  {% if story.youtube_embed %}
+                    data-youtube-embed="{{ story.youtube_embed }}" role="button" tabindex="0"
+                    aria-label="{{ 'Play video'|t }}"
+                  {% endif %}>
+                  <img class="customer-feature__poster" src="{{ story.poster }}" alt="">
+                  <button type="button" class="customer-feature__play"{% if story.youtube_embed %} aria-hidden="true" tabindex="-1"{% else %} disabled tabindex="-1"{% endif %}>
+                    <i class="fa-solid fa-play"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="customer-feature__content">
+                  {% if story.logo %}
+                    <img class="customer-feature__logo" src="{{ story.logo.url }}" alt="{{ story.logo.alt }}">
+                  {% endif %}
+                  {% if story.name or story.role %}
+                    <div>
+                      {% if story.name %}
+                        <p class="customer-feature__name">{{ story.name }}</p>
+                      {% endif %}
+                      {% if story.role %}
+                        <p class="customer-feature__role">{{ story.role }}</p>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                  {% if story.text %}
+                    <p class="customer-feature__text">{{ story.text }}</p>
+                  {% endif %}
+                  <hr class="customer-feature__rule">
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% if partner.trusted_logos %}
+      <section class="partners-page__trusted">
+        <div class="container">
+          <h2 class="t-heading-3 text-center mb-5">{{ partner.trusted_title }}</h2>
+          <div class="customers__logos">
+            {% for logo in partner.trusted_logos %}
+              <span class="customers__logo">
+                <img width="188" height="72" src="{{ logo.url }}" alt="{{ logo.alt }}">
+              </span>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+  </main>
+
+  {% if partner.video_stories %}
+    <div class="modal fade partner-video-modal" id="partnerVideoModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content partner-video-modal__content">
+          <button type="button" class="btn-close partner-video-modal__close" data-bs-dismiss="modal"
+            aria-label="{{ 'Close'|t }}"></button>
+          <div class="ratio ratio-16x9 partner-video-modal__ratio">
+            <iframe class="partner-video-modal__iframe" src="" title="{{ 'YouTube video'|t }}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}

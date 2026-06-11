@@ -213,6 +213,11 @@ function cassiopeia_banner_page_registry(): array {
       'content_types' => ['active_network'],
       'fallback_image' => 'images/banner-mang-luoi.jpg',
     ],
+    'partner' => [
+      'paths' => ['/doi-tac-khach-hang'],
+      'content_types' => ['partner'],
+      'fallback_image' => 'images/customers/khach-hang-banner.jpg',
+    ],
   ];
 }
 
@@ -1853,6 +1858,175 @@ function cassiopeia_active_network_detail_variables(NodeInterface $node): array 
     'filter_provinces' => cassiopeia_active_network_filter_provinces($offices, $projects),
     'offices' => $offices,
     'projects' => $projects,
+    'breadcrumb' => [
+      [
+        'label' => t('Home'),
+        'url' => Url::fromRoute('<front>', [], ['language' => $language])->toString(),
+      ],
+      [
+        'label' => t('About us'),
+        'url' => NULL,
+      ],
+      [
+        'label' => $title,
+        'url' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Builds image data from an image field item.
+ *
+ * @return array{url: string, alt: string}|null
+ */
+function cassiopeia_image_field_item_data($item): ?array {
+  if (!$item || !$item->entity) {
+    return NULL;
+  }
+  $file = $item->entity;
+  return [
+    'url' => cassiopeia_image_url($file->getFileUri()),
+    'alt' => trim((string) ($item->alt ?? '')),
+  ];
+}
+
+/**
+ * Converts a YouTube URL to an embed URL.
+ */
+function cassiopeia_youtube_embed_url(string $url): ?string {
+  $url = trim($url);
+  if ($url === '') {
+    return NULL;
+  }
+
+  if (preg_match('#youtube\.com/embed/([a-zA-Z0-9_-]{11})#', $url, $matches)) {
+    return 'https://www.youtube.com/embed/' . $matches[1];
+  }
+  if (preg_match('#(?:youtube\.com/watch\?(?:[^&]+&)*v=|youtube\.com/v/)([a-zA-Z0-9_-]{11})#', $url, $matches)) {
+    return 'https://www.youtube.com/embed/' . $matches[1];
+  }
+  if (preg_match('#youtu\.be/([a-zA-Z0-9_-]{11})#', $url, $matches)) {
+    return 'https://www.youtube.com/embed/' . $matches[1];
+  }
+  if (preg_match('#youtube\.com/shorts/([a-zA-Z0-9_-]{11})#', $url, $matches)) {
+    return 'https://www.youtube.com/embed/' . $matches[1];
+  }
+
+  return NULL;
+}
+
+/**
+ * Builds carousel story data from a customer story paragraph.
+ *
+ * @return array<string, mixed>
+ */
+function cassiopeia_partner_story_data(ParagraphInterface $paragraph): array {
+  $body = '';
+  if ($paragraph->hasField('field_body') && !$paragraph->get('field_body')->isEmpty()) {
+    $body = (string) $paragraph->get('field_body')->value;
+  }
+  $text = trim(html_entity_decode(strip_tags($body), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+  return [
+    'logo' => $paragraph->hasField('field_anh') && !$paragraph->get('field_anh')->isEmpty()
+      ? cassiopeia_image_field_item_data($paragraph->get('field_anh')->first())
+      : NULL,
+    'avatar' => $paragraph->hasField('field_avatar') && !$paragraph->get('field_avatar')->isEmpty()
+      ? cassiopeia_image_field_item_data($paragraph->get('field_avatar')->first())
+      : NULL,
+    'text' => $text,
+    'is_scroll' => mb_strlen($text) > 280,
+    'name' => trim((string) ($paragraph->get('field_title')->value ?? '')),
+    'role' => trim((string) ($paragraph->get('field_unit')->value ?? '')),
+  ];
+}
+
+/**
+ * Builds video story data from a customer story video paragraph.
+ *
+ * @return array<string, mixed>
+ */
+function cassiopeia_partner_video_story_data(ParagraphInterface $paragraph): array {
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $story = cassiopeia_partner_story_data($paragraph);
+
+  $poster = '/' . $theme_path . '/images/partners/story-video.jpg';
+  if ($paragraph->hasField('field_avatar') && !$paragraph->get('field_avatar')->isEmpty()) {
+    $avatar = cassiopeia_image_field_item_data($paragraph->get('field_avatar')->first());
+    if ($avatar) {
+      $poster = $avatar['url'];
+    }
+  }
+
+  $youtube_embed = NULL;
+  if ($paragraph->hasField('field_video') && !$paragraph->get('field_video')->isEmpty()) {
+    $youtube_embed = cassiopeia_youtube_embed_url((string) $paragraph->get('field_video')->value);
+  }
+
+  return $story + [
+    'poster' => $poster,
+    'youtube_embed' => $youtube_embed,
+  ];
+}
+
+/**
+ * Builds trusted partner logos from the node image field.
+ *
+ * @return array<int, array{url: string, alt: string}>
+ */
+function cassiopeia_partner_trusted_logos(NodeInterface $node): array {
+  if (!$node->hasField('field_anh') || $node->get('field_anh')->isEmpty()) {
+    return [];
+  }
+
+  $logos = [];
+  foreach ($node->get('field_anh') as $item) {
+    $logo = cassiopeia_image_field_item_data($item);
+    if ($logo) {
+      $logos[] = $logo;
+    }
+  }
+  return $logos;
+}
+
+/**
+ * Builds variables for partner detail templates.
+ */
+function cassiopeia_partner_detail_variables(NodeInterface $node): array {
+  $language = $node->language();
+  $title = $node->label();
+  $banner = cassiopeia_page_banner('partner', $title, $language);
+
+  $stories = [];
+  if ($node->hasField('field_customer_stories') && !$node->get('field_customer_stories')->isEmpty()) {
+    foreach ($node->get('field_customer_stories') as $item) {
+      $paragraph = $item->entity;
+      if ($paragraph instanceof ParagraphInterface && $paragraph->bundle() === 'cau_chuyen_khach_hang') {
+        $stories[] = cassiopeia_partner_story_data($paragraph);
+      }
+    }
+  }
+
+  $video_stories = [];
+  if ($node->hasField('field_customer_stories_video') && !$node->get('field_customer_stories_video')->isEmpty()) {
+    foreach ($node->get('field_customer_stories_video') as $item) {
+      $paragraph = $item->entity;
+      if ($paragraph instanceof ParagraphInterface && $paragraph->bundle() === 'cau_chuyen_khach_hang_video') {
+        $video_stories[] = cassiopeia_partner_video_story_data($paragraph);
+      }
+    }
+  }
+
+  return [
+    'title' => $title,
+    'hero_image' => $banner['hero_image'],
+    'hero_image_alt' => $banner['hero_image_alt'],
+    'stories_title' => (string) t('Customer stories'),
+    'trusted_title' => (string) t('We are a trusted partner of customers worldwide'),
+    'stories' => $stories,
+    'video_stories' => $video_stories,
+    'trusted_logos' => cassiopeia_partner_trusted_logos($node),
     'breadcrumb' => [
       [
         'label' => t('Home'),

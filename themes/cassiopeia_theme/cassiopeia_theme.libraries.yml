@@ -69,6 +69,17 @@ network-page:
     - core/drupal
     - core/once
 
+partner-video:
+  version: VERSION
+  js:
+    js/partner-video.js:
+      attributes:
+        defer: true
+  dependencies:
+    - core/drupal
+    - core/once
+    - cassiopeia/bootstrap
+
 global-styling:
   version: VERSION
   dependencies:

@@ -92,6 +92,13 @@ function cassiopeia_theme_preprocess_node(array &$variables): void {
     $variables['#cache']['tags'][] = 'node_list:banner';
     $variables['#cache']['tags'][] = 'node:' . $node->id();
   }
+  if ($node->getType() === 'partner') {
+    $variables['partner'] = cassiopeia_partner_detail_variables($node);
+    $variables['#attached']['library'][] = 'cassiopeia_theme/partner-video';
+    $variables['#cache']['tags'][] = 'node_list:partner';
+    $variables['#cache']['tags'][] = 'node_list:banner';
+    $variables['#cache']['tags'][] = 'node:' . $node->id();
+  }
 }
 
 /**
