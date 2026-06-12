@@ -8,9 +8,8 @@ use Drupal\node\NodeInterface;
 /**
  * Builds homepage template variables from admin content.
  *
- * Sections backed by content types (banner, dich_vu, projects, article) use
- * database data only. Static HTML in the theme is reserved for sections
- * without a content model (partners, testimonials, certifications, etc.).
+ * Dynamic lists (dich_vu, projects, article) come from published nodes.
+ * Static homepage blocks are edited via the home_config content type.
  */
 class HomepageContentProvider {
 
@@ -39,13 +38,16 @@ class HomepageContentProvider {
     $language ??= \Drupal::languageManager()->getCurrentLanguage();
     $theme_path = '/' . \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
 
-    return [
+    $home_config_node = cassiopeia_home_config_node($language);
+    $config = cassiopeia_home_config_data($home_config_node, $theme_path);
+
+    return array_merge($config, [
       'hero' => $this->buildHero($language),
       'services' => $this->buildServices($theme_path, $language),
       'services_default_bg' => $theme_path . '/images/services-bg.jpg',
       'projects' => $this->buildProjects($theme_path, $language),
       'news' => $this->buildNews($theme_path, $language),
-    ];
+    ]);
   }
 
   /**

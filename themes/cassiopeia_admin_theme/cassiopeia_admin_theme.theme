@@ -6,6 +6,8 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Render\Element;
 use Drupal\user\Entity\User;
 
 /**
@@ -41,6 +43,37 @@ function cassiopeia_admin_theme_preprocess_page(&$variables): void {
   if (\Drupal::moduleHandler()->moduleExists('cassiopeia_admin')) {
     $variables['administrator_menu'] = \Drupal::service('cassiopeia_admin.administrator')
       ->cassiopeia_admin_get_administrator_menu();
+  }
+
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($route_name) {
+    $local_task_manager = \Drupal::service('plugin.manager.menu.local_task');
+    $cacheability = new CacheableMetadata();
+
+    $primary = $local_task_manager->getLocalTasks($route_name, 0);
+    $cacheability = $cacheability->merge($primary['cacheability']);
+    $secondary = $local_task_manager->getLocalTasks($route_name, 1);
+    $cacheability = $cacheability->merge($secondary['cacheability']);
+
+    $primary_tabs = $primary['tabs'] ?? [];
+    $secondary_tabs = $secondary['tabs'] ?? [];
+    $visible_primary = array_intersect_key(
+      $primary_tabs,
+      array_flip(Element::getVisibleChildren($primary_tabs)),
+    );
+    $visible_secondary = array_intersect_key(
+      $secondary_tabs,
+      array_flip(Element::getVisibleChildren($secondary_tabs)),
+    );
+
+    if ($visible_primary !== [] || $visible_secondary !== []) {
+      $variables['admin_local_tasks'] = [
+        '#theme' => 'menu_local_tasks',
+        '#primary' => $visible_primary,
+        '#secondary' => $visible_secondary,
+      ];
+      $cacheability->applyTo($variables);
+    }
   }
 
   $uid = (int) \Drupal::currentUser()->id();

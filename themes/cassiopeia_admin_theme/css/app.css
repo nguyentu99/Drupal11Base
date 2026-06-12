@@ -57,6 +57,38 @@ small .admin-link::after {
     margin-left: 5px;
 }
 
+.app-page-tabs {
+    width: 100%;
+}
+
+.app-page-tabs .nav-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 0;
+}
+
+.app-page-tabs .nav-tabs .nav-link {
+    color: #495057;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 0.375rem 0.375rem 0 0;
+    margin-bottom: -1px;
+}
+
+.app-page-tabs .nav-tabs .nav-link.active,
+.app-page-tabs .nav-tabs .nav-link.is-active {
+    color: #0d6efd;
+    background: #fff;
+    border-color: #dee2e6 #dee2e6 #fff;
+    font-weight: 600;
+}
+
+.app-page-highlighted .nav-tabs {
+    margin-bottom: 0.75rem;
+}
+
 .app-page-highlighted {
     position: relative;
     min-height: 41px;

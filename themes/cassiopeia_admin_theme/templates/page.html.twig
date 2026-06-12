@@ -29,6 +29,9 @@
                     {% if page_highlighted|trim|striptags('<!-- -->') %}
                         <div class="app-page-highlighted">{{ page.highlighted }}</div>
                     {% endif %}
+                    {% if admin_local_tasks %}
+                        <div class="app-page-tabs mb-3">{{ admin_local_tasks }}</div>
+                    {% endif %}
                     <div class="box box-solid">
                         <div class="box-body">
                             {{ page.content }}

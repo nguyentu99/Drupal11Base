@@ -7,7 +7,9 @@
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\node\NodeForm;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
@@ -3047,6 +3049,241 @@ function cassiopeia_partner_detail_variables(NodeInterface $node): array {
 }
 
 /**
+ * Loads the published home_config node for the front page.
+ */
+function cassiopeia_home_config_node(?LanguageInterface $language = NULL): ?NodeInterface {
+  $language ??= \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
+  $cache_key = 'cassiopeia:home_config:' . $language->getId();
+  $static = &drupal_static(__FUNCTION__);
+  if (isset($static[$cache_key])) {
+    return $static[$cache_key];
+  }
+
+  $nids = \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('type', 'home_config')
+    ->condition('status', 1)
+    ->condition('field_link', 'home')
+    ->range(0, 1)
+    ->execute();
+
+  if ($nids === []) {
+    $static[$cache_key] = NULL;
+    return NULL;
+  }
+
+  $node = \Drupal::entityTypeManager()->getStorage('node')->load(reset($nids));
+  if ($node && $node->hasTranslation($language->getId())) {
+    $node = $node->getTranslation($language->getId());
+  }
+
+  $static[$cache_key] = $node instanceof NodeInterface ? $node : NULL;
+  return $static[$cache_key];
+}
+
+/**
+ * Returns inline SVG markup for a Vietnam map connector by spot key.
+ */
+function cassiopeia_home_map_connector_svg(string $key): string {
+  $connectors = [
+    'phu-tho' => '<svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 95 32" fill="none"><path d="M93.75 30.75L55.5446 0.75H0.75" stroke="#8CB6A8" stroke-width="1.5" stroke-linecap="round" /></svg>',
+    'ha-noi' => '<svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 90 37" fill="none"><path d="M88.75 0.75L55.25 36.25H0.75" stroke="#8CB6A8" stroke-width="1.5" stroke-linecap="round" /></svg>',
+    'bac-ninh' => '<svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 74 60" fill="none"><path d="M0.750245 58.75L30.3286 0.750001H72.7502" stroke="#8CB6A8" stroke-width="1.5" stroke-linecap="round" /></svg>',
+    'hung-yen' => '<svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 83 25" fill="none"><path d="M0.75 23.75L34.0257 0.75H81.75" stroke="#8CB6A8" stroke-width="1.5" stroke-linecap="round" /></svg>',
+    'ninh-binh' => '<svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 83 55" fill="none"><path d="M0.75 0.750122L34.0257 53.7501H81.75" stroke="#8CB6A8" stroke-width="1.5" stroke-linecap="round" /></svg>',
+    'quang-ngai' => '<svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 88 32" fill="none"><path d="M86.75 30.75L51.4203 0.75H0.75" stroke="#8CB6A8" stroke-width="1.5" stroke-linecap="round" /></svg>',
+    'da-nang' => '<svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 87 18" fill="none"><path d="M0.750245 0.750122L35.6692 16.7501H85.7502" stroke="#8CB6A8" stroke-width="1.5" stroke-linecap="round" /></svg>',
+    'hcm' => '<svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 70 40" fill="none"><path d="M68.75 38.75L40.8149 0.75H0.75" stroke="#8CB6A8" stroke-width="1.5" stroke-linecap="round" /></svg>',
+  ];
+
+  return $connectors[$key] ?? '';
+}
+
+/**
+ * Builds homepage static-section data from a home_config node.
+ *
+ * @return array<string, mixed>
+ */
+function cassiopeia_home_config_data(?NodeInterface $node, string $theme_path): array {
+  if (!$node || $node->bundle() !== 'home_config') {
+    return [];
+  }
+
+  $about_lead = '';
+  if ($node->hasField('field_about_lead') && !$node->get('field_about_lead')->isEmpty()) {
+    $about_lead = (string) $node->get('field_about_lead')->processed;
+  }
+
+  $stats = [];
+  if ($node->hasField('field_so_lieu') && !$node->get('field_so_lieu')->isEmpty()) {
+    foreach ($node->get('field_so_lieu') as $item) {
+      $paragraph = $item->entity;
+      if ($paragraph instanceof ParagraphInterface) {
+        $stat = cassiopeia_dich_vu_stat_item($paragraph);
+        if ($stat) {
+          $stats[] = $stat;
+        }
+      }
+    }
+  }
+
+  $map_image = $theme_path . '/images/cnc-map.png';
+  $map_alt = 'Bản đồ các dự án CNC Industrial tại Việt Nam';
+  if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
+    $image = cassiopeia_image_field_item_data($node->get('field_image')->first());
+    if ($image) {
+      $map_image = $image['url'];
+      $map_alt = $image['alt'] ?: $map_alt;
+    }
+  }
+
+  $map_spots = [];
+  if ($node->hasField('field_diem_ban_do') && !$node->get('field_diem_ban_do')->isEmpty()) {
+    foreach ($node->get('field_diem_ban_do') as $item) {
+      $paragraph = $item->entity;
+      if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'diem_ban_do') {
+        continue;
+      }
+      $key = trim((string) ($paragraph->get('field_key')->value ?? ''));
+      $map_spots[] = [
+        'key' => $key,
+        'name' => trim((string) ($paragraph->get('field_title')->value ?? '')),
+        'value' => trim((string) ($paragraph->get('field_unit')->value ?? '')),
+        'accent' => (bool) ($paragraph->get('field_noi_bat')->value ?? FALSE),
+        'connector' => cassiopeia_home_map_connector_svg($key),
+      ];
+    }
+  }
+
+  $services_lead = '';
+  if ($node->hasField('field_services_lead') && !$node->get('field_services_lead')->isEmpty()) {
+    $services_lead = (string) $node->get('field_services_lead')->value;
+  }
+
+  $projects_lead = '';
+  if ($node->hasField('field_projects_lead') && !$node->get('field_projects_lead')->isEmpty()) {
+    $projects_lead = (string) $node->get('field_projects_lead')->value;
+  }
+
+  $partner_stats = [];
+  if ($node->hasField('field_chi_so_doi_tac') && !$node->get('field_chi_so_doi_tac')->isEmpty()) {
+    foreach ($node->get('field_chi_so_doi_tac') as $item) {
+      $paragraph = $item->entity;
+      if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'chi_so_doi_tac') {
+        continue;
+      }
+      $icon = trim((string) ($paragraph->get('field_icon')->value ?? 'globe'));
+      $style = (string) ($paragraph->get('field_style')->value ?? 'green');
+      $partner_stats[] = [
+        'value' => trim((string) ($paragraph->get('field_title')->value ?? '')),
+        'label' => trim((string) ($paragraph->get('field_content')->value ?? '')),
+        'icon_class' => 'fa-regular fa-' . $icon,
+        'value_class' => $style === 'red' ? 'partners__stat-value--red' : 'partners__stat-value--green',
+        'icon_accent' => $style === 'red',
+      ];
+    }
+  }
+
+  $country_rows = [];
+  if ($node->hasField('field_hang_quoc_gia') && !$node->get('field_hang_quoc_gia')->isEmpty()) {
+    foreach ($node->get('field_hang_quoc_gia') as $item) {
+      $paragraph = $item->entity;
+      if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'hang_quoc_gia') {
+        continue;
+      }
+      $country_rows[] = [
+        'country' => trim((string) ($paragraph->get('field_title')->value ?? '')),
+        'count' => trim((string) ($paragraph->get('field_content')->value ?? '')),
+        'bold' => (bool) ($paragraph->get('field_noi_bat')->value ?? FALSE),
+      ];
+    }
+  }
+
+  $partners_map = $theme_path . '/images/CNC.Map.png';
+  if ($node->hasField('field_image_location') && !$node->get('field_image_location')->isEmpty()) {
+    $image = cassiopeia_image_field_item_data($node->get('field_image_location')->first());
+    if ($image) {
+      $partners_map = $image['url'];
+    }
+  }
+
+  $customers_bg = $theme_path . '/images/customers/earth-bg.jpg';
+  if ($node->hasField('field_customers_bg') && !$node->get('field_customers_bg')->isEmpty()) {
+    $image = cassiopeia_image_field_item_data($node->get('field_customers_bg')->first());
+    if ($image) {
+      $customers_bg = $image['url'];
+    }
+  }
+
+  $logos = cassiopeia_partner_trusted_logos($node);
+
+  $testimonials = [];
+  if ($node->hasField('field_customer_stories') && !$node->get('field_customer_stories')->isEmpty()) {
+    foreach ($node->get('field_customer_stories') as $item) {
+      $paragraph = $item->entity;
+      if ($paragraph instanceof ParagraphInterface) {
+        $testimonials[] = cassiopeia_partner_story_data($paragraph);
+      }
+    }
+  }
+
+  $certifications = [];
+  if ($node->hasField('field_chung_nhan') && !$node->get('field_chung_nhan')->isEmpty()) {
+    foreach ($node->get('field_chung_nhan') as $item) {
+      $paragraph = $item->entity;
+      if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'chung_nhan') {
+        continue;
+      }
+      $image = $paragraph->hasField('field_anh') && !$paragraph->get('field_anh')->isEmpty()
+        ? cassiopeia_image_field_item_data($paragraph->get('field_anh')->first())
+        : NULL;
+      if ($image) {
+        $certifications[] = [
+          'url' => $image['url'],
+          'alt' => trim((string) ($paragraph->get('field_title')->value ?? '')) ?: $image['alt'],
+        ];
+      }
+    }
+  }
+
+  return [
+    'about' => [
+      'title' => trim((string) ($node->get('field_about_title')->value ?? '')),
+      'lead_html' => $about_lead,
+      'stats' => $stats,
+      'map' => [
+        'image' => $map_image,
+        'alt' => $map_alt,
+        'hoang_sa_label' => trim((string) ($node->get('field_hoang_sa_label')->value ?? '')),
+        'truong_sa_label' => trim((string) ($node->get('field_truong_sa_label')->value ?? '')),
+        'spots' => $map_spots,
+      ],
+    ],
+    'services_heading' => [
+      'title' => trim((string) ($node->get('field_services_title')->value ?? '')),
+      'lead' => $services_lead,
+    ],
+    'projects_heading' => [
+      'title' => trim((string) ($node->get('field_projects_title')->value ?? '')),
+      'lead' => $projects_lead,
+    ],
+    'partners' => [
+      'title' => trim((string) ($node->get('field_partners_title')->value ?? '')),
+      'stats' => $partner_stats,
+      'table_rows' => $country_rows,
+      'map_image' => $partners_map,
+    ],
+    'customers' => [
+      'title' => trim((string) ($node->get('field_customers_title')->value ?? '')),
+      'bg_image' => $customers_bg,
+      'logos' => $logos,
+      'testimonials' => $testimonials,
+    ],
+    'certifications' => $certifications,
+  ];
+}
+
+/**
  * Builds variables for the front page homepage template.
  */
 function cassiopeia_homepage_variables(): array {
@@ -3069,6 +3306,7 @@ function cassiopeia_preprocess_page(array &$variables): void {
       'node_list:projects',
       'node_list:dich_vu',
       'node_list:banner',
+      'node_list:home_config',
     ]);
     $variables['#cache']['contexts'] = \Drupal\Core\Cache\Cache::mergeContexts($variables['#cache']['contexts'] ?? [], [
       'languages:language_interface',
@@ -3108,4 +3346,45 @@ function cassiopeia_preprocess_views_view(array &$variables): void {
   $variables['feed_icons'] = [];
   $variables['more'] = '';
   $variables['footer'] = '';
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function cassiopeia_form_alter(array &$form, FormStateInterface $form_state, $form_id): void {
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof NodeForm) {
+    return;
+  }
+
+  $node = $form_object->getEntity();
+  if ($node->isNew() || !\Drupal::moduleHandler()->moduleExists('content_translation')) {
+    return;
+  }
+
+  /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
+  $manager = \Drupal::service('content_translation.manager');
+  if (!$manager->isEnabled('node', $node->bundle())) {
+    return;
+  }
+
+  $access = \Drupal::accessManager()->checkNamedRoute(
+    'entity.node.content_translation_overview',
+    ['node' => $node->id()],
+    \Drupal::currentUser(),
+    TRUE,
+  );
+  if (!$access->isAllowed()) {
+    return;
+  }
+
+  $form['translation_link'] = [
+    '#type' => 'link',
+    '#title' => t('Dịch nội dung'),
+    '#url' => Url::fromRoute('entity.node.content_translation_overview', ['node' => $node->id()]),
+    '#attributes' => [
+      'class' => ['button', 'button--primary', 'mb-3'],
+    ],
+    '#weight' => -100,
+  ];
 }

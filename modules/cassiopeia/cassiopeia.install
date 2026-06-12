@@ -218,3 +218,47 @@ function cassiopeia_update_11011(): string {
   $messages = $importer->import();
   return implode(' ', $messages);
 }
+
+/**
+ * Installs home_config content type, fields, and paragraph bundles.
+ */
+function cassiopeia_update_11012(): string {
+  /** @var \Drupal\cassiopeia\Service\HomeConfigContentInstaller $installer */
+  $installer = \Drupal::service('cassiopeia.home_config_content_installer');
+  $installer->install();
+  return (string) t('Installed home_config content type with fields and paragraphs.');
+}
+
+/**
+ * Seeds the home_config node from legacy homepage static content.
+ */
+function cassiopeia_update_11013(): string {
+  /** @var \Drupal\cassiopeia\Service\HomeConfigContentImporter $importer */
+  $importer = \Drupal::service('cassiopeia.home_config_content_importer');
+  $messages = $importer->import();
+  return implode(' ', $messages);
+}
+
+/**
+ * Makes image alt text optional on home_config image fields.
+ */
+function cassiopeia_update_11014(): string {
+  /** @var \Drupal\cassiopeia\Service\HomeConfigContentInstaller $installer */
+  $installer = \Drupal::service('cassiopeia.home_config_content_installer');
+  $installer->relaxImageAltRequirement();
+  return (string) t('Image alt text is no longer required on home_config fields.');
+}
+
+/**
+ * Enables content translation for home_config and related paragraph types.
+ */
+function cassiopeia_update_11015(): string {
+  if (!\Drupal::moduleHandler()->moduleExists('content_translation')) {
+    \Drupal::service('module_installer')->install(['content_translation'], TRUE);
+  }
+
+  /** @var \Drupal\cassiopeia\Service\HomeConfigContentInstaller $installer */
+  $installer = \Drupal::service('cassiopeia.home_config_content_installer');
+  $installer->enableContentTranslation();
+  return (string) t('Enabled content translation for home_config.');
+}

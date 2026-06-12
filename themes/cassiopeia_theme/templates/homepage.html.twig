@@ -6,189 +6,72 @@
         <div class="hero__curve"></div>
     </div>
 
+    {% if homepage.about %}
     <div class="section about-stats">
         <div class="container">
             <div class="row g-4 g-lg-5 align-items-start">
                 <div class="col-lg-7">
-                    <h2 class="t-heading-1 mb-4">Nhà phát triển công nghiệp hàng đầu với các
-                        giải pháp toàn diện</h2>
-                    <p class="t-body text-justify mb-4 mb-lg-5">
-                        <strong class="t-subtitle">CNCIndustrial</strong> tập trung phát triển và khai thác hạ tầng
-                        khu công nghiệp theo định hướng xanh – thông minh – bền vững, cung cấp hệ sinh thái công
-                        nghiệp đồng bộ cho nhà đầu tư trong và ngoài nước
-                    </p>
+                    {% if homepage.about.title %}
+                    <h2 class="t-heading-1 mb-4">{{ homepage.about.title }}</h2>
+                    {% endif %}
+                    {% if homepage.about.lead_html %}
+                    <div class="t-body text-justify mb-4 mb-lg-5">{{ homepage.about.lead_html|raw }}</div>
+                    {% endif %}
+                    {% if homepage.about.stats is not empty %}
                     <div class="row g-3 g-md-4">
+                        {% for stat in homepage.about.stats %}
                         <div class="col-md-4 col-6">
                             <div class="stat-card">
-                                <div class="stat-card__value"><span class="stat-card__num"
-                                        data-count="600">0</span><span>+</span></div>
-                                <p class="stat-card__label">Tổng mức đầu tư<br>(triệu USD)</p>
+                                <div class="stat-card__value">
+                                    <span class="stat-card__num" data-count="{{ stat.value }}">0</span>
+                                    {% if stat.unit %}<span>{{ stat.unit }}</span>{% endif %}
+                                </div>
+                                <p class="stat-card__label">{{ stat.label|raw }}</p>
                             </div>
                         </div>
-                        <div class="col-md-4 col-6">
-                            <div class="stat-card">
-                                <div class="stat-card__value"><span class="stat-card__num"
-                                        data-count="650">0</span><span>+</span></div>
-                                <p class="stat-card__label">Hecta quỹ đất công nghiệp đang ĐT & PT</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-6">
-                            <div class="stat-card">
-                                <div class="stat-card__value"><span class="stat-card__num"
-                                        data-count="80">0</span><span>+</span></div>
-                                <p class="stat-card__label">Tổng diện tích nhà xưởng kho lấp đầy (Ha)</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-6">
-                            <div class="stat-card">
-                                <div class="stat-card__value"><span class="stat-card__num"
-                                        data-count="95">0</span><span>%</span></div>
-                                <p class="stat-card__label">Tỉ lệ lấp đầy trên diện tích xây dựng (%)</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-6">
-                            <div class="stat-card">
-                                <div class="stat-card__value"><span class="stat-card__num"
-                                        data-count="498">0</span><span>+</span></div>
-                                <p class="stat-card__label">Thu hút đầu tư luỹ kế (triệu USD)</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-6">
-                            <div class="stat-card">
-                                <div class="stat-card__value"><span class="stat-card__num"
-                                        data-count="63">0</span><span>+</span></div>
-                                <p class="stat-card__label">Số lượng khách hàng</p>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
+                    {% endif %}
                 </div>
+                {% if homepage.about.map %}
                 <div class="col-lg-5 about-stats__map">
                     <div class="vn-map">
-                        <img width="516" height="620" class="vn-map__base" src="/themes/cassiopeia_theme/images/cnc-map.png"
-                            alt="Bản đồ các dự án CNC Industrial tại Việt Nam">
-                        <div class="vn-map__spot vn-map__spot--phu-tho">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 95 32"
-                                fill="none">
-                                <path d="M93.75 30.75L55.5446 0.75H0.75" stroke="#8CB6A8" stroke-width="1.5"
-                                    stroke-linecap="round" />
-                            </svg>
-                            <span class="vn-map__pin"><img width="16" height="20" src="/themes/cassiopeia_theme/images/svg/location.svg"
-                                    alt=""></span>
-                            <span class="vn-map__label vn-map__label--accent">
-                                <span class="vn-map__label-name">Phú Thọ</span><span class="vn-map__label-sep">:</span>
-                                <span class="vn-map__label-value">500 ha</span>
+                        <img width="516" height="620" class="vn-map__base" src="{{ homepage.about.map.image }}"
+                            alt="{{ homepage.about.map.alt }}">
+                        {% for spot in homepage.about.map.spots %}
+                        <div class="vn-map__spot vn-map__spot--{{ spot.key }}">
+                            {{ spot.connector|raw }}
+                            <span class="vn-map__pin"><img width="16" height="20" src="/themes/cassiopeia_theme/images/svg/location.svg" alt=""></span>
+                            <span class="vn-map__label{{ spot.accent ? ' vn-map__label--accent' : '' }}">
+                                <span class="vn-map__label-name">{{ spot.name }}</span><span class="vn-map__label-sep">:</span>
+                                <span class="vn-map__label-value">{{ spot.value }}</span>
                             </span>
                         </div>
-                        <div class="vn-map__spot vn-map__spot--ha-noi">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 90 37"
-                                fill="none">
-                                <path d="M88.75 0.75L55.25 36.25H0.75" stroke="#8CB6A8" stroke-width="1.5"
-                                    stroke-linecap="round" />
-                            </svg>
-                            <span class="vn-map__pin"><img width="16" height="20" src="/themes/cassiopeia_theme/images/svg/location.svg"
-                                    alt=""></span>
-                            <span class="vn-map__label">
-                                <span class="vn-map__label-name">Hà Nội</span><span class="vn-map__label-sep">:</span>
-                                <span class="vn-map__label-value">6.5 ha</span>
-                            </span>
-                        </div>
-                        <div class="vn-map__spot vn-map__spot--bac-ninh">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 74 60"
-                                fill="none">
-                                <path d="M0.750245 58.75L30.3286 0.750001H72.7502" stroke="#8CB6A8" stroke-width="1.5"
-                                    stroke-linecap="round" />
-                            </svg>
-                            <span class="vn-map__pin"><img width="16" height="20" src="/themes/cassiopeia_theme/images/svg/location.svg"
-                                    alt=""></span>
-                            <span class="vn-map__label vn-map__label--accent">
-                                <span class="vn-map__label-name">Bắc Ninh</span><span class="vn-map__label-sep">:</span>
-                                <span class="vn-map__label-value">68.1 ha</span>
-                            </span>
-                        </div>
-                        <div class="vn-map__spot vn-map__spot--hung-yen">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 83 25"
-                                fill="none">
-                                <path d="M0.75 23.75L34.0257 0.75H81.75" stroke="#8CB6A8" stroke-width="1.5"
-                                    stroke-linecap="round" />
-                            </svg>
-                            <span class="vn-map__pin"><img width="16" height="20" src="/themes/cassiopeia_theme/images/svg/location.svg"
-                                    alt=""></span>
-                            <span class="vn-map__label vn-map__label--accent">
-                                <span class="vn-map__label-name">Hưng Yên</span><span class="vn-map__label-sep">:</span>
-                                <span class="vn-map__label-value">10 ha</span>
-                            </span>
-                        </div>
-                        <div class="vn-map__spot vn-map__spot--ninh-binh">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 83 55"
-                                fill="none">
-                                <path d="M0.75 0.750122L34.0257 53.7501H81.75" stroke="#8CB6A8" stroke-width="1.5"
-                                    stroke-linecap="round" />
-                            </svg>
-                            <span class="vn-map__pin"><img width="16" height="20" src="/themes/cassiopeia_theme/images/svg/location.svg"
-                                    alt=""></span>
-                            <span class="vn-map__label vn-map__label--accent">
-                                <span class="vn-map__label-name">Ninh Bình</span><span
-                                    class="vn-map__label-sep">:</span>
-                                <span class="vn-map__label-value">4.6 ha</span>
-                            </span>
-                        </div>
-                        <div class="vn-map__spot vn-map__spot--quang-ngai">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 88 32"
-                                fill="none">
-                                <path d="M86.75 30.75L51.4203 0.75H0.75" stroke="#8CB6A8" stroke-width="1.5"
-                                    stroke-linecap="round" />
-                            </svg>
-                            <span class="vn-map__pin"><img width="16" height="20" src="/themes/cassiopeia_theme/images/svg/location.svg"
-                                    alt=""></span>
-                            <span class="vn-map__label">
-                                <span class="vn-map__label-name">Quảng Ngãi</span><span
-                                    class="vn-map__label-sep">:</span>
-                                <span class="vn-map__label-value">1.9 ha</span>
-                            </span>
-                        </div>
-                        <div class="vn-map__spot vn-map__spot--da-nang">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 87 18"
-                                fill="none">
-                                <path d="M0.750245 0.750122L35.6692 16.7501H85.7502" stroke="#8CB6A8" stroke-width="1.5"
-                                    stroke-linecap="round" />
-                            </svg>
-                            <span class="vn-map__pin"><img width="16" height="20" src="/themes/cassiopeia_theme/images/svg/location.svg"
-                                    alt=""></span>
-                            <span class="vn-map__label">
-                                <span class="vn-map__label-name">Đà Nẵng</span><span class="vn-map__label-sep">:</span>
-                                <span class="vn-map__label-value">1 ha</span>
-                            </span>
-                        </div>
-                        <div class="vn-map__spot vn-map__spot--hcm">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="vn-map__connector" viewBox="0 0 70 40"
-                                fill="none">
-                                <path d="M68.75 38.75L40.8149 0.75H0.75" stroke="#8CB6A8" stroke-width="1.5"
-                                    stroke-linecap="round" />
-                            </svg>
-                            <span class="vn-map__pin"><img width="16" height="20" src="/themes/cassiopeia_theme/images/svg/location.svg"
-                                    alt=""></span>
-                            <span class="vn-map__label">
-                                <span class="vn-map__label-name">TP. Hồ Chí Minh</span><span
-                                    class="vn-map__label-sep">:</span>
-                                <span class="vn-map__label-value">5.2 ha</span>
-                            </span>
-                        </div>
-                        <span class="vn-map__island-label vn-map__island-label--hoang-sa">Quần Đảo<br>Hoàng Sa</span>
-                        <span class="vn-map__island-label vn-map__island-label--truong-sa">Quần Đảo<br>Trường Sa</span>
+                        {% endfor %}
+                        {% if homepage.about.map.hoang_sa_label %}
+                        <span class="vn-map__island-label vn-map__island-label--hoang-sa">{{ homepage.about.map.hoang_sa_label|nl2br }}</span>
+                        {% endif %}
+                        {% if homepage.about.map.truong_sa_label %}
+                        <span class="vn-map__island-label vn-map__island-label--truong-sa">{{ homepage.about.map.truong_sa_label|nl2br }}</span>
+                        {% endif %}
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
+    {% endif %}
 
     {% if homepage.services is not empty %}
     <div class="section section--gray section--services" id="dich-vu">
         <div class="container">
             <div class="section__head section__head--split">
-                <h2 class="t-heading-1">Dịch vụ CNCIndustrial</h2>
-                <p class="t-body">CNCIndustrial tập trung phát triển và đồng hành cùng doanh nghiệp từ giai đoạn
-                    chuẩn bị hạ tầng, xây dựng, vận hành đến tối ưu hoạt động sản xuất lâu dài. Với 8 giải pháp
-                    dịch vụ chủ lực giúp các doanh nghiệp phát triển mạnh tại Việt Nam.</p>
+                {% if homepage.services_heading is defined and homepage.services_heading.title %}
+                <h2 class="t-heading-1">{{ homepage.services_heading.title }}</h2>
+                {% endif %}
+                {% if homepage.services_heading is defined and homepage.services_heading.lead %}
+                <p class="t-body">{{ homepage.services_heading.lead }}</p>
+                {% endif %}
             </div>
         </div>
         <div class="services-showcase">
@@ -230,10 +113,12 @@
     <div class="section">
         <div class="container">
             <div class="section__head section__head--split">
-                <h2 class="t-heading-1">Các dự án công nghiệp<br class="d-none d-md-inline">
-                    nổi bật</h2>
-                <p class="t-body">CNCIndustrial đã đầu tư đáng kể vào bảy tỉnh thành trên khắp Việt Nam. Trong số
-                    đó, Phú Thọ (mới) nổi bật là trọng tâm, với 650 ha quỹ đất đã mua lại cho đến nay.</p>
+                {% if homepage.projects_heading is defined and homepage.projects_heading.title %}
+                <h2 class="t-heading-1">{{ homepage.projects_heading.title|nl2br }}</h2>
+                {% endif %}
+                {% if homepage.projects_heading is defined and homepage.projects_heading.lead %}
+                <p class="t-body">{{ homepage.projects_heading.lead }}</p>
+                {% endif %}
             </div>
         </div>
         {% set featured = homepage.projects.featured %}
@@ -285,26 +170,25 @@
     </div>
     {% endif %}
 
+    {% if homepage.partners %}
     <div class="section section--gray partners">
         <div class="container">
-            <h2 class="t-heading-1 mb-4 mb-lg-5">Mạng lưới đối tác & khách hàng</h2>
+            {% if homepage.partners.title %}
+            <h2 class="t-heading-1 mb-4 mb-lg-5">{{ homepage.partners.title }}</h2>
+            {% endif %}
             <div class="row g-4 g-xl-5 align-items-stretch">
                 <div class="col-lg-4">
-                    <div class="partners__stat mb-3">
-                        <i class="fa-regular fa-globe partners__stat-icon"></i>
+                    {% for stat in homepage.partners.stats %}
+                    {% if not loop.first %}<hr class="partners__divider">{% endif %}
+                    <div class="partners__stat{{ loop.last ? ' mb-4' : ' mb-3' }}">
+                        <i class="{{ stat.icon_class }} partners__stat-icon{{ stat.icon_accent ? ' text-accent' : '' }}"></i>
                         <div>
-                            <p class="partners__stat-value partners__stat-value--green">45</p>
-                            <p class="partners__stat-label">Khách hàng quốc tế</p>
+                            <p class="partners__stat-value {{ stat.value_class }}">{{ stat.value }}</p>
+                            <p class="partners__stat-label">{{ stat.label }}</p>
                         </div>
                     </div>
-                    <hr class="partners__divider">
-                    <div class="partners__stat mb-4">
-                        <i class="fa-regular fa-earth-americas partners__stat-icon text-accent"></i>
-                        <div>
-                            <p class="partners__stat-value partners__stat-value--red">6+</p>
-                            <p class="partners__stat-label">Quốc gia</p>
-                        </div>
-                    </div>
+                    {% endfor %}
+                    {% if homepage.partners.table_rows is not empty %}
                     <div class="table-responsive partners__table">
                         <table class="table mb-0">
                             <thead>
@@ -314,234 +198,102 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for row in homepage.partners.table_rows %}
                                 <tr>
-                                    <td>Đài Loan (Trung Quốc)</td>
-                                    <td class="text-center">5</td>
+                                    <td>{% if row.bold %}<strong>{{ row.country }}</strong>{% else %}{{ row.country }}{% endif %}</td>
+                                    <td class="text-center">{% if row.bold %}<strong>{{ row.count }}</strong>{% else %}{{ row.count }}{% endif %}</td>
                                 </tr>
-                                <tr>
-                                    <td>Hàn Quốc</td>
-                                    <td class="text-center">3</td>
-                                </tr>
-                                <tr>
-                                    <td>Malaysia</td>
-                                    <td class="text-center">1</td>
-                                </tr>
-                                <tr>
-                                    <td>Việt Nam</td>
-                                    <td class="text-center">7</td>
-                                </tr>
-                                <tr>
-                                    <td>Trung Quốc</td>
-                                    <td class="text-center">27</td>
-                                </tr>
-                                <tr>
-                                    <td>Hong Kong</td>
-                                    <td class="text-center">2</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Tổng cộng</strong></td>
-                                    <td class="text-center"><strong>45</strong></td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
+                    {% endif %}
                 </div>
+                {% if homepage.partners.map_image %}
                 <div class="col-lg-8 partners__map">
-                    <img src="/themes/cassiopeia_theme/images/CNC.Map.png" alt="Bản đồ mạng lưới khách hàng quốc tế của CNC Industrial">
+                    <img src="{{ homepage.partners.map_image }}" alt="{{ homepage.partners.title }}">
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
+    {% endif %}
 
+    {% if homepage.customers %}
     <div class="section customers">
         <div class="customers__bg">
             <div class="customers__earth-glow"></div>
-            <img width="1920" height="762" class="customers__earth" src="/themes/cassiopeia_theme/images/customers/earth-bg.jpg" alt="">
+            <img width="1920" height="762" class="customers__earth" src="{{ homepage.customers.bg_image }}" alt="">
         </div>
         <div class="container customers__inner">
-            <h2 class="t-heading-1 customers__title">Khách hàng của chúng tôi</h2>
+            {% if homepage.customers.title %}
+            <h2 class="t-heading-1 customers__title">{{ homepage.customers.title }}</h2>
+            {% endif %}
+            {% if homepage.customers.logos is not empty %}
             <div class="customers__logos">
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
-                        src="/themes/cassiopeia_theme/images/LOGO/Ability%20%C4%91en.png" alt="Ability đen"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/Accton-Logo-Color.png"
-                        alt="Accton-Logo-Color"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/Anotech.png"
-                        alt="Anotech">
-                </a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/Anson.png"
-                        alt="Anson"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/apd_logo-02-1.png"
-                        alt="apd logo-02-1"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/Arts.png"
-                        alt="Arts"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/beifa.png"
-                        alt="beifa"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
-                        src="/themes/cassiopeia_theme/images/LOGO/Bia%20H%C3%A0%20N%E1%BB%99i.png" alt="Bia Hà Nội"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
-                        src="/themes/cassiopeia_theme/images/LOGO/ChatGPT%20Image%2020_49_07%2027%20thg%205%2C%202026.png"
-                        alt="ChatGPT Image 20 49 07 27 thg 5, 2026"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/DB%20Schenker.png"
-                        alt="DB Schenker"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/feliks.png"
-                        alt="feliks">
-                </a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/FHE.png"
-                        alt="FHE"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/ghtk.png"
-                        alt="ghtk"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/Glitter.png"
-                        alt="Glitter">
-                </a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/I-Chain.png"
-                        alt="I-Chain">
-                </a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/JOC.png"
-                        alt="JOC"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/Kingstone.png"
-                        alt="Kingstone"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/KW.png" alt="KW"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/Lesus.jpg"
-                        alt="Lesus"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
-                        src="/themes/cassiopeia_theme/images/LOGO/LOGO%20CTY%20KH%C3%81CH%20H%C3%80NG-06.png" alt="CTY KHÁCH HÀNG-06"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/logo%20mentech.png"
-                        alt="mentech"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/MSTD.png"
-                        alt="MSTD"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/Newface.png"
-                        alt="Newface">
-                </a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/SEOV.jpg"
-                        alt="SEOV"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/sirline.jpg"
-                        alt="sirline">
-                </a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/Skylight.png"
-                        alt="Skylight">
-                </a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/SMC.png"
-                        alt="SMC"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/Sunway%20logo.png"
-                        alt="Sunway logo"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
-                        src="/themes/cassiopeia_theme/images/LOGO/uti-logo-pAs4eETPyng42iOBorMD-1734340926_upscayl_1x_upscayl-lite-4x.png"
-                        alt="uti-logo-pAs4eETPyng42iOBorMD-1734340926 upscayl 1x upscayl-lite-4x"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/Vietnam%20Post.png"
-                        alt="Vietnam Post"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/Vitalink.png"
-                        alt="Vitalink">
-                </a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/xingtai.jpg"
-                        alt="xingtai">
-                </a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="/themes/cassiopeia_theme/images/LOGO/Yingtong.png"
-                        alt="Yingtong">
-                </a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
-                        src="/themes/cassiopeia_theme/images/LOGO/z7799065766196_67c9803e6d07f35c8f5719df1f0178df_upscayl_2x_upscayl-lite-4x.png"
-                        alt="Khách hàng"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
-                        src="/themes/cassiopeia_theme/images/LOGO/z7873384190963_53625650bd525f2cbc8ccfdd0288a456.jpg" alt="Khách hàng"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
-                        src="/themes/cassiopeia_theme/images/LOGO/z7873384190970_99efab47d96b9c4d12314e3e117f35c3.jpg" alt="Khách hàng"></a>
-                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72"
-                        src="/themes/cassiopeia_theme/images/LOGO/z7873428053763_60a07cd5ab722fb32563af6238a09e35.jpg" alt="Khách hàng"></a>
+                {% for logo in homepage.customers.logos %}
+                <a class="customers__logo" href="{{ base_path }}#"><img width="188" height="72" src="{{ logo.url }}" alt="{{ logo.alt }}"></a>
+                {% endfor %}
             </div>
+            {% endif %}
         </div>
+        {% if homepage.customers.testimonials is not empty %}
         <div class="container">
             <div class="customers__carousel-wrap">
                 <div class="customers-testimonials owl-carousel">
-                    <blockquote class="testimonial-card">
-                        <img width="162" height="36" class="testimonial-card__logo" src="/themes/cassiopeia_theme/images/customers/brand-1.png"
-                            alt="Accton">
-                        <div class="testimonial-card__body">
-                            <p class="testimonial-card__text">Nhờ CNCTech Industrial, việc xây dựng nhà máy của chúng
-                                tôi bắt đầu vào tháng 10/2022 và trong vòng 4 tháng, chúng tôi đã sẵn sàng sản xuất.
-                                Sự hỗ trợ của họ trên nhiều lĩnh vực, từ đơn xin đầu tư đến hỗ trợ pháp lý, đã đóng
-                                vai trò quan trọng trong tiến trình nhanh chóng của chúng tôi.</p>
-                        </div>
-                        <div class="testimonial-card__author">
-                            <img width="68" height="68" class="testimonial-card__avatar"
-                                src="/themes/cassiopeia_theme/images/customers/avatar-1.jpg" alt="">
-                            <div>
-                                <cite class="testimonial-card__name">Mr. Jackel Lee</cite>
-                                <p class="testimonial-card__role">SVP of Product Supply & Demand</p>
+                    {% for story in homepage.customers.testimonials %}
+                    <blockquote class="testimonial-card{{ story.is_scroll ? ' testimonial-card--scroll' : '' }}">
+                        {% if story.logo %}
+                            {% if story.is_scroll %}
+                            <div class="testimonial-card__logo-wrap">
+                                <img class="testimonial-card__logo" src="{{ story.logo.url }}" alt="{{ story.logo.alt }}">
                             </div>
-                        </div>
-                    </blockquote>
-                    <blockquote class="testimonial-card testimonial-card--scroll">
-                        <div class="testimonial-card__logo-wrap">
-                            <img width="152" height="50" src="/themes/cassiopeia_theme/images/customers/brand-2.png" alt="New Protect">
-                        </div>
+                            {% else %}
+                            <img class="testimonial-card__logo" src="{{ story.logo.url }}" alt="{{ story.logo.alt }}">
+                            {% endif %}
+                        {% endif %}
+                        {% if story.text %}
                         <div class="testimonial-card__body">
-                            <p class="testimonial-card__text">CNCIndustrial đã đồng hành cùng New Protec Vina xuyên suốt
-                                quá trình triển khai nhà máy tại KCN Bá Thiện 1 – từ tư vấn đầu tư, lựa chọn vị trí đến
-                                xây dựng và hoàn thiện vận hành. Chỉ trong chưa đầy 1 năm, dự án đã đi vào hoạt động ổn
-                                định nhờ tiến độ triển khai nhanh chóng, tối ưu pháp lý và sự phối hợp chuyên nghiệp từ
-                                đội ngũ CNCIndustrial. Đây là đối tác đáng tin cậy cho các doanh nghiệp FDI khi đầu tư
-                                tại Việt Nam</p>
+                            <p class="testimonial-card__text">{{ story.text }}</p>
+                            {% if story.is_scroll %}
                             <div class="testimonial-card__scrollbar">
                                 <span class="testimonial-card__scrollbar-thumb"></span>
                             </div>
+                            {% endif %}
                         </div>
+                        {% endif %}
+                        {% if story.name or story.avatar %}
                         <div class="testimonial-card__author">
-                            <img width="68" height="68" class="testimonial-card__avatar"
-                                src="/themes/cassiopeia_theme/images/customers/avatar-2.jpg" alt="">
-                            <div class="testimonial-card__meta">
-                                <cite class="testimonial-card__name">Mr. Kwon Ki Woon</cite>
-                                <p class="testimonial-card__role">Tổng Giám đốc</p>
-                                <p class="testimonial-card__role">New Protect</p>
+                            {% if story.avatar %}
+                            <img width="68" height="68" class="testimonial-card__avatar" src="{{ story.avatar.url }}" alt="{{ story.avatar.alt }}">
+                            {% endif %}
+                            <div{{ story.is_scroll ? ' class="testimonial-card__meta"' : '' }}>
+                                {% if story.name %}
+                                <cite class="testimonial-card__name">{{ story.name }}</cite>
+                                {% endif %}
+                                {% if story.role %}
+                                {% for role_line in story.role|split('\n') %}
+                                <p class="testimonial-card__role">{{ role_line }}</p>
+                                {% endfor %}
+                                {% endif %}
                             </div>
                         </div>
+                        {% endif %}
                     </blockquote>
-                    <blockquote class="testimonial-card">
-                        <img width="162" height="51" class="testimonial-card__logo testimonial-card__logo--tall"
-                            src="/themes/cassiopeia_theme/images/customers/brand-3.png" alt="Glitter VietNam">
-                        <div class="testimonial-card__body">
-                            <p class="testimonial-card__text">Xét đến các lựa chọn như Bắc Ninh và Bắc Giang, Vĩnh Phúc
-                                nổi bật với lực lượng lao động ổn định và thủ tục hành chính gọn nhẹ. Vì vậy, chúng tôi
-                                đã nhanh chóng đưa ra quyết định chọn Vĩnh Phúc làm nơi khởi đầu cho hoạt động kinh
-                                doanh
-                                sản xuất tại Việt Nam</p>
-                        </div>
-                        <div class="testimonial-card__author">
-                            <img width="68" height="68" class="testimonial-card__avatar"
-                                src="/themes/cassiopeia_theme/images/customers/avatar-3.jpg" alt="">
-                            <div>
-                                <cite class="testimonial-card__name">Mr. Chen Jin Bao</cite>
-                                <p class="testimonial-card__role">CEO of Glitter VietNam</p>
-                            </div>
-                        </div>
-                    </blockquote>
-                    <blockquote class="testimonial-card">
-                        <img width="162" height="36" class="testimonial-card__logo" src="/themes/cassiopeia_theme/images/customers/brand-4.png"
-                            alt="Sirline VietNam">
-                        <div class="testimonial-card__body">
-                            <p class="testimonial-card__text">Khi lựa chọn địa điểm gần nhà máy Vĩnh Phúc, các dự án của
-                                CNCTech Industrial đã đáp ứng rất tốt nhu cầu về quy mô của chúng tôi. Các dịch vụ toàn
-                                diện của họ và môi trường thuận lợi của Vĩnh Phúc đã biến nơi đây thành điểm đến đầu tư
-                                lý tưởng cho các doanh nghiệp FDI.</p>
-                        </div>
-                        <div class="testimonial-card__author">
-                            <img width="68" height="68" class="testimonial-card__avatar"
-                                src="/themes/cassiopeia_theme/images/customers/avatar-4.jpg" alt="">
-                            <div>
-                                <cite class="testimonial-card__name">Mr. Jason Wu</cite>
-                                <p class="testimonial-card__role">CEO of Sirline VietNam</p>
-                            </div>
-                        </div>
-                    </blockquote>
+                    {% endfor %}
                 </div>
+                {% if homepage.customers.testimonials|length > 1 %}
                 <div class="customers__dots">
-                    <button type="button" class="is-active"></button>
-                    <button type="button"></button>
-                    <button type="button"></button>
-                    <button type="button"></button>
+                    {% for story in homepage.customers.testimonials %}
+                    <button type="button"{{ loop.first ? ' class="is-active"' }}></button>
+                    {% endfor %}
                 </div>
+                {% endif %}
             </div>
         </div>
+        {% endif %}
     </div>
+    {% endif %}
 
     {% if homepage.news is not empty %}
     <div class="section section--gray section--news">
@@ -608,29 +360,18 @@
         </div>
     </section>
 
+    {% if homepage.certifications is not empty %}
     <section class="certifications" aria-label="Chứng nhận">
         <div class="container">
             <ul class="certifications__list">
+                {% for cert in homepage.certifications %}
                 <li class="certifications__item">
                     <div class="certifications__badge">
-                        <img src="/themes/cassiopeia_theme/images/logo-2.png" alt="ISO 9001:2015">
+                        <img src="{{ cert.url }}" alt="{{ cert.alt }}">
                     </div>
                 </li>
-                <li class="certifications__item">
-                    <div class="certifications__badge">
-                        <img src="/themes/cassiopeia_theme/images/logo-3.png" alt="ISO 14001:2015">
-                    </div>
-                </li>
-                <li class="certifications__item">
-                    <div class="certifications__badge">
-                        <img src="/themes/cassiopeia_theme/images/logo-4.png" alt="LEED">
-                    </div>
-                </li>
-                <li class="certifications__item">
-                    <div class="certifications__badge">
-                        <img src="/themes/cassiopeia_theme/images/log-1.png" alt="IATF 16949:2016">
-                    </div>
-                </li>
+                {% endfor %}
             </ul>
         </div>
     </section>
+    {% endif %}
