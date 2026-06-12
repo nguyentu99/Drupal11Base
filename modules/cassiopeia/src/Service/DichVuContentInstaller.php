@@ -227,6 +227,7 @@ class DichVuContentInstaller {
       'type' => 'text_with_summary',
       'settings' => [
         'display_summary' => FALSE,
+        'allowed_formats' => ['basic_html'],
       ],
     ]);
 

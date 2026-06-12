@@ -182,3 +182,29 @@ function cassiopeia_update_11008(): string {
   $installer->install();
   return (string) t('Installed Dịch vụ content type with fields and paragraphs.');
 }
+
+/**
+ * Imports four Dịch vụ nodes from HTML content definitions.
+ */
+function cassiopeia_update_11009(): string {
+  /** @var \Drupal\cassiopeia\Service\DichVuContentImporter $importer */
+  $importer = \Drupal::service('cassiopeia.dich_vu_content_importer');
+  $messages = $importer->import();
+  return implode(' ', $messages);
+}
+
+/**
+ * Fixes text formats on imported Dịch vụ nodes (full_html → basic_html).
+ */
+function cassiopeia_update_11010(): string {
+  $field = \Drupal\field\Entity\FieldConfig::load('node.dich_vu.body');
+  if ($field) {
+    $field->setSetting('allowed_formats', ['basic_html']);
+    $field->save();
+  }
+
+  /** @var \Drupal\cassiopeia\Service\DichVuContentImporter $importer */
+  $importer = \Drupal::service('cassiopeia.dich_vu_content_importer');
+  $messages = $importer->fixTextFormats();
+  return implode(' ', $messages);
+}
