@@ -183,6 +183,11 @@ function cassiopeia_image_url(string $uri, $image_style = NULL): string {
  */
 function cassiopeia_banner_page_registry(): array {
   return [
+    'home' => [
+      'paths' => ['/'],
+      'route' => '<front>',
+      'fallback_image' => 'images/banner.jpg',
+    ],
     'news' => [
       'paths' => ['/news'],
       'route' => 'cassiopeia.news',
@@ -243,8 +248,10 @@ function cassiopeia_banner_resolve_link_key(string $link): ?string {
     if ($link === $key) {
       return $key;
     }
-    if (!empty($info['route']) && $link === $info['route']) {
-      return $key;
+    if (!empty($info['route'])) {
+      if ($link === $info['route'] || ($info['route'] === '<front>' && in_array($link, ['<front>', '<none>', '/'], TRUE))) {
+        return $key;
+      }
     }
     foreach ($info['paths'] as $path) {
       $normalized = '/' . trim($path, '/');
@@ -3040,11 +3047,34 @@ function cassiopeia_partner_detail_variables(NodeInterface $node): array {
 }
 
 /**
+ * Builds variables for the front page homepage template.
+ */
+function cassiopeia_homepage_variables(): array {
+  /** @var \Drupal\cassiopeia\Service\HomepageContentProvider $provider */
+  $provider = \Drupal::service('cassiopeia.homepage_content_provider');
+  return $provider->build();
+}
+
+/**
  * Implements hook_preprocess_HOOK() for page templates.
  */
 function cassiopeia_preprocess_page(array &$variables): void {
   $variables['site_config'] = cassiopeia_site_config();
   $variables['#cache']['tags'][] = 'config:cassiopeia.settings';
+
+  if (!empty($variables['is_front'])) {
+    $variables['homepage'] = cassiopeia_homepage_variables();
+    $variables['#cache']['tags'] = \Drupal\Core\Cache\Cache::mergeTags($variables['#cache']['tags'] ?? [], [
+      'node_list:article',
+      'node_list:projects',
+      'node_list:dich_vu',
+      'node_list:banner',
+    ]);
+    $variables['#cache']['contexts'] = \Drupal\Core\Cache\Cache::mergeContexts($variables['#cache']['contexts'] ?? [], [
+      'languages:language_interface',
+      'languages:language_content',
+    ]);
+  }
 }
 
 /**

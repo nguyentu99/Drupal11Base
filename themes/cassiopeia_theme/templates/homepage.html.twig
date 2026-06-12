@@ -2,7 +2,7 @@
 /** Homepage section from html/index.html */
 #}
 <div class="hero">
-        <img width="1920" height="880" class="hero__media" src="/themes/cassiopeia_theme/images/banner.jpg" alt="Khu công nghiệp Green Park IP">
+        <img width="1920" height="880" class="hero__media" src="{{ homepage.hero.image }}" alt="{{ homepage.hero.alt }}">
         <div class="hero__curve"></div>
     </div>
 
@@ -181,6 +181,7 @@
         </div>
     </div>
 
+    {% if homepage.services is not empty %}
     <div class="section section--gray section--services" id="dich-vu">
         <div class="container">
             <div class="section__head section__head--split">
@@ -191,104 +192,24 @@
             </div>
         </div>
         <div class="services-showcase">
-            <div class="services-showcase__slide" data-default-bg="/themes/cassiopeia_theme/images/services-bg.jpg">
+            <div class="services-showcase__slide" data-default-bg="{{ homepage.services_default_bg }}">
                 <div class="services-showcase__bgs">
-                    <img width="1920" height="768" class="services-showcase__bg is-visible" src="/themes/cassiopeia_theme/images/services-bg.jpg"
+                    <img width="1920" height="768" class="services-showcase__bg is-visible" src="{{ homepage.services_default_bg }}"
                         alt="">
                     <img width="1920" height="768" class="services-showcase__bg" alt="">
                 </div>
                 <div class="services-showcase__labels">
-                    <article class="services-showcase__label" tabindex="0" data-bg="images/services-bg.jpg">
-                        <h3 class="services-showcase__label-title">Giải pháp hạ tầng khu<br>công nghiệp</h3>
+                    {% for service in homepage.services %}
+                    <article class="services-showcase__label" tabindex="0" data-bg="{{ service.bg }}">
+                        <h3 class="services-showcase__label-title">{{ service.title_html|raw }}</h3>
                         <div class="services-showcase__label-body">
-                            <p class="services-showcase__label-desc">Cung cấp giải pháp tổng thể từ quy hoạch, san nền,
-                                giao thông, cấp điện – cấp nước, thoát nước – xử lý nước thải, viễn thông, cây xanh đến
-                                hạ tầng môi trường. Mục tiêu là tạo quỹ “đất sạch” với hạ tầng đồng bộ, sẵn sàng bàn
-                                giao cho nhà đầu tư thứ cấp và nhà máy vào hoạt động. </p>
+                            <p class="services-showcase__label-desc">{{ service.description }}</p>
                             <span class="services-showcase__label-rule"></span>
-                            <a class="btn-see-more" href="{{ base_path }}giai-phap-ha-tang-kcn">xem thêm<span
+                            <a class="btn-see-more" href="{{ service.url }}">xem thêm<span
                                     class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
                         </div>
                     </article>
-                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-2.jpg">
-                        <h3 class="services-showcase__label-title">Thiết kế và xây dựng công trình<br>công nghiệp</h3>
-                        <div class="services-showcase__label-body">
-                            <p class="services-showcase__label-desc">Thực hiện thiết kế cơ sở, thiết kế kỹ thuật – bản
-                                vẽ thi công và thi công trọn gói nhà xưởng, kho bãi, công trình phụ trợ và khối văn
-                                phòng trong khu công nghiệp. Đảm bảo công trình đạt tiêu chuẩn kỹ thuật, tối ưu chi phí
-                                đầu tư, phù hợp dây chuyền sản xuất và quy hoạch tổng thể hạ tầng. </p>
-                            <span class="services-showcase__label-rule"></span>
-                            <a class="btn-see-more" href="{{ base_path }}thiet-ke-xay-dung-cong-trinh-cong-nghiep">xem thêm<span
-                                    class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
-                        </div>
-                    </article>
-                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-3.jpg">
-                        <h3 class="services-showcase__label-title">Thiết lập hệ thống kỹ thuật và nội thất nhà xưởng
-                        </h3>
-                        <div class="services-showcase__label-body">
-                            <p class="services-showcase__label-desc">Cung cấp dịch vụ cải tạo, mở rộng, nâng cấp nhà
-                                xưởng và thiết lập hệ thống kỹ thuật và nội thất khu văn phòng, khu phụ trợ trong nhà
-                                máy theo nhu cầu sản xuất cụ thể của từng khách hàng. Tối ưu công năng, dòng di chuyển,
-                                môi trường làm việc (ánh sáng, thông gió, cách nhiệt, tiếng ồn) và giảm chi phí vận
-                                hành. </p>
-                            <span class="services-showcase__label-rule"></span>
-                            <a class="btn-see-more" href="{{ base_path }}thiet-lap-he-thong-ky-thuat-noi-that-nha-xuong">xem
-                                thêm<span class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
-                        </div>
-                    </article>
-                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-4.jpg">
-                        <h3 class="services-showcase__label-title">Thiết kế thi công giải pháp phòng cháy công nghiệp
-                        </h3>
-                        <div class="services-showcase__label-body">
-                            <p class="services-showcase__label-desc">Tư vấn giải pháp, thiết kế, thẩm duyệt và thi công
-                                các hệ thống Phòng cháy chữa cháy (PCCC) cho nhà xưởng và hạ tầng khu công nghiệp theo
-                                quy định pháp luật. Đồng thời cung cấp dịch vụ nghiệm thu, huấn luyện, bảo trì để đảm
-                                bảo an toàn cháy nổ trong suốt quá trình vận hành. </p>
-                            <span class="services-showcase__label-rule"></span>
-                            <a class="btn-see-more" href="{{ base_path }}thiet-ke-thi-cong-giai-phap-phong-chay-cong-nghiep">xem
-                                thêm<span class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
-                        </div>
-                    </article>
-                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-1-1.jpg">
-                        <h3 class="services-showcase__label-title">Khai thác và xúc tiến đầu tư<br>khu công nghiệp</h3>
-                        <div class="services-showcase__label-body">
-                            <p class="services-showcase__label-desc">Dịch vụ chiến lược đầu tư khu công nghiệp giúp Chủ đầu tư tối ưu hoạt động xúc tiến đầu tư, từ nghiên cứu thị trường, phát triển khách hàng đến marketing và kết nối nhà đầu tư quốc tế. Mục tiêu là tăng tỷ lệ lấp đầy, thu hút FDI chất lượng cao, tối đa hóa giá trị tài sản và nâng cao năng lực cạnh tranh của khu công nghiệp.</p>
-                            <span class="services-showcase__label-rule"></span>
-                            <a class="btn-see-more" href="{{ base_path }}khai-thac-va-xuc-tien-dau-tu-kcn">xem thêm<span
-                                    class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
-                        </div>
-                    </article>
-                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-2-2.jpg">
-                        <h3 class="services-showcase__label-title">Quản lý, vận hành<br>khu công nghiệp</h3>
-                        <div class="services-showcase__label-body">
-                            <p class="services-showcase__label-desc">
-                                Vận hành đồng bộ hệ thống hạ tầng kỹ thuật (điện, nước, xử lý nước thải, PCCC, an ninh, cảnh quan, vệ sinh) và dịch vụ hỗ trợ nhà đầu tư. Hướng đến mô hình quản lý chuyên nghiệp, minh bạch, nâng cao chất lượng dịch vụ và sức hấp dẫn của khu công nghiệp.
-                            </p>
-                            <span class="services-showcase__label-rule"></span>
-                            <a class="btn-see-more" href="{{ base_path }}quan-ly-van-hanh-kcn">xem thêm<span
-                                    class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
-                        </div>
-                    </article>
-                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-3-3.jpg">
-                        <h3 class="services-showcase__label-title">Tư vấn pháp lý <br> đầu tư</h3>
-                        <div class="services-showcase__label-body">
-                            <p class="services-showcase__label-desc">Đồng hành pháp lý cho chủ đầu tư hạ tầng và nhà đầu tư trong suốt vòng đời dự án: từ chủ trương đầu tư, đất đai, xây dựng, môi trường, PCCC, giấy chứng nhận đầu tư, đăng ký kinh doanh, vận hành và mọi giấy phép hoạt động... Giúp rút ngắn thời gian thủ tục, giảm rủi ro pháp lý và đảm bảo tuân thủ đầy đủ quy định của pháp luật. </p>
-                            <span class="services-showcase__label-rule"></span>
-                            <a class="btn-see-more" href="{{ base_path }}tu-van-phap-ly-dau-tu">xem thêm<span
-                                    class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
-                        </div>
-                    </article>
-                    <article class="services-showcase__label" tabindex="0" data-bg="images/service-bg-4-4.jpg">
-                        <h3 class="services-showcase__label-title">Tiện ích nhà ở, <br> văn phòng</h3>
-                        <div class="services-showcase__label-body">
-                            <p class="services-showcase__label-desc">
-                                Phát triển và vận hành hệ thống nhà ở công nhân, nhà ở chuyên gia, căn hộ dịch vụ và văn phòng cho thuê gắn với khu công nghiệp. Tạo hệ sinh thái dịch vụ – tiện ích đồng bộ (nhà ở, làm việc, thương mại – dịch vụ) nhằm nâng cao chất lượng sống và giữ chân nguồn nhân lực.
-                            </p>
-                            <span class="services-showcase__label-rule"></span>
-                            <a class="btn-see-more" href="{{ base_path }}tien-ich-nha-o-van-phong">xem thêm<span
-                                    class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
-                        </div>
-                    </article>
+                    {% endfor %}
                 </div>
             </div>
             <div class="services-showcase__nav">
@@ -303,7 +224,9 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
+    {% if homepage.projects.featured %}
     <div class="section">
         <div class="container">
             <div class="section__head section__head--split">
@@ -313,33 +236,35 @@
                     đó, Phú Thọ (mới) nổi bật là trọng tâm, với 650 ha quỹ đất đã mua lại cho đến nay.</p>
             </div>
         </div>
+        {% set featured = homepage.projects.featured %}
         <article class="project-featured">
-            <img width="1920" height="596" class="project-featured__img" src="/themes/cassiopeia_theme/images/du-an-banner.jpg"
-                alt="Khu công nghiệp Nam Bình Xuyên Green Park">
+            <img width="1920" height="596" class="project-featured__img" src="{{ featured.image }}"
+                alt="{{ featured.image_alt }}">
             <div class="project-featured__panel">
                 <div class="project-featured__info">
-                    <h3 class="project-featured__title">Khu công nghiệp Nam Bình Xuyên<br>Green Park</h3>
+                    <h3 class="project-featured__title">{{ featured.title_html|default(featured.title)|raw }}</h3>
                     <p class="project-featured__loc">
                         <img width="20" height="20" class="project-featured__loc-icon"
-                            src="/themes/cassiopeia_theme/images/svg/location-white.svg" alt="">
-                        KCN Nam Bình Xuyên, Xuân Lãng, Phú Thọ
+                            src="{{ featured.location_icon }}" alt="">
+                        {{ featured.address }}
                     </p>
                 </div>
-                <a class="btn-see-more" href="{{ base_path }}kcn-nam-binh-xuyen-green-park">xem thêm<span
+                <a class="btn-see-more" href="{{ featured.url }}">xem thêm<span
                         class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
             </div>
         </article>
         <div class="container">
             <div class="project-carousel owl-carousel">
+                {% for project in homepage.projects.cards %}
                 <article class="project-card">
-                    <a class="project-card__link" href="{{ base_path }}kcn-nam-binh-xuyen-green-park">
-                        <img width="420" height="293" class="project-card__img" src="/themes/cassiopeia_theme/images/du-an-banner.jpg"
-                            alt="KCN Nam Bình Xuyên Green Park">
+                    <a class="project-card__link" href="{{ project.url }}">
+                        <img width="420" height="293" class="project-card__img" src="{{ project.image }}"
+                            alt="{{ project.image_alt }}">
                         <div class="project-card__body">
-                            <h3 class="project-card__title">KCN Nam Bình Xuyên Green Park</h3>
+                            <h3 class="project-card__title">{{ project.title }}</h3>
                             <p class="project-card__loc">
-                                <img width="20" height="20" src="/themes/cassiopeia_theme/images/svg/location-green.svg" alt="">
-                                KCN Nam Bình Xuyên, Xuân Lãng, Phú Thọ
+                                <img width="20" height="20" src="{{ project.location_icon }}" alt="">
+                                {{ project.address }}
                             </p>
                             <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
                                     class="btn-see-more__icon btn-see-more__icon--sm"><i
@@ -347,131 +272,18 @@
                         </div>
                     </a>
                 </article>
-                <article class="project-card">
-                    <a class="project-card__link" href="{{ base_path }}cnctech-ba-thien-1">
-                        <img width="420" height="293" class="project-card__img"
-                            src="/themes/cassiopeia_theme/images/projects/ba-thien/gallery-1.jpg" alt="CNCTech Bá Thiện 1">
-                        <div class="project-card__body">
-                            <h3 class="project-card__title">CNCTech Bá Thiện 1</h3>
-                            <p class="project-card__loc">
-                                <img width="20" height="20" src="/themes/cassiopeia_theme/images/svg/location-green.svg" alt="">
-                                Khu công nghiệp Bá Thiện - Phân khu I, Bình Xuyên, Phú Thọ
-                            </p>
-                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
-                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
-                                        class="fa-solid fa-arrow-right"></i></span></span>
-                        </div>
-                    </a>
-                </article>
-                <article class="project-card">
-                    <a class="project-card__link" href="{{ base_path }}tt-logistics-bac-giang">
-                        <img width="420" height="293" class="project-card__img" src="/themes/cassiopeia_theme/images/banner-bac-gian.jpg"
-                            alt="TT Logistics quốc tế Bắc Giang">
-                        <div class="project-card__body">
-                            <h3 class="project-card__title">TT Logistics quốc tế Bắc Giang</h3>
-                            <p class="project-card__loc">
-                                <img width="20" height="20" src="/themes/cassiopeia_theme/images/svg/location-green.svg" alt="">
-                                Quốc lộ 1A – Phường Tiền Phong – Tỉnh Bắc Ninh – Việt Nam
-                            </p>
-                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
-                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
-                                        class="fa-solid fa-arrow-right"></i></span></span>
-                        </div>
-                    </a>
-                </article>
-                <article class="project-card">
-                    <a class="project-card__link" href="{{ base_path }}kcn-thang-long-3">
-                        <img width="420" height="293" class="project-card__img" src="/themes/cassiopeia_theme/images/thang-long-2.jpg"
-                            alt="KCN Thăng Long 3">
-                        <div class="project-card__body">
-                            <h3 class="project-card__title">KCN Thăng Long 3</h3>
-                            <p class="project-card__loc">
-                                <img width="20" height="20" src="/themes/cassiopeia_theme/images/svg/location-green.svg" alt="">
-                                KCN Thăng Long 3, huyện Bình Nguyên, tỉnh Phú Thọ, Việt Nam
-                            </p>
-                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
-                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
-                                        class="fa-solid fa-arrow-right"></i></span></span>
-                        </div>
-                    </a>
-                </article>
-                <article class="project-card">
-                    <a class="project-card__link" href="{{ base_path }}khu-cong-nghiep-binh-xuyen">
-                        <img width="420" height="293" class="project-card__img" src="/themes/cassiopeia_theme/images/binh-xuyen-banner.jpg"
-                            alt="Khu công nghiệp Bình Xuyên">
-                        <div class="project-card__body">
-                            <h3 class="project-card__title">Khu công nghiệp Bình Xuyên</h3>
-                            <p class="project-card__loc">
-                                <img width="20" height="20" src="/themes/cassiopeia_theme/images/svg/location-green.svg" alt="">
-                                Bình Xuyên IC, xã Bình Nguyên, tỉnh Phú Thọ, Việt Nam
-                            </p>
-                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
-                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
-                                        class="fa-solid fa-arrow-right"></i></span></span>
-                        </div>
-                    </a>
-                </article>
-                <article class="project-card">
-                    <a class="project-card__link" href="{{ base_path }}kcn-thang-long-2">
-                        <img width="420" height="293" class="project-card__img" src="/themes/cassiopeia_theme/images/thang-long-2.jpg"
-                            alt="Khu công nghiệp Thăng Long 2">
-                        <div class="project-card__body">
-                            <h3 class="project-card__title">Khu công nghiệp Thăng Long 2</h3>
-                            <p class="project-card__loc">
-                                <img width="20" height="20" src="/themes/cassiopeia_theme/images/svg/location-green.svg" alt="">
-                                Thăng Long 2 IC Xã Yên Mỹ, Tỉnh Hưng Yên, Việt Nam
-                            </p>
-                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
-                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
-                                        class="fa-solid fa-arrow-right"></i></span></span>
-                        </div>
-                    </a>
-                </article>
-                <article class="project-card">
-                    <a class="project-card__link" href="{{ base_path }}cnctech-ha-nam">
-                        <img width="420" height="293" class="project-card__img" src="/themes/cassiopeia_theme/images/ha-nam-banner.jpg"
-                            alt="Hà Nam IC">
-                        <div class="project-card__body">
-                            <h3 class="project-card__title">Hà Nam IC</h3>
-                            <p class="project-card__loc">
-                                <img width="20" height="20" src="/themes/cassiopeia_theme/images/svg/location-green.svg" alt="">
-                                Khu công nghiệp Hà nam, tỉnh Ninh Bình, Việt Nam
-                            </p>
-                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
-                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
-                                        class="fa-solid fa-arrow-right"></i></span></span>
-                        </div>
-                    </a>
-                </article>
-                <article class="project-card">
-                    <a class="project-card__link" href="{{ base_path }}cum-cong-nghiep-hop-thinh">
-                        <img width="420" height="293" class="project-card__img" src="/themes/cassiopeia_theme/images/hop-thinh-banner.jpg"
-                            alt="Cụm công nghiệp Hợp Thịnh">
-                        <div class="project-card__body">
-                            <h3 class="project-card__title">Cụm công nghiệp Hợp Thịnh</h3>
-                            <p class="project-card__loc">
-                                <img width="20" height="20" src="/themes/cassiopeia_theme/images/svg/location-green.svg" alt="">
-                                Cụm Hợp Thịnh. Xã Hội Thịnh, tỉnh Phú Thọ, Việt Nam
-                            </p>
-                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
-                                    class="btn-see-more__icon btn-see-more__icon--sm"><i
-                                        class="fa-solid fa-arrow-right"></i></span></span>
-                        </div>
-                    </a>
-                </article>
+                {% endfor %}
             </div>
+            {% if homepage.projects.cards|length > 1 %}
             <div class="project-carousel__dots">
-                <button type="button" class="is-active"></button>
-                <button type="button"></button>
-                <button type="button"></button>
-                <button type="button"></button>
-                <button type="button"></button>
-                <button type="button"></button>
-                <button type="button"></button>
-                <button type="button"></button>
+                {% for project in homepage.projects.cards %}
+                <button type="button"{{ loop.first ? ' class="is-active"' }}></button>
+                {% endfor %}
             </div>
+            {% endif %}
         </div>
     </div>
+    {% endif %}
 
     <div class="section section--gray partners">
         <div class="container">
@@ -731,59 +543,37 @@
         </div>
     </div>
 
+    {% if homepage.news is not empty %}
     <div class="section section--gray section--news">
         <div class="container">
             <h2 class="t-heading-1 section--news__title">Tin tức cập nhật</h2>
             <div class="section--news__carousel-wrap">
                 <div class="news-carousel owl-carousel">
+                    {% for item in homepage.news %}
                     <article class="news-card">
-                        <a class="news-card__media" href="{{ base_path }}tin-tuc-chi-tiet">
-                            <img width="420" height="288" class="news-card__img" src="/themes/cassiopeia_theme/images/news/news-1.jpg"
-                                alt="CNCIndustrial đón tiếp đoàn SingCham">
+                        <a class="news-card__media" href="{{ item.url }}">
+                            <img width="420" height="288" class="news-card__img" src="{{ item.image }}"
+                                alt="{{ item.image_alt }}">
                         </a>
                         <div class="news-card__body">
-                            <span class="news-card__cat">Tin tức Doanh nghiệp</span>
-                            <h3 class="news-card__title"><a href="{{ base_path }}tin-tuc-chi-tiet">CNCIndustrial đón tiếp đoàn
-                                    SingCham: Mở rộng kết
-                                    nối đầu tư quốc tế.</a></h3>
-                            <time class="news-card__date" datetime="2025-12-10">10-12-2025</time>
+                            <span class="news-card__cat">{{ item.category }}</span>
+                            <h3 class="news-card__title"><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                            <time class="news-card__date" datetime="{{ item.date_iso }}">{{ item.date }}</time>
                         </div>
                     </article>
-                    <article class="news-card">
-                        <a class="news-card__media" href="{{ base_path }}tin-tuc-chi-tiet">
-                            <img width="420" height="288" class="news-card__img" src="/themes/cassiopeia_theme/images/news/news-2.jpg"
-                                alt="Recap sự kiện Nam Bình Xuyên Green Park">
-                        </a>
-                        <div class="news-card__body">
-                            <span class="news-card__cat">Tin tức Doanh nghiệp</span>
-                            <h3 class="news-card__title"><a href="{{ base_path }}tin-tuc-chi-tiet">Recap: Sự kiện tham quan hạ
-                                    tầng và hệ thống xử lý
-                                    nước thải Nam Bình Xuyên Green Park.</a></h3>
-                            <time class="news-card__date" datetime="2025-12-10">10-12-2025</time>
-                        </div>
-                    </article>
-                    <article class="news-card">
-                        <a class="news-card__media" href="{{ base_path }}tin-tuc-chi-tiet">
-                            <img width="420" height="288" class="news-card__img" src="/themes/cassiopeia_theme/images/news/news-3.jpg"
-                                alt="Cnctech đồng hành FDI Connect 2026">
-                        </a>
-                        <div class="news-card__body">
-                            <span class="news-card__cat">Tin tức Doanh nghiệp</span>
-                            <h3 class="news-card__title"><a href="{{ base_path }}tin-tuc-chi-tiet">Cnctech đồng hành cùng FDI
-                                    Connect 2026 – thúc đẩy
-                                    kết nối trong chuỗi cung ứng toàn cầu.</a></h3>
-                            <time class="news-card__date" datetime="2025-12-10">10-12-2025</time>
-                        </div>
-                    </article>
+                    {% endfor %}
                 </div>
+                {% if homepage.news|length > 1 %}
                 <div class="news-carousel__dots">
-                    <button type="button" class="is-active"></button>
-                    <button type="button"></button>
-                    <button type="button"></button>
+                    {% for item in homepage.news %}
+                    <button type="button"{{ loop.first ? ' class="is-active"' }}></button>
+                    {% endfor %}
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
+    {% endif %}
 
     {% set cta = site_config.cta_banner %}
     <section class="cta-banner" id="lien-he">

@@ -4,6 +4,11 @@ services:
   cassiopeia.dich_vu_content_importer:
     class: Drupal\cassiopeia\Service\DichVuContentImporter
     arguments: ['@file_system', '@file.repository']
+  cassiopeia.homepage_content_provider:
+    class: Drupal\cassiopeia\Service\HomepageContentProvider
+  cassiopeia.homepage_content_importer:
+    class: Drupal\cassiopeia\Service\HomepageContentImporter
+    arguments: ['@file_system', '@file.repository']
   cassiopeia.CassiopeiaRenderTemplate:
     class: Drupal\cassiopeia\Service\CassiopeiaRenderTemplate
     arguments: ['@extension.path.resolver']

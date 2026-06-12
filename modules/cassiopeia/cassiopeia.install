@@ -208,3 +208,13 @@ function cassiopeia_update_11010(): string {
   $messages = $importer->fixTextFormats();
   return implode(' ', $messages);
 }
+
+/**
+ * Seeds homepage banner and project aliases for front page data binding.
+ */
+function cassiopeia_update_11011(): string {
+  /** @var \Drupal\cassiopeia\Service\HomepageContentImporter $importer */
+  $importer = \Drupal::service('cassiopeia.homepage_content_importer');
+  $messages = $importer->import();
+  return implode(' ', $messages);
+}
