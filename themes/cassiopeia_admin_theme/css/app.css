@@ -86,3 +86,1196 @@ a, a:hover, a:focus {
     background-color: transparent;
     opacity: unset;
 }
+
+/* ==========================================================================
+   Cassiopeia Admin — minimalist UI overrides (CSS only)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. General style
+   -------------------------------------------------------------------------- */
+:root {
+    --cassiopeia-admin-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --cassiopeia-admin-text: #1f2937;
+    --cassiopeia-admin-muted: #6b7280;
+    --cassiopeia-admin-border: #e5e7eb;
+    --cassiopeia-admin-border-soft: #f0f1f3;
+    --cassiopeia-admin-surface: #ffffff;
+    --cassiopeia-admin-accent: #2563eb;
+    --cassiopeia-admin-accent-soft: #eff6ff;
+    --cassiopeia-admin-danger: #b42318;
+    --cassiopeia-admin-danger-soft: #fef3f2;
+    --cassiopeia-admin-radius: 0.375rem;
+    --cassiopeia-admin-radius-lg: 0.5rem;
+    --cassiopeia-admin-transition: 0.18s ease;
+    --cassiopeia-admin-input-height: 2.375rem;
+    --cassiopeia-admin-paragraph-title-bg: #f5f5f5;
+    --cassiopeia-admin-paragraph-title-border: #e0e0e0;
+}
+
+.app-content {
+    font-family: var(--cassiopeia-admin-font);
+    font-size: 0.9375rem;
+    color: var(--cassiopeia-admin-text);
+    letter-spacing: -0.01em;
+}
+
+.app-content .box.box-solid {
+    border: 1px solid var(--cassiopeia-admin-border);
+    border-radius: var(--cassiopeia-admin-radius-lg);
+    background: var(--cassiopeia-admin-surface);
+    box-shadow: none;
+}
+
+.app-content .box-body {
+    padding: 1rem 1.125rem;
+}
+
+.app-content-header {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+}
+
+.app-content-header h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--cassiopeia-admin-text);
+}
+
+.app-content .form-item {
+    margin-bottom: 1rem;
+}
+
+.app-content .form-label,
+.app-content label {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--cassiopeia-admin-text);
+    margin-bottom: 0.375rem;
+}
+
+.app-content .form-control,
+.app-content .form-select,
+.app-content textarea.form-control {
+    min-height: var(--cassiopeia-admin-input-height);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    border-color: var(--cassiopeia-admin-border);
+    border-radius: var(--cassiopeia-admin-radius);
+    box-shadow: none;
+    transition: border-color var(--cassiopeia-admin-transition), box-shadow var(--cassiopeia-admin-transition);
+}
+
+.app-content textarea.form-control {
+    min-height: 5.5rem;
+    padding: 0.625rem 0.75rem;
+}
+
+.app-content .form-control:focus,
+.app-content .form-select:focus,
+.app-content textarea.form-control:focus {
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 8%);
+}
+
+.app-content .form-actions {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--cassiopeia-admin-border-soft);
+}
+
+.app-content .btn,
+.app-content input.form-submit,
+.app-content button.form-submit {
+    width: auto;
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.35;
+    border-radius: var(--cassiopeia-admin-radius);
+    padding: 0.4375rem 0.875rem;
+    box-shadow: none;
+}
+
+.app-content .form-actions .btn-primary,
+.app-content .form-actions input.form-submit.btn-primary {
+    background-color: var(--cassiopeia-admin-accent);
+    border-color: var(--cassiopeia-admin-accent);
+}
+
+/* --------------------------------------------------------------------------
+   2. Left sidebar
+   -------------------------------------------------------------------------- */
+.app-sidebar .sidebar-brand {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    border-bottom-color: rgb(255 255 255 / 8%);
+}
+
+.app-sidebar .sidebar-brand .brand-link {
+    height: 2.25rem;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.9375rem;
+}
+
+.app-sidebar .sidebar-brand .brand-link .brand-image {
+    width: 1.375rem;
+}
+
+.app-sidebar .sidebar-menu .nav-item > .nav-link {
+    margin-bottom: 0.125rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.35;
+    border-radius: var(--cassiopeia-admin-radius);
+    transition:
+        background-color var(--cassiopeia-admin-transition),
+        color var(--cassiopeia-admin-transition),
+        box-shadow var(--cassiopeia-admin-transition);
+}
+
+.app-sidebar .sidebar-menu .nav-treeview > .nav-item > .nav-link {
+    padding: 0.4375rem 0.75rem 0.4375rem 1.75rem;
+    font-size: 0.875rem;
+    border-radius: calc(var(--cassiopeia-admin-radius) - 0.0625rem);
+    transition:
+        background-color var(--cassiopeia-admin-transition),
+        color var(--cassiopeia-admin-transition);
+}
+
+.app-sidebar .sidebar-menu .nav-item > .nav-link:hover,
+.app-sidebar .sidebar-menu .nav-treeview > .nav-item > .nav-link:hover {
+    background-color: rgb(255 255 255 / 8%);
+}
+
+.app-sidebar .sidebar-menu .nav-item > .nav-link.active,
+.app-sidebar .sidebar-menu .nav-treeview > .nav-item > .nav-link.active {
+    background-color: rgb(255 255 255 / 12%);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 10%);
+    color: #fff;
+}
+
+.app-sidebar .sidebar-menu .nav-header {
+    padding: 0.625rem 0.625rem 0.25rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.72;
+}
+
+.app-sidebar .sidebar-menu .nav-icon {
+    min-width: 1.375rem;
+    max-width: 1.375rem;
+    font-size: 0.9375rem;
+}
+
+.app-sidebar .sidebar-menu .nav-link p {
+    padding-left: 0.4375rem;
+}
+
+/* --------------------------------------------------------------------------
+   3. Data tables (project list & admin listings)
+   -------------------------------------------------------------------------- */
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) {
+    width: 100%;
+    margin: 0.75rem 0 1rem;
+    font-family: var(--cassiopeia-admin-font);
+    font-size: 0.9375rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--cassiopeia-admin-border);
+    border-radius: var(--cassiopeia-admin-radius-lg);
+    overflow: hidden;
+    background: var(--cassiopeia-admin-surface);
+}
+
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) thead th,
+.app-content table.sticky-header th {
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--cassiopeia-admin-muted);
+    background: #f9fafb;
+    border-bottom: 1px solid var(--cassiopeia-admin-border);
+    border-top: 0;
+    vertical-align: middle;
+}
+
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) tbody td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    color: var(--cassiopeia-admin-text);
+    border-top: 1px solid var(--cassiopeia-admin-border-soft);
+    background: var(--cassiopeia-admin-surface);
+}
+
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) tbody tr:first-child td {
+    border-top: 0;
+}
+
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) tbody tr:hover td {
+    background: #fafbfc;
+}
+
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) td img,
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) th img {
+    display: block;
+    max-height: 2.75rem;
+    width: auto;
+    border-radius: var(--cassiopeia-admin-radius);
+    border: 1px solid var(--cassiopeia-admin-border-soft);
+    object-fit: cover;
+}
+
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) td a:not(.btn):not(.button):not(.tabledrag-handle):not(.dropbutton__toggle) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.125rem;
+    margin-right: 0.375rem;
+    padding: 0.1875rem 0.4375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--cassiopeia-admin-accent);
+    border-radius: calc(var(--cassiopeia-admin-radius) - 0.0625rem);
+    transition:
+        background-color var(--cassiopeia-admin-transition),
+        color var(--cassiopeia-admin-transition);
+}
+
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) td a:not(.btn):not(.button):hover,
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) td a:not(.btn):not(.button):focus {
+    color: #1d4ed8;
+    background: var(--cassiopeia-admin-accent-soft);
+    text-decoration: none;
+}
+
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) td a[href*="/delete"]:not(.btn):not(.button),
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) td a[href*="delete"]:not(.btn):not(.button) {
+    color: var(--cassiopeia-admin-danger);
+}
+
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) td a[href*="/delete"]:not(.btn):not(.button):hover,
+.app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) td a[href*="delete"]:not(.btn):not(.button):hover {
+    color: #912018;
+    background: var(--cassiopeia-admin-danger-soft);
+}
+
+.app-content .dropbutton-wrapper,
+.app-content .dropbutton-widget {
+    border-radius: var(--cassiopeia-admin-radius);
+}
+
+.app-content .dropbutton .dropbutton-action > a,
+.app-content .dropbutton .dropbutton-action > input,
+.app-content .dropbutton .dropbutton-action > button {
+    font-size: 0.8125rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   4. Image / file upload fields (multiple widgets)
+   -------------------------------------------------------------------------- */
+.app-content .field-multiple-table,
+.app-content .table-file-multiple-widget {
+    width: 100%;
+    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--cassiopeia-admin-border);
+    border-radius: var(--cassiopeia-admin-radius-lg);
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    background: var(--cassiopeia-admin-surface);
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table {
+    overflow: visible;
+    border: 0;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    background: transparent;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table > thead,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table > thead {
+    display: table;
+    width: 100%;
+}
+
+.app-content .field--widget-paragraphs .table-responsive,
+.app-content .field--widget-entity-reference-paragraphs .table-responsive {
+    overflow: visible;
+    border: 1px solid var(--cassiopeia-admin-paragraph-title-border);
+    border-radius: var(--cassiopeia-admin-radius);
+    background: #fff;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table > tbody,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table > tbody {
+    display: block;
+    width: 100%;
+    margin-top: 0;
+    padding: 0.75rem 0.875rem 0.875rem;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table > tbody > tr.draggable,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table > tbody > tr.draggable {
+    display: table;
+    width: 100%;
+    margin-bottom: 0.875rem;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table > tbody > tr.draggable:last-child,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table > tbody > tr.draggable:last-child {
+    margin-bottom: 0;
+}
+.app-content .field--widget-paragraphs .field-multiple-table.table-striped > tbody > tr:nth-of-type(odd) > *,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table.table-striped > tbody > tr:nth-of-type(odd) > * {
+    --bs-table-bg-type: initial;
+    --bs-table-color-type: initial;
+    --bs-table-bg-state: initial;
+    --bs-table-color-state: initial;
+    box-shadow: none;
+}
+
+.app-content .field-multiple-table td,
+.app-content .table-file-multiple-widget td {
+    padding: 0.75rem 1rem;
+    vertical-align: top;
+    border-top: 1px solid var(--cassiopeia-admin-border-soft);
+    background: var(--cassiopeia-admin-surface);
+}
+
+.app-content .field-multiple-table tr:first-child td,
+.app-content .table-file-multiple-widget tr:first-child td {
+    border-top: 0;
+}
+
+.app-content .image-widget,
+.app-content .field-multiple-table .form-managed-file,
+.app-content .table-file-multiple-widget .form-managed-file {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.875rem;
+    align-items: start;
+    clear: both;
+}
+
+.app-content .image-widget .image-preview,
+.app-content .image-widget-data {
+    float: none;
+    padding: 0;
+}
+
+.app-content .image-widget-data {
+    display: flex;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.app-content .image-widget .image-preview img,
+.app-content .form-managed-file img {
+    display: block;
+    max-height: 5rem;
+    width: auto;
+    border-radius: var(--cassiopeia-admin-radius);
+    border: 1px solid var(--cassiopeia-admin-border);
+}
+
+.app-content .image-widget-data > .form-item,
+.app-content .image-widget-data .form-type-textfield,
+.app-content .form-managed-file > .form-item:not(:last-child) {
+    width: 100%;
+    max-width: 20rem;
+    margin-bottom: 0;
+}
+
+.app-content .image-widget-data .form-control,
+.app-content .image-widget-data input[type="text"],
+.app-content .field-multiple-table td input[type="text"].form-control {
+    width: 100%;
+    min-height: 2rem;
+    height: auto;
+    padding: 0.375rem 0.625rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    border-color: #dde1e6;
+    border-radius: var(--cassiopeia-admin-radius);
+    background: #fafbfc;
+}
+
+.app-content .image-widget-data .form-control:focus,
+.app-content .field-multiple-table td input[type="text"].form-control:focus {
+    border-color: #cbd5e1;
+    box-shadow: 0 0 0 2px rgb(148 163 184 / 12%);
+    background: #fff;
+}
+
+.app-content .image-widget-data .file,
+.app-content .form-managed-file .file {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.app-content .field-multiple-table input[type="file"],
+.app-content .form-managed-file input[type="file"] {
+    max-width: 100%;
+    font-size: 0.875rem;
+    color: var(--cassiopeia-admin-muted);
+}
+
+.app-content .field-multiple-table input[type="file"]::file-selector-button,
+.app-content .form-managed-file input[type="file"]::file-selector-button {
+    margin-right: 0.5rem;
+    padding: 0.4375rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--cassiopeia-admin-text);
+    border: 1px solid var(--cassiopeia-admin-border);
+    border-radius: var(--cassiopeia-admin-radius);
+    background: #f3f4f6;
+    cursor: pointer;
+    transition:
+        background-color var(--cassiopeia-admin-transition),
+        border-color var(--cassiopeia-admin-transition);
+}
+
+.app-content .field-multiple-table input[type="file"]::file-selector-button:hover,
+.app-content .form-managed-file input[type="file"]::file-selector-button:hover {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+}
+
+.app-content .field-multiple-table input[name*="_remove_button"],
+.app-content .field-multiple-table input[name*="remove_button"],
+.app-content .form-managed-file input[name*="_remove_button"],
+.app-content .form-managed-file input[name*="remove_button"],
+.app-content .image-widget-data input[name*="_remove_button"],
+.app-content .image-widget-data input[name*="remove_button"] {
+    width: auto !important;
+    max-width: none;
+    display: inline-block !important;
+    align-self: flex-start;
+    padding: 0.4375rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--cassiopeia-admin-danger) !important;
+    border: 1px solid #fecdca !important;
+    border-radius: var(--cassiopeia-admin-radius);
+    background: var(--cassiopeia-admin-danger-soft) !important;
+    box-shadow: none !important;
+}
+
+.app-content .field-multiple-table input[name*="_remove_button"]:hover,
+.app-content .field-multiple-table input[name*="remove_button"]:hover,
+.app-content .form-managed-file input[name*="_remove_button"]:hover,
+.app-content .form-managed-file input[name*="remove_button"]:hover,
+.app-content .image-widget-data input[name*="_remove_button"]:hover,
+.app-content .image-widget-data input[name*="remove_button"]:hover {
+    color: #912018 !important;
+    border-color: #fda29b !important;
+    background: #fee4e2 !important;
+}
+
+.app-content .field-multiple-table .form-managed-file input.form-submit:not([name*="_remove_button"]):not([name*="remove_button"]),
+.app-content .form-managed-file input.form-submit:not([name*="_remove_button"]):not([name*="remove_button"]),
+.app-content .image-widget-data input.form-submit:not([name*="_remove_button"]):not([name*="remove_button"]) {
+    width: auto !important;
+    display: inline-block !important;
+    padding: 0.4375rem 0.875rem;
+    font-size: 0.8125rem;
+    color: var(--cassiopeia-admin-text) !important;
+    border: 1px solid var(--cassiopeia-admin-border) !important;
+    background: #f3f4f6 !important;
+    box-shadow: none !important;
+}
+
+.app-content .field-add-more-submit {
+    margin-top: 0.5rem;
+    padding: 0.4375rem 0.875rem;
+    font-size: 0.875rem;
+    color: var(--cassiopeia-admin-accent);
+    border: 1px dashed #bfdbfe;
+    border-radius: var(--cassiopeia-admin-radius);
+    background: var(--cassiopeia-admin-accent-soft);
+}
+
+.app-content .field-add-more-submit:hover {
+    color: #1d4ed8;
+    border-color: #93c5fd;
+    background: #dbeafe;
+}
+
+.app-content .field-multiple-table .tabledrag-handle .handle {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-top: 0.25rem;
+}
+
+.app-content .field-multiple-table .tabledrag-changed-warning {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.app-content .tabledrag-toggle-weight-wrapper .link,
+.app-content .tabledrag-toggle-weight {
+    display: inline-block;
+    padding: 0.3125rem 0.625rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--cassiopeia-admin-muted);
+    border: 1px solid var(--cassiopeia-admin-border);
+    border-radius: var(--cassiopeia-admin-radius);
+    background: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   5. Paragraphs & field groups
+   -------------------------------------------------------------------------- */
+.app-content details.field-group-details,
+.app-content fieldset.field-group-fieldset {
+    margin: 0.875rem 0;
+    border: 1px solid var(--cassiopeia-admin-border);
+    border-radius: var(--cassiopeia-admin-radius-lg);
+    background: var(--cassiopeia-admin-surface);
+}
+
+.app-content details.field-group-details > summary {
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: #f9fafb;
+    border-radius: var(--cassiopeia-admin-radius-lg);
+}
+
+.app-content details.field-group-details[open] > summary {
+    border-bottom: 1px solid var(--cassiopeia-admin-border-soft);
+    border-radius: var(--cassiopeia-admin-radius-lg) var(--cassiopeia-admin-radius-lg) 0 0;
+}
+
+.app-content details.field-group-details > .details-wrapper,
+.app-content fieldset.field-group-fieldset > .fieldset-wrapper {
+    padding: 1rem 1.125rem;
+    font-weight: normal;
+}
+
+.app-content fieldset.field-group-fieldset > legend {
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin-bottom: 0;
+    float: none;
+    width: 100%;
+    background: #f9fafb;
+    border-bottom: 1px solid var(--cassiopeia-admin-border-soft);
+}
+
+.app-content .field--widget-paragraphs .field-actions,
+.app-content .field--widget-paragraphs .form-actions,
+.app-content .field--widget-entity-reference-paragraphs .field-actions,
+.app-content .field--widget-entity-reference-paragraphs .form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 0.75rem;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table thead .field-actions,
+.app-content .field--widget-paragraphs .field-multiple-table thead .paragraphs-actions,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table thead .field-actions,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table thead .paragraphs-actions {
+    margin-bottom: 0;
+}
+
+.app-content .field--widget-paragraphs .form-item:has(> .field-multiple-table) > .tabledrag-toggle-weight-wrapper,
+.app-content .field--widget-paragraphs .form-item:has(> .table-responsive) > .tabledrag-toggle-weight-wrapper,
+.app-content .field--widget-entity-reference-paragraphs .form-item:has(> .field-multiple-table) > .tabledrag-toggle-weight-wrapper,
+.app-content .field--widget-entity-reference-paragraphs .form-item:has(> .table-responsive) > .tabledrag-toggle-weight-wrapper {
+    margin: 0 0 0.375rem;
+    text-align: right;
+}
+
+.app-content .field--widget-paragraphs .form-item > .table-responsive,
+.app-content .field--widget-entity-reference-paragraphs .form-item > .table-responsive {
+    margin-top: 0;
+}
+
+.app-content .field--widget-paragraphs .field-actions input.form-submit,
+.app-content .field--widget-paragraphs .field-actions .button,
+.app-content .field--widget-entity-reference-paragraphs .field-actions input.form-submit,
+.app-content .field--widget-entity-reference-paragraphs .field-actions .button {
+    width: auto !important;
+    padding: 0.4375rem 0.875rem;
+    font-size: 0.8125rem;
+    color: var(--cassiopeia-admin-accent) !important;
+    border: 1px solid #bfdbfe !important;
+    background: #fff !important;
+    box-shadow: none !important;
+}
+
+.app-content .field--widget-paragraphs .field-actions input.form-submit:hover,
+.app-content .field--widget-paragraphs .field-actions .button:hover,
+.app-content .field--widget-entity-reference-paragraphs .field-actions input.form-submit:hover,
+.app-content .field--widget-entity-reference-paragraphs .field-actions .button:hover {
+    color: #1d4ed8 !important;
+    border-color: #93c5fd !important;
+    background: var(--cassiopeia-admin-accent-soft) !important;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table thead,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table thead {
+    display: table-header-group;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table thead tr,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table thead tr {
+    background: transparent;
+    border: 0;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table thead th,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table thead th {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    vertical-align: middle;
+    font-size: inherit;
+    font-weight: normal;
+    text-transform: none;
+    letter-spacing: normal;
+    color: inherit;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table thead th.field-label,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table thead th.field-label {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    background: var(--cassiopeia-admin-paragraph-title-bg);
+    border-bottom: 1px solid var(--cassiopeia-admin-paragraph-title-border);
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table thead th.field-label h4.label,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table thead th.field-label h4.label {
+    float: left;
+    margin: 0;
+    padding: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--cassiopeia-admin-text);
+    background: transparent;
+    border: 0;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table thead th.field-label .field-actions,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table thead th.field-label .field-actions,
+.app-content .field--widget-paragraphs .field-multiple-table thead th.field-label .paragraphs-actions,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table thead th.field-label .paragraphs-actions {
+    float: right;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table thead th.field-label::after,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table thead th.field-label::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table thead th:not(.field-label),
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table thead th:not(.field-label) {
+    display: none;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table tbody tr.draggable,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table tbody tr.draggable {
+    background: transparent;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table tbody tr.draggable td,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table tbody tr.draggable td {
+    padding: 0;
+    vertical-align: top;
+    border: 1px solid var(--cassiopeia-admin-paragraph-title-border);
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 5%);
+    transition:
+        border-color var(--cassiopeia-admin-transition),
+        box-shadow var(--cassiopeia-admin-transition);
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table tbody tr.draggable td.field-multiple-drag,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table tbody tr.draggable td.field-multiple-drag {
+    width: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0.875rem 0.375rem;
+    vertical-align: middle;
+    text-align: center;
+    border-right: 0;
+    border-radius: var(--cassiopeia-admin-radius) 0 0 var(--cassiopeia-admin-radius);
+    background: var(--cassiopeia-admin-paragraph-title-bg);
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table tbody tr.draggable td:last-child,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table tbody tr.draggable td:last-child {
+    border-left: 0;
+    border-radius: 0 var(--cassiopeia-admin-radius) var(--cassiopeia-admin-radius) 0;
+    background: #fff;
+    overflow: hidden;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table tbody tr.draggable td.delta-order,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table tbody tr.draggable td.delta-order {
+    display: none;
+    width: 0;
+    padding: 0;
+    border: 0;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table .draggable a.tabledrag-handle,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table .draggable a.tabledrag-handle {
+    float: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    border-radius: var(--cassiopeia-admin-radius);
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table .tabledrag-handle .handle,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table .tabledrag-handle .handle {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0;
+    padding: 0;
+    opacity: 0.65;
+    background-position: center;
+    background-size: 1.125rem 1.125rem;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table tr:hover .tabledrag-handle .handle,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table tr:hover .tabledrag-handle .handle,
+.app-content .field--widget-paragraphs .field-multiple-table .tabledrag-handle:hover .handle,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table .tabledrag-handle:hover .handle {
+    opacity: 1;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table .field-multiple-drag .form-item,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table .field-multiple-drag .form-item {
+    margin: 0;
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table tbody tr.draggable:hover td,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table tbody tr.draggable:hover td {
+    border-color: #c4c9d0;
+    box-shadow: 0 2px 6px rgb(15 23 42 / 8%);
+}
+
+.app-content .field--widget-paragraphs .field-multiple-table tbody tr.draggable:hover td.field-multiple-drag,
+.app-content .field--widget-entity-reference-paragraphs .field-multiple-table tbody tr.draggable:hover td.field-multiple-drag {
+    background: #f0f0f0;
+}
+
+.app-content .field--widget-paragraphs .paragraphs-actions .dropbutton .dropbutton-action > a,
+.app-content .field--widget-paragraphs .paragraphs-actions .dropbutton .dropbutton-action > input,
+.app-content .field--widget-entity-reference-paragraphs .paragraphs-actions .dropbutton .dropbutton-action > a,
+.app-content .field--widget-entity-reference-paragraphs .paragraphs-actions .dropbutton .dropbutton-action > input {
+    font-size: 0.8125rem;
+    padding: 0.375rem 0.625rem;
+}
+
+.app-content .paragraph-top {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: auto auto 1fr auto;
+    grid-gap: 0 0.625rem;
+    align-items: center;
+    padding: 0.625rem 0.875rem;
+    background: var(--cassiopeia-admin-paragraph-title-bg);
+    border: 0;
+    border-bottom: 1px solid var(--cassiopeia-admin-paragraph-title-border);
+    border-radius: 0;
+}
+
+@media (min-width: 992px) {
+    .app-content .paragraph-top {
+        grid-template-columns: auto auto 1fr auto;
+    }
+}
+
+.app-content .paragraph-top .paragraph-type {
+    grid-row: 1;
+    grid-column: 1;
+    margin: auto !important;
+}
+
+.app-content .paragraph-top .paragraph-info {
+    grid-row: 1;
+    grid-column: 2;
+}
+
+.app-content .paragraph-top .paragraph-summary {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+@media (min-width: 600px) {
+    .app-content .paragraph-top .paragraph-summary {
+        grid-row: 1 / span 2;
+        grid-column: 3;
+    }
+}
+
+.app-content .paragraph-top .paragraphs-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    justify-content: flex-end;
+    justify-self: end;
+    align-self: center;
+    grid-row: 1;
+    grid-column: 3 / -1;
+}
+
+@media (min-width: 600px) {
+    .app-content .paragraph-top .paragraphs-actions {
+        grid-column: 4;
+    }
+}
+
+.app-content .paragraph-type-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-width: 0;
+}
+
+.app-content .paragraph-type-icon {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    padding: 0;
+}
+
+.app-content .paragraph-type-label {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    padding: 0.3125rem 0.625rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #1e40af;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 999px;
+}
+
+.app-content .paragraphs-subform {
+    margin-top: 0;
+    padding: 1rem 1.125rem 1.125rem;
+    background: #fff;
+    border: 0;
+    border-radius: 0;
+}
+
+.app-content .paragraphs-subform > .form-item {
+    margin-bottom: 0.875rem;
+}
+
+.app-content .paragraphs-subform > .form-item:last-child,
+.app-content .paragraphs-subform .field-group-details:last-child {
+    margin-bottom: 0;
+}
+
+.app-content .paragraphs-actions .button,
+.app-content .paragraphs-actions input.form-submit {
+    width: auto !important;
+    padding: 0.4375rem 0.875rem;
+    font-size: 0.8125rem;
+    line-height: 1.3;
+    color: var(--cassiopeia-admin-accent) !important;
+    border: 1px solid #bfdbfe !important;
+    background: #fff !important;
+    box-shadow: none !important;
+}
+
+.app-content .paragraphs-actions .button:hover,
+.app-content .paragraphs-actions input.form-submit:hover {
+    color: #1d4ed8 !important;
+    border-color: #93c5fd !important;
+    background: var(--cassiopeia-admin-accent-soft) !important;
+}
+
+.app-content .paragraphs-actions input[name*="remove"],
+.app-content .paragraphs-actions input[name*="delete"] {
+    color: var(--cassiopeia-admin-danger) !important;
+    border: 1px solid #fecdca !important;
+    background: var(--cassiopeia-admin-danger-soft) !important;
+}
+
+.app-content .paragraph-type-add-modal-button,
+.app-content .field--widget-paragraphs .field-add-more-submit,
+.app-content .field--widget-entity-reference-paragraphs .field-add-more-submit {
+    padding: 0.4375rem 0.875rem;
+    font-size: 0.875rem;
+}
+
+/* --------------------------------------------------------------------------
+   6. Vertical tabs (node edit — Trạng thái, URL ảo, …)
+   -------------------------------------------------------------------------- */
+.app-content .vertical-tabs {
+    display: flex;
+    align-items: stretch;
+    margin: 1rem 0 1.25rem;
+    border: 1px solid var(--cassiopeia-admin-border);
+    border-radius: var(--cassiopeia-admin-radius-lg);
+    background: #f9fafb;
+    overflow: hidden;
+    font-size: 0.9375rem;
+}
+
+.app-content .vertical-tabs::after {
+    display: none;
+}
+
+.app-content .vertical-tabs__menu {
+    flex: 0 0 14.5rem;
+    width: 14.5rem;
+    min-width: 14.5rem;
+    margin: 0;
+    padding: 0.5rem;
+    border: 0;
+    border-right: 1px solid var(--cassiopeia-admin-border-soft);
+    border-top: 0;
+    background: #f3f4f6;
+    list-style: none;
+    float: none;
+}
+
+.app-content .vertical-tabs__menu-item {
+    margin: 0 0 0.3125rem;
+    border: 0;
+    background: transparent;
+    border-radius: var(--cassiopeia-admin-radius);
+}
+
+.app-content .vertical-tabs__menu-item:last-child {
+    margin-bottom: 0;
+}
+
+.app-content .vertical-tabs__menu-item a {
+    display: block;
+    padding: 0.625rem 0.75rem;
+    text-decoration: none;
+    color: var(--cassiopeia-admin-text);
+    border: 1px solid transparent;
+    border-radius: var(--cassiopeia-admin-radius);
+    transition:
+        background-color var(--cassiopeia-admin-transition),
+        border-color var(--cassiopeia-admin-transition),
+        box-shadow var(--cassiopeia-admin-transition);
+}
+
+.app-content .vertical-tabs__menu-item a:hover,
+.app-content .vertical-tabs__menu-item a:focus {
+    outline: none;
+    text-decoration: none;
+    background: #fff;
+    border-color: var(--cassiopeia-admin-border);
+}
+
+.app-content .vertical-tabs__menu-item a:focus-visible {
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 12%);
+}
+
+.app-content .vertical-tabs__menu-item a:hover .vertical-tabs__menu-item-title,
+.app-content .vertical-tabs__menu-item a:active .vertical-tabs__menu-item-title,
+.app-content .vertical-tabs__menu-item a:focus .vertical-tabs__menu-item-title {
+    text-decoration: none;
+}
+
+.app-content .vertical-tabs__menu-item.is-selected {
+    border-right-width: 0;
+    background: transparent;
+}
+
+.app-content .vertical-tabs__menu-item.is-selected a {
+    background: #fff;
+    border-color: var(--cassiopeia-admin-border);
+    box-shadow: 0 1px 3px rgb(15 23 42 / 6%);
+    border-left: 3px solid var(--cassiopeia-admin-accent);
+    padding-left: calc(0.75rem - 2px);
+}
+
+.app-content .vertical-tabs__menu-item-title {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--cassiopeia-admin-text);
+}
+
+.app-content .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-item-title {
+    color: var(--cassiopeia-admin-accent);
+}
+
+.app-content .vertical-tabs__menu-item-summary {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--cassiopeia-admin-muted);
+    word-break: break-word;
+}
+
+.app-content .vertical-tabs__panes {
+    flex: 1 1 auto;
+    min-width: 0;
+    float: none !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 1rem 1.25rem !important;
+    background: #fff;
+    border: 0;
+    inset-block-start: 0;
+}
+
+.app-content .vertical-tabs__pane {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+.app-content .vertical-tabs__pane > summary {
+    display: none;
+}
+
+.app-content .vertical-tabs__pane > .details-wrapper,
+.app-content .vertical-tabs__pane .details-wrapper {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+}
+
+.app-content .vertical-tabs__pane .form-item {
+    margin-bottom: 0.875rem;
+}
+
+.app-content .vertical-tabs__pane .form-item:last-child {
+    margin-bottom: 0;
+}
+
+.app-content .vertical-tabs__pane label,
+.app-content .vertical-tabs__pane .form-label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--cassiopeia-admin-text);
+}
+
+.app-content .vertical-tabs__pane .form-check-label {
+    font-weight: 500;
+}
+
+.app-content .vertical-tabs__pane .form-control,
+.app-content .vertical-tabs__pane .form-select {
+    max-width: 100%;
+}
+
+.app-content .vertical-tabs__pane .form-check {
+    margin-bottom: 0.75rem;
+}
+
+@media (max-width: 767.98px) {
+    .app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) thead th,
+    .app-content table:not(.field-multiple-table):not(.table-file-multiple-widget) tbody td {
+        padding: 0.625rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .app-content .image-widget,
+    .app-content .field-multiple-table .form-managed-file,
+    .app-content .table-file-multiple-widget .form-managed-file {
+        grid-template-columns: 1fr;
+    }
+
+    .app-content .image-widget .image-preview img,
+    .app-content .form-managed-file img {
+        max-height: 4rem;
+    }
+
+    .app-content .vertical-tabs {
+        flex-direction: column;
+    }
+
+    .app-content .vertical-tabs__menu {
+        flex: none;
+        width: 100%;
+        min-width: 0;
+        padding: 0.375rem;
+        border-right: 0;
+        border-bottom: 1px solid var(--cassiopeia-admin-border-soft);
+    }
+
+    .app-content .vertical-tabs__menu-item.is-selected a {
+        border-left-width: 3px;
+    }
+
+    .app-content .vertical-tabs__panes {
+        padding: 0.875rem 1rem !important;
+    }
+}
+
+.app-header {
+    padding: 4px;
+}
+
+.app-main {
+    padding: 0 8px;
+}
+
+.app-main .row {
+    margin: 0;
+}
+
+.app-main .row>* {
+    padding: 0;
+}
+
+.paragraphs-tabs-wrapper .tabledrag-toggle-weight-wrapper {
+    display: none;
+}
