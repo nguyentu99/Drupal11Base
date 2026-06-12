@@ -1,21 +1,8 @@
 <!--begin::Sidebar-->
 <aside class="app-sidebar sidebar-dark-primary bg-body-secondary shadow" data-bs-theme="dark"> <!--begin::Sidebar Brand-->
-  <div class="sidebar-brand"> <!--begin::Brand Link--> <a href="./index.html" class="brand-link"> <!--begin::Brand Image--> <img src="/themes/cassiopeia_admin_theme/images/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> <!--end::Brand Image--> <!--begin::Brand Text--> <span class="brand-text fw-light">AdminLTE 4</span> <!--end::Brand Text--> </a> <!--end::Brand Link--> </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
+  <div class="sidebar-brand"> <!--begin::Brand Link--> <a href="/" class="brand-link"> <!--begin::Brand Image--> <img src="/themes/cassiopeia_admin_theme/images/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> <!--end::Brand Image--> <!--begin::Brand Text--> <span class="brand-text fw-light">AdminLTE 4</span> <!--end::Brand Text--> </a> <!--end::Brand Link--> </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
   <div class="sidebar-wrapper"> <!-- Sidebar user (optional) -->
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="image">
-        {% if account_avatar %}
-          {{ account_avatar }}
-        {% endif %}
-      </div>
-      <div class="info"> <a href="#" class="d-block">{{ account.getAccountName() }}</a> </div>
-    </div> <!-- SidebarSearch Form -->
-    <div class="form-inline">
-      <div class="input-group" data-widget="sidebar-search"> <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-        <div class="input-group-append"> <button class="btn btn-outline"> <i class="bi bi-search"></i> </button> </div>
-      </div>
-    </div>
-    <nav class="mt-2"> <!--begin::Sidebar Menu-->
+    <nav> <!--begin::Sidebar Menu-->
       {{  administrator_menu }}
     </nav>
   </div> <!--end::Sidebar Wrapper-->

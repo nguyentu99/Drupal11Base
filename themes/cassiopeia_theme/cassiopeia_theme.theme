@@ -99,6 +99,14 @@ function cassiopeia_theme_preprocess_node(array &$variables): void {
     $variables['#cache']['tags'][] = 'node_list:banner';
     $variables['#cache']['tags'][] = 'node:' . $node->id();
   }
+  if ($node->getType() === 'projects') {
+    $variables['project'] = cassiopeia_projects_detail_variables($node);
+    $variables['project']['contact_form'] = \Drupal::formBuilder()->getForm('Drupal\cassiopeia\Form\ContactForm');
+    $variables['#cache']['tags'][] = 'node_list:projects';
+    $variables['#cache']['tags'][] = 'node_list:banner';
+    $variables['#cache']['tags'][] = 'node:' . $node->id();
+    $variables['#cache']['contexts'][] = 'user';
+  }
 }
 
 /**

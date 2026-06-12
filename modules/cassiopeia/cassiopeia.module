@@ -218,6 +218,10 @@ function cassiopeia_banner_page_registry(): array {
       'content_types' => ['partner'],
       'fallback_image' => 'images/customers/khach-hang-banner.jpg',
     ],
+    'projects' => [
+      'content_types' => ['projects'],
+      'fallback_image' => 'images/ba-thien-1-banner.jpg',
+    ],
   ];
 }
 
@@ -1988,6 +1992,506 @@ function cassiopeia_partner_trusted_logos(NodeInterface $node): array {
     }
   }
   return $logos;
+}
+
+/**
+ * Builds teaser data for a projects node card.
+ *
+ * @return array<string, mixed>
+ */
+function cassiopeia_projects_teaser_data(NodeInterface $node): array {
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $fallback_image = '/' . $theme_path . '/images/du-an-banner.jpg';
+  $image_url = $fallback_image;
+  $image_alt = $node->label();
+
+  if ($node->hasField('field_anh') && !$node->get('field_anh')->isEmpty()) {
+    $image = cassiopeia_image_field_item_data($node->get('field_anh')->first());
+    if ($image) {
+      $image_url = $image['url'];
+      $image_alt = $image['alt'] ?: $image_alt;
+    }
+  }
+
+  return [
+    'title' => $node->label(),
+    'url' => $node->toUrl('canonical')->toString(),
+    'image' => $image_url,
+    'image_alt' => $image_alt,
+    'address' => $node->hasField('field_address') && !$node->get('field_address')->isEmpty()
+      ? trim((string) $node->get('field_address')->value)
+      : '',
+  ];
+}
+
+/**
+ * Loads related published projects excluding the current node.
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function cassiopeia_projects_related(NodeInterface $node, int $limit = 6): array {
+  $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('type', 'projects')
+    ->condition('status', 1)
+    ->condition('nid', $node->id(), '<>')
+    ->range(0, $limit)
+    ->sort('created', 'DESC');
+
+  if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
+    $query->condition('langcode', $node->language()->getId());
+  }
+
+  $nids = $query->execute();
+  if (!$nids) {
+    return [];
+  }
+
+  $items = [];
+  /** @var \Drupal\node\NodeInterface[] $nodes */
+  $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
+  foreach ($nids as $nid) {
+    if (isset($nodes[$nid])) {
+      $items[] = cassiopeia_projects_teaser_data($nodes[$nid]);
+    }
+  }
+
+  return $items;
+}
+
+/**
+ * Extracts plain-text paragraphs from processed HTML.
+ *
+ * @return array<int, string>
+ */
+function cassiopeia_html_paragraph_texts(string $html): array {
+  $paragraphs = [];
+  if (preg_match_all('#<p[^>]*>(.*?)</p>#is', $html, $matches)) {
+    foreach ($matches[1] as $paragraph) {
+      $text = trim(html_entity_decode(strip_tags($paragraph), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+      if ($text !== '') {
+        $paragraphs[] = $text;
+      }
+    }
+  }
+
+  if (!$paragraphs) {
+    $text = trim(html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    if ($text !== '') {
+      $paragraphs[] = $text;
+    }
+  }
+
+  return $paragraphs;
+}
+
+/**
+ * Extracts intro paragraphs from a node body field.
+ *
+ * @return array<int, string>
+ */
+function cassiopeia_projects_intro_paragraphs(NodeInterface $node): array {
+  if (!$node->hasField('body') || $node->get('body')->isEmpty()) {
+    return [];
+  }
+
+  return cassiopeia_html_paragraph_texts((string) $node->get('body')->processed);
+}
+
+/**
+ * Builds one infrastructure card from a co_so_ha_tang paragraph.
+ *
+ * @return array{icon: ?array, title: string, texts: array<int, string>}|null
+ */
+function cassiopeia_projects_infrastructure_item(ParagraphInterface $paragraph): ?array {
+  if ($paragraph->bundle() !== 'co_so_ha_tang') {
+    return NULL;
+  }
+
+  $icon = $paragraph->hasField('field_anh') && !$paragraph->get('field_anh')->isEmpty()
+    ? cassiopeia_image_field_item_data($paragraph->get('field_anh')->first())
+    : NULL;
+  $title = trim((string) ($paragraph->get('field_title')->value ?? ''));
+  $texts = [];
+  if ($paragraph->hasField('field_body') && !$paragraph->get('field_body')->isEmpty()) {
+    $texts = cassiopeia_html_paragraph_texts((string) $paragraph->get('field_body')->processed);
+  }
+
+  if ($title === '' && !$texts && !$icon) {
+    return NULL;
+  }
+
+  return [
+    'icon' => $icon,
+    'title' => $title,
+    'texts' => $texts,
+  ];
+}
+
+/**
+ * Builds tax benefit list items for a projects detail page.
+ *
+ * @return array<int, string>
+ */
+function cassiopeia_projects_tax_benefits(NodeInterface $node): array {
+  $benefits = [];
+
+  if ($node->hasField('field_tax_benefits') && !$node->get('field_tax_benefits')->isEmpty()) {
+    foreach ($node->get('field_tax_benefits') as $item) {
+      $paragraph = $item->entity;
+      if (!$paragraph instanceof ParagraphInterface) {
+        continue;
+      }
+      foreach (['field_body', 'field_content'] as $field_name) {
+        if (!$paragraph->hasField($field_name) || $paragraph->get($field_name)->isEmpty()) {
+          continue;
+        }
+        foreach (cassiopeia_html_paragraph_texts((string) $paragraph->get($field_name)->processed) as $text) {
+          $benefits[] = $text;
+        }
+      }
+      if ($benefits === [] && $paragraph->hasField('field_title') && !$paragraph->get('field_title')->isEmpty()) {
+        $benefits[] = trim((string) $paragraph->get('field_title')->value);
+      }
+    }
+  }
+
+  if ($benefits === [] && $node->hasField('field_tax') && !$node->get('field_tax')->isEmpty()) {
+    $benefits = cassiopeia_html_paragraph_texts((string) $node->get('field_tax')->processed);
+  }
+
+  if ($benefits !== []) {
+    return $benefits;
+  }
+
+  return [
+    (string) t('Corporate income tax: Based on taxable income, 100% tax exemption for the first 2 years and a 50% reduction of payable tax for the following 4 years.'),
+    (string) t('VAT: Imported machinery, equipment, and specialized vehicles serving production are VAT-exempt if not yet manufactured domestically. Tax rate: 0%.'),
+  ];
+}
+
+/**
+ * Builds tax section image data for a projects detail page.
+ *
+ * @return array{url: string, alt: string}
+ */
+function cassiopeia_projects_tax_image(NodeInterface $node, string $title): array {
+  foreach (['field_tax_image', 'field_image_tax'] as $field_name) {
+    if ($node->hasField($field_name) && !$node->get($field_name)->isEmpty()) {
+      $image = cassiopeia_image_field_item_data($node->get($field_name)->first());
+      if ($image) {
+        return [
+          'url' => $image['url'],
+          'alt' => $image['alt'] ?: $title,
+        ];
+      }
+    }
+  }
+
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $candidates = [
+    'images/thue.jpg',
+    'images/customers/khach-hang-banner.jpg',
+    'images/du-an-banner.jpg',
+  ];
+  foreach ($candidates as $relative) {
+    $uri = DRUPAL_ROOT . '/' . $theme_path . '/' . $relative;
+    if (is_file($uri)) {
+      return [
+        'url' => '/' . $theme_path . '/' . $relative,
+        'alt' => (string) t('Tax incentives at @project', ['@project' => $title]),
+      ];
+    }
+  }
+
+  return [
+    'url' => '/' . $theme_path . '/images/thue.jpg',
+    'alt' => (string) t('Tax incentives at @project', ['@project' => $title]),
+  ];
+}
+
+/**
+ * Builds existing customer logos for a projects detail page.
+ *
+ * @return array<int, array{url: string, alt: string}>
+ */
+function cassiopeia_projects_customer_logos(NodeInterface $node): array {
+  foreach (['field_customer_logos', 'field_existing_customers', 'field_khach_hang'] as $field_name) {
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+    $logos = [];
+    foreach ($node->get($field_name) as $item) {
+      $image = cassiopeia_image_field_item_data($item);
+      if ($image) {
+        $logos[] = [
+          'url' => $image['url'],
+          'alt' => $image['alt'] ?: $node->label(),
+        ];
+      }
+    }
+    if ($logos !== []) {
+      return $logos;
+    }
+  }
+
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $base = '/' . $theme_path . '/images/customers/';
+  $files = [
+    'logo-1.png',
+    'logo-2.png',
+    'logo-3.png',
+    'logo-4.png',
+    'logo-5.png',
+    'logo-6.png',
+    'logo-7.png',
+    'brand-1.png',
+    'brand-2.png',
+    'brand-3.png',
+    'brand-4.png',
+    'logo-1.png',
+    'logo-2.png',
+    'logo-3.png',
+  ];
+
+  $logos = [];
+  foreach ($files as $index => $file) {
+    $logos[] = [
+      'url' => $base . $file,
+      'alt' => (string) t('Customer @num', ['@num' => $index + 1]),
+    ];
+  }
+
+  return $logos;
+}
+
+/**
+ * Builds hero image variables for a projects node.
+ *
+ * @return array{hero_image: string, hero_image_alt: string}
+ */
+function cassiopeia_projects_hero_image(NodeInterface $node, LanguageInterface $language): array {
+  $banner = cassiopeia_page_banner('projects', $node->label(), $language);
+  $banner_node = cassiopeia_banner_index($language)['projects'] ?? NULL;
+  if ($banner_node instanceof NodeInterface) {
+    return [
+      'hero_image' => $banner['hero_image'],
+      'hero_image_alt' => $banner['hero_image_alt'],
+    ];
+  }
+
+  if ($node->hasField('field_anh') && !$node->get('field_anh')->isEmpty()) {
+    $image = cassiopeia_image_field_item_data($node->get('field_anh')->first());
+    if ($image) {
+      return [
+        'hero_image' => $image['url'],
+        'hero_image_alt' => $image['alt'] ?: $node->label(),
+      ];
+    }
+  }
+
+  return [
+    'hero_image' => $banner['hero_image'],
+    'hero_image_alt' => $banner['hero_image_alt'],
+  ];
+}
+
+/**
+ * Builds variables for projects detail templates.
+ */
+function cassiopeia_projects_detail_variables(NodeInterface $node): array {
+  $language = $node->language();
+  $title = $node->label();
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $hero = cassiopeia_projects_hero_image($node, $language);
+  $front_url = Url::fromRoute('<front>', [], ['language' => $language])->toString();
+  $contact_url = cassiopeia_contact_url(['language' => $language]);
+
+  $address = $node->hasField('field_address') && !$node->get('field_address')->isEmpty()
+    ? trim((string) $node->get('field_address')->value)
+    : '';
+
+  $download_url = NULL;
+  $download_label = (string) t('Download');
+  if ($node->hasField('field_file') && !$node->get('field_file')->isEmpty()) {
+    $file = $node->get('field_file')->entity;
+    if ($file) {
+      $download_url = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+      $download_label = $file->getFilename() ?: $download_label;
+    }
+  }
+
+  $gallery = [];
+  if ($node->hasField('field_anh') && !$node->get('field_anh')->isEmpty()) {
+    foreach ($node->get('field_anh') as $item) {
+      $image = cassiopeia_image_field_item_data($item);
+      if ($image) {
+        $gallery[] = $image + ['alt' => $image['alt'] ?: $title];
+      }
+    }
+  }
+
+  $specifications = [];
+  if ($node->hasField('field_specifications') && !$node->get('field_specifications')->isEmpty()) {
+    foreach ($node->get('field_specifications') as $item) {
+      $paragraph = $item->entity;
+      if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'para_specifications') {
+        continue;
+      }
+      $label = trim((string) ($paragraph->get('field_title')->value ?? ''));
+      $value = trim((string) ($paragraph->get('field_content')->value ?? ''));
+      if ($label !== '' || $value !== '') {
+        $specifications[] = [
+          'label' => $label,
+          'value' => $value,
+        ];
+      }
+    }
+  }
+
+  $location_map = NULL;
+  if ($node->hasField('field_image_location') && !$node->get('field_image_location')->isEmpty()) {
+    $location_map = cassiopeia_image_field_item_data($node->get('field_image_location')->first());
+    if ($location_map) {
+      $location_map['alt'] = $location_map['alt'] ?: $title;
+    }
+  }
+
+  $distances = [];
+  if ($node->hasField('field_location') && !$node->get('field_location')->isEmpty()) {
+    foreach ($node->get('field_location') as $item) {
+      $paragraph = $item->entity;
+      if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'vi_tri_du_an') {
+        continue;
+      }
+      $icon = $paragraph->hasField('field_anh') && !$paragraph->get('field_anh')->isEmpty()
+        ? cassiopeia_image_field_item_data($paragraph->get('field_anh')->first())
+        : NULL;
+      $label = trim((string) ($paragraph->get('field_title')->value ?? ''));
+      $value = trim((string) ($paragraph->get('field_content')->value ?? ''));
+      if ($label === '' && $value === '') {
+        continue;
+      }
+      $distances[] = [
+        'icon' => $icon,
+        'label' => $label,
+        'value' => $value,
+      ];
+    }
+  }
+
+  $zones = [];
+  if ($node->hasField('field_zoning_area') && !$node->get('field_zoning_area')->isEmpty()) {
+    foreach ($node->get('field_zoning_area') as $item) {
+      $paragraph = $item->entity;
+      if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'khu_vuc_phan_vung') {
+        continue;
+      }
+      $map = $paragraph->hasField('field_anh') && !$paragraph->get('field_anh')->isEmpty()
+        ? cassiopeia_image_field_item_data($paragraph->get('field_anh')->first())
+        : NULL;
+      $label = trim((string) ($paragraph->get('field_title')->value ?? ''));
+      if (!$map && $label === '') {
+        continue;
+      }
+      $zones[] = [
+        'title' => $label,
+        'map' => $map,
+      ];
+    }
+  }
+
+  $infrastructure = [];
+  if ($node->hasField('field_infrastructure') && !$node->get('field_infrastructure')->isEmpty()) {
+    foreach ($node->get('field_infrastructure') as $item) {
+      $paragraph = $item->entity;
+      if (!$paragraph instanceof ParagraphInterface) {
+        continue;
+      }
+      $card = cassiopeia_projects_infrastructure_item($paragraph);
+      if ($card) {
+        $infrastructure[] = $card;
+      }
+    }
+  }
+
+  $map_url = $address !== ''
+    ? 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode($address)
+    : NULL;
+
+  return [
+    'title' => $title,
+    'hero_image' => $hero['hero_image'],
+    'hero_image_alt' => $hero['hero_image_alt'],
+    'address' => $address,
+    'intro_paragraphs' => cassiopeia_projects_intro_paragraphs($node),
+    'contact_url' => $contact_url,
+    'total_area' => $node->hasField('field_total_area') && !$node->get('field_total_area')->isEmpty()
+      ? trim((string) $node->get('field_total_area')->value)
+      : '',
+    'land_use' => $node->hasField('field_land_use') && !$node->get('field_land_use')->isEmpty()
+      ? trim((string) $node->get('field_land_use')->value)
+      : '',
+    'price' => $node->hasField('field_price') && !$node->get('field_price')->isEmpty()
+      ? trim((string) $node->get('field_price')->value)
+      : '',
+    'download_url' => $download_url,
+    'download_label' => $download_label,
+    'gallery' => $gallery,
+    'specifications' => $specifications,
+    'location_map' => $location_map,
+    'map_url' => $map_url,
+    'distances' => $distances,
+    'zones' => $zones,
+    'infrastructure' => $infrastructure,
+    'tax' => [
+      'benefits' => cassiopeia_projects_tax_benefits($node),
+      'image' => cassiopeia_projects_tax_image($node, $title),
+    ],
+    'customers' => cassiopeia_projects_customer_logos($node),
+    'related' => cassiopeia_projects_related($node),
+    'contact_form_image' => '/' . $theme_path . '/images/banner-form.jpg',
+    'location_icon' => '/' . $theme_path . '/images/svg/location-green.svg',
+    'breadcrumb' => [
+      [
+        'label' => t('Home'),
+        'url' => $front_url,
+      ],
+      [
+        'label' => t('Projects'),
+        'url' => $front_url,
+      ],
+      [
+        'label' => $title,
+        'url' => NULL,
+      ],
+    ],
+    'labels' => [
+      'total_area' => (string) t('Total area'),
+      'project_name' => (string) t('Project name'),
+      'land_use' => (string) t('Land use'),
+      'address' => (string) t('Address'),
+      'price' => (string) t('Price'),
+      'document' => (string) t('Document'),
+      'download' => (string) t('Download'),
+      'contact_us' => (string) t('Contact us'),
+      'gallery' => (string) t('Project gallery'),
+      'tech_specs' => (string) t('Technical specifications'),
+      'expand' => (string) t('Expand table'),
+      'collapse' => (string) t('Collapse table'),
+      'location' => (string) t('Location'),
+      'google_map' => (string) t('Google map'),
+      'zoning' => (string) t('2D zoning'),
+      'infrastructure' => (string) t('Infrastructure'),
+      'tax' => (string) t('Tax incentives'),
+      'tax_contact' => (string) t('Contact us now'),
+      'customers' => (string) t('Existing customers'),
+      'contact_request' => (string) t('Contact request'),
+      'contact_note' => (string) t('Note: Fields marked with (*) are required.'),
+      'related' => (string) t('Other projects'),
+      'see_more' => (string) t('See more'),
+    ],
+  ];
 }
 
 /**

@@ -1,0 +1,389 @@
+{#
+/**
+ * @file
+ * Project detail page (node type: projects).
+ */
+#}
+{% if view_mode == 'full' and project %}
+  <div class="page-hero page-hero--project">
+    <img class="page-hero__media" src="{{ project.hero_image }}" alt="{{ project.hero_image_alt }}">
+    <div class="page-hero__content">
+      <div class="container">
+        {% if project.breadcrumb %}
+          <nav class="page-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
+            <ol class="breadcrumb page-hero__breadcrumb">
+              {% for item in project.breadcrumb %}
+                {% if item.url %}
+                  <li class="breadcrumb-item"><a href="{{ item.url }}">{{ item.label }}</a></li>
+                {% else %}
+                  <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
+                {% endif %}
+              {% endfor %}
+            </ol>
+          </nav>
+        {% endif %}
+        <h1 class="page-hero__title">{{ project.title }}</h1>
+      </div>
+    </div>
+  </div>
+
+  <main class="project-detail">
+    <div class="project-detail__intro">
+      <div class="container">
+        <div class="row project-detail__intro-row">
+          <div class="col-lg-8">
+            <h2 class="project-detail__title">{{ project.title }}</h2>
+            {% if project.address %}
+              <p class="project-detail__loc">
+                <img src="{{ project.location_icon }}" alt="">
+                <span>{{ project.address }}</span>
+              </p>
+            {% endif %}
+            {% for paragraph in project.intro_paragraphs %}
+              <p class="project-detail__desc">{{ paragraph }}</p>
+            {% endfor %}
+            <a class="btn-see-more btn-see-more--solid" href="{{ project.contact_url }}">
+              {{ project.labels.contact_us|lower }}
+              <span class="btn-see-more__icon btn-see-more__icon--sm"><i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+          </div>
+          <div class="col-lg-4">
+            <aside class="project-specs">
+              {% if project.total_area %}
+                <div class="project-specs__highlight">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                    <g clip-path="url(#clip0_project_specs)">
+                      <path d="M61.7146 0.5C62.7006 0.500418 63.5002 1.30011 63.4998 2.28613V52.5723C63.4999 53.2488 63.1175 53.8674 62.5125 54.1699H62.5115L44.2791 63.2852C44.2415 63.2912 44.1915 63.3032 44.1365 63.3271L44.1238 63.332L44.1111 63.3389C43.704 63.5433 43.2264 63.5541 42.8103 63.3682L42.8093 63.3691C42.7452 63.3393 42.686 63.3257 42.6423 63.3193L23.0603 54.6152L22.8572 54.5254L22.6541 54.6152L3.01147 63.3467C2.52811 63.5611 1.97868 63.5485 1.50952 63.3213L1.31323 63.2109C0.870082 62.9229 0.581044 62.4555 0.515381 61.9385L0.500732 61.7139V11.4297C0.500628 10.7239 0.916353 10.0844 1.56128 9.79785V9.79688L22.1033 0.666992C22.1119 0.664969 22.1242 0.662465 22.1365 0.65918C22.1549 0.654213 22.1791 0.64625 22.2068 0.635742L22.2078 0.636719C22.2765 0.611031 22.3472 0.589338 22.4187 0.572266L22.4324 0.568359C22.5006 0.549963 22.5699 0.535916 22.6394 0.525391C22.784 0.514481 22.9293 0.514566 23.074 0.525391C23.1441 0.535942 23.2141 0.549796 23.283 0.568359L23.2966 0.572266C23.3681 0.589325 23.4389 0.610079 23.5076 0.635742C23.5355 0.646367 23.5603 0.65417 23.5789 0.65918C23.5909 0.662415 23.6025 0.664976 23.6111 0.666992L43.1687 9.36035L43.3845 9.45703L43.5955 9.35059L60.9158 0.688477C61.1637 0.56458 61.4373 0.499951 61.7146 0.5ZM20.3689 5.34766L4.3689 12.458L4.07202 12.5898V58.9658L4.77515 58.6533L20.7751 51.543L21.072 51.4111V5.03516L20.3689 5.34766ZM59.2048 5.53809L45.491 12.3945L45.2146 12.5332V58.8252L45.9382 58.4639L59.6521 51.6064L59.9285 51.4678V5.17578L59.2048 5.53809ZM41.6433 12.5898L41.3464 12.458L25.3464 5.34766L24.6433 5.03516V51.4111L24.9402 51.543L40.9402 58.6533L41.6433 58.9658V12.5898Z" fill="#066042" stroke="white"/>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_project_specs">
+                        <rect width="64" height="64" fill="white"/>
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  <div>
+                    <p class="project-specs__area-label">{{ project.labels.total_area }}</p>
+                    <p class="project-specs__area-value">{{ project.total_area }}</p>
+                  </div>
+                </div>
+                <hr class="project-specs__divider">
+              {% endif %}
+              <div class="project-specs__rows">
+                <div class="project-specs__row">
+                  <span class="project-specs__label">{{ project.labels.project_name }}</span>
+                  <p class="project-specs__value">{{ project.title }}</p>
+                </div>
+                {% if project.land_use %}
+                  <div class="project-specs__row">
+                    <span class="project-specs__label">{{ project.labels.land_use }}</span>
+                    <p class="project-specs__value">{{ project.land_use }}</p>
+                  </div>
+                {% endif %}
+                {% if project.address %}
+                  <div class="project-specs__row">
+                    <span class="project-specs__label">{{ project.labels.address }}</span>
+                    <p class="project-specs__value">{{ project.address }}</p>
+                  </div>
+                {% endif %}
+                {% if project.price %}
+                  <div class="project-specs__row">
+                    <span class="project-specs__label">{{ project.labels.price }}</span>
+                    <p class="project-specs__value project-specs__value--price">{{ project.price }}</p>
+                  </div>
+                {% endif %}
+                {% if project.download_url %}
+                  <div class="project-specs__row">
+                    <span class="project-specs__label">{{ project.labels.document }}</span>
+                    <a class="project-specs__download" href="{{ project.download_url }}" download>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <g clip-path="url(#clip0_project_download)">
+                          <path d="M23.5961 16.0972C23.3272 15.828 23 15.6934 22.6156 15.6934H15.923L13.9615 17.6548C13.4038 18.1932 12.75 18.4625 12 18.4625C11.2502 18.4625 10.5962 18.1936 10.0385 17.6548L8.09137 15.6934H1.3846C1.00005 15.6934 0.673153 15.8282 0.403841 16.0972C0.13458 16.3664 0 16.6933 0 17.0781V21.6933C0 22.078 0.13458 22.4049 0.403841 22.6741C0.673102 22.9433 1 23.0777 1.3846 23.0777H22.6156C23 23.0777 23.3272 22.9433 23.5962 22.6741C23.8655 22.4049 24 22.078 24 21.6933V17.0781C24 16.6933 23.8655 16.3664 23.5961 16.0972ZM18.1877 20.9578C18.0048 21.1405 17.7884 21.2318 17.5384 21.2318C17.2884 21.2318 17.0723 21.1405 16.8894 20.9578C16.7068 20.775 16.6155 20.5588 16.6155 20.3089C16.6155 20.0589 16.7068 19.8423 16.8894 19.6599C17.0723 19.477 17.2884 19.3855 17.5384 19.3855C17.7884 19.3855 18.0048 19.477 18.1877 19.6599C18.3703 19.8423 18.4616 20.0589 18.4616 20.3089C18.4616 20.5587 18.3703 20.775 18.1877 20.9578ZM21.8798 20.9578C21.6972 21.1405 21.4808 21.2318 21.2308 21.2318C20.9808 21.2318 20.7645 21.1405 20.5817 20.9578C20.3992 20.775 20.3079 20.5588 20.3079 20.3089C20.3079 20.0589 20.3992 19.8423 20.5817 19.6599C20.7645 19.477 20.9807 19.3855 21.2308 19.3855C21.4808 19.3855 21.6972 19.477 21.8798 19.6599C22.0625 19.8423 22.154 20.0589 22.154 20.3089C22.154 20.5587 22.0627 20.775 21.8798 20.9578Z" fill="#066042"/>
+                          <path d="M11.3511 16.3424C11.5242 16.5249 11.7406 16.6163 12.0001 16.6163C12.2598 16.6163 12.4758 16.5249 12.6491 16.3424L19.1107 9.88074C19.4087 9.60193 19.4761 9.26533 19.3126 8.87109C19.1494 8.49619 18.8657 8.30872 18.4617 8.30852H14.7693V1.84695C14.7693 1.59698 14.6778 1.38061 14.4954 1.19794C14.3125 1.01522 14.0963 0.923828 13.8464 0.923828H10.1537C9.90387 0.923828 9.6875 1.01522 9.50473 1.19794C9.3221 1.38061 9.23072 1.59693 9.23072 1.84695V8.30857H5.5384C5.13436 8.30857 4.85085 8.49624 4.68738 8.87114C4.524 9.26523 4.59124 9.60198 4.8894 9.88079L11.3511 16.3424Z" fill="#066042"/>
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_project_download">
+                            <rect width="24" height="24" fill="white"/>
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <span>{{ project.labels.download }}</span>
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if project.gallery %}
+      <div class="project-detail__section">
+        <div class="container">
+          <h2 class="t-heading-1 project-detail__section-title mb-3">{{ project.labels.gallery|lower }}</h2>
+          <div class="project-gallery">
+            <div class="project-gallery__carousel owl-carousel">
+              {% for image in project.gallery %}
+                <div class="project-gallery__slide">
+                  <img src="{{ image.url }}" alt="{{ image.alt }}">
+                </div>
+              {% endfor %}
+            </div>
+            {% if project.gallery|length > 1 %}
+              <div class="project-gallery__dots" role="tablist" aria-label="{{ 'Gallery pagination'|t }}">
+                {% for image in project.gallery %}
+                  <button type="button" class="{{ loop.first ? 'is-active' : '' }}" aria-label="{{ 'Slide @num'|t({'@num': loop.index}) }}"></button>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if project.specifications %}
+      <div class="project-detail__section project-detail__section--tech">
+        <div class="container">
+          <div class="project-tech-specs">
+            <div class="project-tech-specs__head">
+              <h2 class="project-tech-specs__title">{{ project.labels.tech_specs }}</h2>
+            </div>
+            <div class="project-tech-specs__body">
+              {% for spec in project.specifications %}
+                <div class="project-tech-specs__row{{ loop.index > 3 ? ' project-tech-specs__row--extra' : '' }}">
+                  <p class="project-tech-specs__label">{{ spec.label }}</p>
+                  <p class="project-tech-specs__value">{{ spec.value }}</p>
+                </div>
+              {% endfor %}
+            </div>
+            {% if project.specifications|length > 3 %}
+              <button type="button" class="project-tech-specs__expand" aria-expanded="false"
+                data-expand-label="{{ project.labels.expand }}" data-collapse-label="{{ project.labels.collapse }}">
+                <span class="project-tech-specs__expand-label">{{ project.labels.expand }}</span>
+                <i class="fa-solid fa-angles-down project-tech-specs__expand-icon" aria-hidden="true"></i>
+              </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if project.location_map or project.distances %}
+      <div class="project-detail__section">
+        <div class="container">
+          <h2 class="t-heading-1 project-detail__section-title">{{ project.labels.location }}</h2>
+          <div class="project-location">
+            {% if project.location_map %}
+              <div class="project-location__map">
+                <img src="{{ project.location_map.url }}" alt="{{ project.location_map.alt }}">
+              </div>
+            {% endif %}
+            <div class="project-location__sidebar">
+              {% if project.address %}
+                <div class="project-location__address">
+                  <div class="project-location__address-row">
+                    <img src="{{ project.location_icon }}" alt="">
+                    <p>{{ project.address }}</p>
+                  </div>
+                  {% if project.map_url %}
+                    <a class="project-location__map-link" href="{{ project.map_url }}" target="_blank" rel="noopener noreferrer">{{ project.labels.google_map }}</a>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if project.distances %}
+                <div class="project-location__distances">
+                  {% for distance in project.distances %}
+                    <div class="project-distance">
+                      {% if distance.icon %}
+                        <span class="project-distance__icon" aria-hidden="true"><img src="{{ distance.icon.url }}" alt="{{ distance.icon.alt }}"></span>
+                      {% endif %}
+                      <div>
+                        <p class="project-distance__label">{{ distance.label }}</p>
+                        <p class="project-distance__value">{{ distance.value }}</p>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if project.infrastructure %}
+      <div class="project-detail__section project-detail__section--infra">
+        <div class="container">
+          <section class="project-infra">
+            <h2 class="t-heading-1 project-infra__heading">{{ project.labels.infrastructure }}</h2>
+            <div class="row project-infra__grid">
+              {% for item in project.infrastructure %}
+                <div class="col-md-6 col-xl-4 d-flex">
+                  <article class="project-infra__card">
+                    {% if item.icon or item.title %}
+                      <div class="project-infra__head">
+                        {% if item.icon %}
+                          <span class="project-infra__icon" aria-hidden="true">
+                            <img src="{{ item.icon.url }}" alt="{{ item.icon.alt }}">
+                          </span>
+                        {% endif %}
+                        {% if item.title %}
+                          <h3 class="project-infra__title">{{ item.title }}</h3>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                    {% if item.texts %}
+                      <hr class="project-infra__divider">
+                      {% for text in item.texts %}
+                        <p class="project-infra__text">{{ text }}</p>
+                      {% endfor %}
+                    {% endif %}
+                  </article>
+                </div>
+              {% endfor %}
+            </div>
+          </section>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if project.zones %}
+      {% set zone_tabs_id = 'projectZoneTabs' ~ node.id %}
+      {% set zone_content_id = 'projectZoneTabContent' ~ node.id %}
+      <div class="project-detail__section project-detail__section--zone">
+        <div class="container">
+          <div class="project-detail__section-head">
+            <h2 class="t-heading-1 project-detail__section-title mb-0">{{ project.labels.zoning }}</h2>
+            {% if project.zones|length > 1 %}
+              <ul class="nav nav-tabs project-zone__tabs" id="{{ zone_tabs_id }}" role="tablist" aria-label="{{ project.labels.zoning }}">
+                {% for zone in project.zones %}
+                  <li class="nav-item" role="presentation">
+                    <button type="button" class="nav-link{{ loop.first ? ' active' : '' }}" id="{{ zone_tabs_id }}Tab{{ loop.index }}"
+                      data-bs-toggle="tab" data-bs-target="#{{ zone_tabs_id }}Panel{{ loop.index }}" role="tab"
+                      aria-controls="{{ zone_tabs_id }}Panel{{ loop.index }}" aria-selected="{{ loop.first ? 'true' : 'false' }}">{{ zone.title }}</button>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+          <div class="tab-content project-zone__tab-content" id="{{ zone_content_id }}">
+            {% for zone in project.zones %}
+              <div class="tab-pane fade{{ loop.first ? ' show active' : '' }}" id="{{ zone_tabs_id }}Panel{{ loop.index }}" role="tabpanel"
+                aria-labelledby="{{ zone_tabs_id }}Tab{{ loop.index }}" tabindex="0">
+                {% if zone.map %}
+                  <div class="project-zone__map-wrap">
+                    <img class="project-zone__map" src="{{ zone.map.url }}" alt="{{ zone.map.alt ?: zone.title }}">
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="project-detail__section project-detail__section--tax">
+      <div class="container">
+        <div class="row project-tax align-items-center g-4 g-xl-5">
+          <div class="col-lg-6">
+            <div class="project-tax__content">
+              <h2 class="t-heading-1 project-detail__section-title">{{ project.labels.tax }}</h2>
+              <ul class="project-tax__list">
+                {% for benefit in project.tax.benefits %}
+                  <li class="project-tax__item">
+                    <span class="project-tax__check" aria-hidden="true"><i class="fa-solid fa-circle-check"></i></span>
+                    <p class="project-tax__text">{{ benefit }}</p>
+                  </li>
+                {% endfor %}
+              </ul>
+              <a class="btn-see-more btn-see-more--solid" href="{{ project.contact_url }}">
+                {{ project.labels.tax_contact|lower }}
+                <span class="btn-see-more__icon btn-see-more__icon--sm"><i class="fa-solid fa-arrow-right"></i></span>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="project-tax__media">
+              <div class="project-tax__media-bg" aria-hidden="true"></div>
+              <div class="project-tax__photo-wrap">
+                <img class="project-tax__photo" src="{{ project.tax.image.url }}" alt="{{ project.tax.image.alt }}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-detail__section project-detail__section--customers">
+      <div class="container">
+        <h2 class="t-heading-1 project-detail__section-title">{{ project.labels.customers|lower }}</h2>
+        <div class="project-customers__logos">
+          {% for logo in project.customers %}
+            <div class="project-customers__logo">
+              <img src="{{ logo.url }}" alt="{{ logo.alt }}">
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="project-detail__section">
+      <div class="container">
+        <div class="project-contact-card">
+          <div class="project-contact-card__head">
+            <h2 class="project-contact-card__title">{{ project.labels.contact_request }}</h2>
+          </div>
+          <div class="project-contact-card__body">
+            <div class="project-contact-card__media">
+              <img src="{{ project.contact_form_image }}" alt="">
+            </div>
+            <div class="project-contact-card__form-wrap">
+              <p class="project-contact-card__note">
+                <i class="fa-solid fa-circle-info"></i>
+                {{ project.labels.contact_note }}
+              </p>
+              {{ project.contact_form }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if project.related %}
+      <div class="project-detail__section project-detail__section--related">
+        <div class="container">
+          <h2 class="t-heading-1 project-detail__section-title">{{ project.labels.related|lower }}</h2>
+          <div class="project-carousel owl-carousel">
+            {% for item in project.related %}
+              <article class="project-card">
+                <a class="project-card__link" href="{{ item.url }}">
+                  <img class="project-card__img" src="{{ item.image }}" alt="{{ item.image_alt }}">
+                  <div class="project-card__body">
+                    <h3 class="project-card__title">{{ item.title }}</h3>
+                    {% if item.address %}
+                      <p class="project-card__loc">
+                        <img width="20" height="20" src="{{ project.location_icon }}" alt="">
+                        {{ item.address }}
+                      </p>
+                    {% endif %}
+                    <span class="btn-see-more btn-see-more--solid project-card__btn">
+                      {{ project.labels.see_more|lower }}
+                      <span class="btn-see-more__icon btn-see-more__icon--sm"><i class="fa-solid fa-arrow-right"></i></span>
+                    </span>
+                  </div>
+                </a>
+              </article>
+            {% endfor %}
+          </div>
+          {% if project.related|length > 1 %}
+            <div class="project-carousel__dots">
+              {% for item in project.related %}
+                <button type="button" class="{{ loop.first ? 'is-active' : '' }}"></button>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </main>
+{% endif %}
