@@ -1,4 +1,5 @@
 # Drupal 11 base — see also example.gitignore (from core scaffold).
+/tmp/
 
 # Composer dependencies (root only; do not ignore vendor inside contrib modules).
 /vendor/

@@ -1,0 +1,418 @@
+{#
+/**
+ * @file
+ * Service detail page (node type: dich_vu).
+ */
+#}
+{% if view_mode == 'full' and service %}
+  <div class="page-hero page-hero--project">
+    <img class="page-hero__media" src="{{ service.hero_image }}" alt="{{ service.hero_image_alt }}">
+    <div class="page-hero__content">
+      <div class="container">
+        {% if service.breadcrumb %}
+          <nav class="page-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
+            <ol class="breadcrumb page-hero__breadcrumb">
+              {% for item in service.breadcrumb %}
+                {% if item.url %}
+                  <li class="breadcrumb-item"><a href="{{ item.url }}">{{ item.label }}</a></li>
+                {% else %}
+                  <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
+                {% endif %}
+              {% endfor %}
+            </ol>
+          </nav>
+        {% endif %}
+        <h1 class="page-hero__title">{{ service.title }}</h1>
+      </div>
+    </div>
+  </div>
+
+  <main class="service-detail">
+    <section class="service-detail__intro{{ service.highlight_cards ? ' service-detail__intro--white' : '' }}">
+      <div class="container{{ service.highlight_cards ? ' d-flex flex-column gap-5' : '' }}">
+        <div class="row service-detail__intro-row align-items-center">
+          <div class="col-lg-6">
+            <div class="d-flex flex-column gap-4 align-items-start{{ service.intro_image ? ' pe-lg-4' : '' }}">
+              <h2 class="service-detail__title">{{ service.title }}</h2>
+              {% if service.intro_paragraphs %}
+                <div class="service-detail__text mt-0">
+                  {% for paragraph in service.intro_paragraphs %}
+                    <p>{{ paragraph }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              {% if service.stats %}
+                <div class="service-detail__stats d-flex flex-wrap align-items-start gap-4 mt-0">
+                  {% for stat in service.stats %}
+                    <div class="service-detail__stat">
+                      <p class="service-detail__stat-value">
+                        {{ stat.value }}{% if stat.unit %}<small>{{ stat.unit }}</small>{% endif %}
+                      </p>
+                      <p class="service-detail__stat-label">{{ stat.label|raw }}</p>
+                    </div>
+                    {% if not loop.last %}
+                      <span class="service-detail__stat-divider" aria-hidden="true"></span>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+              <a class="btn-see-more btn-see-more--solid service-detail__cta mt-0" href="{{ service.contact_url }}">
+                {{ service.labels.contact_us }}
+                <span class="btn-see-more__icon btn-see-more__icon--sm"><i class="fa-solid fa-arrow-right"></i></span>
+              </a>
+            </div>
+          </div>
+          {% if service.intro_image %}
+            <div class="col-lg-6">
+              <div class="service-detail__media">
+                <img class="service-detail__photo" src="{{ service.intro_image.url }}" alt="{{ service.intro_image.alt }}">
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        {% for highlight in service.highlight_cards %}
+          <div class="row service-detail__intro-row align-items-center service-fdi">
+            {% if highlight.image %}
+              <div class="col-lg-6">
+                <div class="service-detail__media service-detail__media--start custom-fdi">
+                  <img class="service-detail__photo" src="{{ highlight.image.url }}" alt="{{ highlight.image.alt ?: highlight.title }}">
+                </div>
+              </div>
+            {% endif %}
+            <div class="col-lg-6 ps-lg-3">
+              {% if highlight.title %}
+                <h2 class="service-fdi__title">{{ highlight.title }}</h2>
+              {% endif %}
+              {% if highlight.lead %}
+                <div class="service-fdi__lead">{{ highlight.lead|raw }}</div>
+              {% endif %}
+              {% if highlight.items %}
+                <div class="row row-cols-1 g-3">
+                  {% for item in highlight.items %}
+                    <div class="col">
+                      <div class="service-fdi__card d-flex align-items-center gap-3">
+                        {% if item.icon %}
+                          <span class="service-fdi__icon flex-shrink-0">
+                            <img src="{{ item.icon.url }}" alt="{{ item.icon.alt }}">
+                          </span>
+                        {% endif %}
+                        <div>
+                          {% if item.title %}
+                            <h3 class="service-fdi__card-title">{{ item.title }}</h3>
+                          {% endif %}
+                          {% if item.body %}
+                            <div class="service-fdi__card-text">{{ item.body|raw }}</div>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    {% for highlight in service.highlight_lists %}
+      <section class="service-detail__section service-detail__section--gray">
+        <div class="container">
+          <div class="row service-detail__intro-row align-items-center">
+            {% if highlight.image %}
+              <div class="col-lg-6">
+                <div class="service-detail__media service-detail__media--start">
+                  <img class="service-detail__photo" src="{{ highlight.image.url }}" alt="{{ highlight.image.alt ?: highlight.title }}">
+                </div>
+              </div>
+            {% endif %}
+            <div class="col-lg-6 ps-lg-3">
+              {% if highlight.title %}
+                <h2 class="service-fdi__title">{{ highlight.title }}</h2>
+              {% endif %}
+              {% if highlight.lead %}
+                <div class="service-fdi__lead">{{ highlight.lead|raw }}</div>
+              {% endif %}
+              {% if highlight.items %}
+                <ul class="service-management__list">
+                  {% for item in highlight.items %}
+                    <li class="service-management__item">
+                      {% if item.icon %}
+                        <img class="service-management__icon" src="{{ item.icon.url }}" alt="{{ item.icon.alt }}">
+                      {% endif %}
+                      {% if item.body %}
+                        <div class="service-management__text">{{ item.body|raw }}</div>
+                      {% elseif item.title %}
+                        <p class="service-management__text">{{ item.title }}</p>
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endfor %}
+
+    {% if service.solutions %}
+      <section class="service-detail__section service-detail__section--gray">
+        <div class="container">
+          <h2 class="t-heading-1 service-detail__section-title">
+            {{ service.solutions_layout == 'carousel' ? service.labels.solutions : service.labels.fields }}
+          </h2>
+          {% if service.solutions_layout == 'carousel' %}
+            <div class="service-solutions">
+              <div class="service-solutions-carousel owl-carousel">
+                {% for card in service.solutions %}
+                  <article class="service-fields__card">
+                    {% if card.image %}
+                      <div class="service-fields__media">
+                        <img src="{{ card.image.url }}" alt="{{ card.image.alt ?: card.title }}">
+                      </div>
+                    {% endif %}
+                    <div class="service-fields__body">
+                      {% if card.title %}
+                        <h3 class="service-fields__title">{{ card.title }}</h3>
+                      {% endif %}
+                      {% if card.text %}
+                        <p class="service-fields__text">{{ card.text }}</p>
+                      {% endif %}
+                    </div>
+                  </article>
+                {% endfor %}
+              </div>
+              {% if service.solutions|length > 1 %}
+                <div class="service-solutions__dots">
+                  {% for card in service.solutions %}
+                    <button type="button" class="{{ loop.first ? 'is-active' : '' }}" aria-label="{{ 'Slide @num'|t({'@num': loop.index}) }}"></button>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% else %}
+            <div class="service-fields__grid">
+              {% for card in service.solutions %}
+                <article class="service-fields__card">
+                  {% if card.image %}
+                    <div class="service-fields__media">
+                      <img src="{{ card.image.url }}" alt="{{ card.image.alt ?: card.title }}">
+                    </div>
+                  {% endif %}
+                  <div class="service-fields__body">
+                    {% if card.title %}
+                      <h3 class="service-fields__title">{{ card.title }}</h3>
+                    {% endif %}
+                    {% if card.text %}
+                      <p class="service-fields__text">{{ card.text }}</p>
+                    {% endif %}
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% set stack_sections = service.process or service.gallery_tabs or service.customers %}
+    {% if stack_sections %}
+      <section class="service-detail__section service-detail__section--white">
+        <div class="container{{ (service.process and service.gallery_tabs) or service.customers ? ' d-flex flex-column gap-5' : ' service-detail__section-stack' }}">
+          {% if service.process %}
+            <div>
+              <h2 class="t-heading-1 service-detail__section-title{{ service.process_compact ? ' service-detail__section-title--left' : '' }}">
+                {{ service.labels.process }}
+              </h2>
+              <div class="service-process{{ service.process_compact ? ' service-process--operations' : '' }}">
+                <div class="service-process__steps">
+                  {% for step in service.process %}
+                    <div class="service-process__step">
+                      <img src="{{ service.process_box_image }}" alt="">
+                      <div class="service-process__content">
+                        {% if step.icon %}
+                          <img class="service-process__icon" src="{{ step.icon.url }}" alt="{{ step.icon.alt }}">
+                        {% endif %}
+                        {% if step.title %}
+                          <p class="service-process__title">{{ step.title }}</p>
+                        {% endif %}
+                        {% if step.description %}
+                          <p class="service-process__desc">{{ step.description }}</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if service.gallery_tabs %}
+            {% set gallery_id = 'serviceGallery' ~ node.id %}
+            <div>
+              <h2 class="t-heading-1 service-detail__section-title">{{ service.labels.gallery }}</h2>
+              <div class="service-gallery">
+                {% if service.gallery_show_tabs %}
+                  <ul class="nav nav-tabs service-gallery__tabs" role="tablist" aria-label="{{ service.labels.gallery }}">
+                    {% for tab in service.gallery_tabs %}
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link{{ loop.first ? ' active' : '' }}" id="{{ gallery_id }}-tab-{{ loop.index }}"
+                          data-bs-toggle="tab" data-bs-target="#{{ gallery_id }}-pane-{{ loop.index }}" type="button"
+                          role="tab" aria-controls="{{ gallery_id }}-pane-{{ loop.index }}"
+                          aria-selected="{{ loop.first ? 'true' : 'false' }}">{{ tab.title }}</button>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+                <div class="tab-content service-gallery__content">
+                  {% for tab in service.gallery_tabs %}
+                    <div class="tab-pane fade service-gallery__panel{{ loop.first ? ' show active' : '' }}"
+                      id="{{ gallery_id }}-pane-{{ loop.index }}" role="tabpanel"
+                      aria-labelledby="{{ gallery_id }}-tab-{{ loop.index }}" tabindex="0">
+                      <div class="service-gallery__slider owl-carousel">
+                        {% for image in tab.images %}
+                          <div class="service-gallery__slide">
+                            <img src="{{ image.url }}" alt="{{ image.alt }}">
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="service-gallery__nav">
+                        <button type="button" class="service-gallery__arrow service-gallery__arrow--prev" aria-label="{{ 'Previous image'|t }}">
+                          <img src="{{ service.gallery_arrow_left }}" alt="">
+                        </button>
+                        <button type="button" class="service-gallery__arrow service-gallery__arrow--next" aria-label="{{ 'Next image'|t }}">
+                          <img src="{{ service.gallery_arrow_right }}" alt="">
+                        </button>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if service.customers %}
+            <div>
+              <h2 class="t-heading-1 service-detail__section-title">{{ service.labels.customers }}</h2>
+              <div class="customers__logos">
+                {% for logo in service.customers %}
+                  <a class="customers__logo" href="{{ logo.link }}">
+                    <img src="{{ logo.url }}" alt="{{ logo.alt }}">
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% if service.featured_projects %}
+      <section class="service-detail__section service-detail__section--gray">
+        <div class="container">
+          <h2 class="t-heading-1 service-detail__section-title">{{ service.labels.featured_projects }}</h2>
+          <div class="service-carousel-wrap">
+            <div class="project-carousel service-carousel owl-carousel">
+              {% for project in service.featured_projects %}
+                <article class="service-featured-card">
+                  <a class="service-featured-card__link" href="{{ project.url }}">
+                    <div class="service-featured-card__media">
+                      <img src="{{ project.image }}" alt="{{ project.image_alt }}">
+                    </div>
+                    <div class="service-featured-card__body">
+                      <span class="service-featured-card__badge" aria-hidden="true">
+                        <img src="{{ project.badge_icon }}" alt="">
+                      </span>
+                      <h3 class="service-featured-card__title">{{ project.title }}</h3>
+                      {% if project.address %}
+                        <div class="service-featured-card__loc">
+                          <img src="{{ project.location_icon }}" alt="">
+                          <span>{{ project.address }}</span>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </a>
+                </article>
+              {% endfor %}
+            </div>
+            {% if service.featured_projects|length > 1 %}
+              <div class="service-carousel__dots project-carousel__dots" role="tablist" aria-label="{{ service.labels.featured_projects }}">
+                {% for project in service.featured_projects %}
+                  <button type="button" class="{{ loop.first ? 'is-active' : '' }}" aria-label="{{ 'Slide @num'|t({'@num': loop.index}) }}"></button>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if service.why_items or service.contact_form %}
+      <section class="service-detail__section service-detail__section--white">
+        <div class="container d-flex flex-column gap-5">
+          {% if service.why_items %}
+            <div class="row service-detail__intro-row align-items-center">
+              <div class="col-lg-6">
+                <h2 class="service-detail__title">{{ service.labels.why_choose }}</h2>
+                <div class="d-flex flex-column gap-4 mt-3">
+                  {% for item in service.why_items %}
+                    <div class="service-why__item d-flex gap-3">
+                      {% if item.number %}
+                        <span class="service-why__num flex-shrink-0" aria-hidden="true">{{ item.number }}</span>
+                      {% endif %}
+                      <div class="service-why__body">
+                        {% if item.title %}
+                          <h3 class="service-why__title">{{ item.title }}</h3>
+                        {% endif %}
+                        {% if item.text %}
+                          <p class="service-why__text">{{ item.text }}</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                    {% if not loop.last %}
+                      <hr class="service-why__divider">
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+              {% if service.why_image %}
+                <div class="col-lg-6">
+                  <div class="service-detail__media">
+                    <img class="service-detail__photo" src="{{ service.why_image.url }}" alt="{{ service.why_image.alt }}">
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if service.contact_form %}
+            <div class="project-contact-card service-contact-card">
+              <div class="project-contact-card__head">
+                <h2 class="project-contact-card__title">{{ service.labels.contact_request }}</h2>
+              </div>
+              <div class="project-contact-card__body">
+                <div class="row g-4 g-lg-5 align-items-stretch">
+                  <div class="col-lg-6">
+                    <div class="project-contact-card__media h-100">
+                      <img src="{{ service.contact_form_image }}" alt="">
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="project-contact-card__form-wrap">
+                      <p class="project-contact-card__note">
+                        <i class="fa-solid fa-circle-info"></i>
+                        {{ service.labels.contact_note }}
+                      </p>
+                      {{ service.contact_form }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+    {% endif %}
+  </main>
+{% endif %}
