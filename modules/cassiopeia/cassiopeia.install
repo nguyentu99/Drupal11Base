@@ -172,3 +172,13 @@ function cassiopeia_update_11007(): void {
 
   $config->set('contact_form', $contact_form)->save();
 }
+
+/**
+ * Installs Dịch vụ content type, fields, and paragraph bundles.
+ */
+function cassiopeia_update_11008(): string {
+  /** @var \Drupal\cassiopeia\Service\DichVuContentInstaller $installer */
+  $installer = \Drupal::service('cassiopeia.dich_vu_content_installer');
+  $installer->install();
+  return (string) t('Installed Dịch vụ content type with fields and paragraphs.');
+}

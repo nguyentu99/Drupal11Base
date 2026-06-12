@@ -222,6 +222,11 @@ function cassiopeia_banner_page_registry(): array {
       'content_types' => ['projects'],
       'fallback_image' => 'images/ba-thien-1-banner.jpg',
     ],
+    'services' => [
+      'paths' => ['/dich-vu'],
+      'content_types' => ['dich_vu'],
+      'fallback_image' => 'images/nha-xuong.jpg',
+    ],
   ];
 }
 
@@ -2490,6 +2495,492 @@ function cassiopeia_projects_detail_variables(NodeInterface $node): array {
       'contact_note' => (string) t('Note: Fields marked with (*) are required.'),
       'related' => (string) t('Other projects'),
       'see_more' => (string) t('See more'),
+    ],
+  ];
+}
+
+/**
+ * Builds a solution card from a linh_vuc_hoat_dong or co_so_ha_tang paragraph.
+ *
+ * @return array{image: ?array, title: string, text: string}|null
+ */
+function cassiopeia_dich_vu_solution_card(ParagraphInterface $paragraph): ?array {
+  if ($paragraph->bundle() === 'co_so_ha_tang') {
+    $card = cassiopeia_projects_infrastructure_item($paragraph);
+    if (!$card) {
+      return NULL;
+    }
+    return [
+      'image' => $card['icon'],
+      'title' => $card['title'],
+      'text' => implode(' ', $card['texts']),
+    ];
+  }
+
+  if ($paragraph->bundle() !== 'linh_vuc_hoat_dong') {
+    return NULL;
+  }
+
+  $title = trim((string) ($paragraph->get('field_title')->value ?? ''));
+  $text = '';
+  if ($paragraph->hasField('field_body') && !$paragraph->get('field_body')->isEmpty()) {
+    $text = trim(html_entity_decode(strip_tags((string) $paragraph->get('field_body')->processed), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+  }
+  $image = $paragraph->hasField('field_anh') && !$paragraph->get('field_anh')->isEmpty()
+    ? cassiopeia_image_field_item_data($paragraph->get('field_anh')->first())
+    : NULL;
+
+  if ($title === '' && $text === '' && !$image) {
+    return NULL;
+  }
+
+  return [
+    'image' => $image,
+    'title' => $title,
+    'text' => $text,
+  ];
+}
+
+/**
+ * Builds one stat item for a service detail page.
+ *
+ * @return array{value: string, unit: string, label: string}|null
+ */
+function cassiopeia_dich_vu_stat_item(ParagraphInterface $paragraph): ?array {
+  if ($paragraph->bundle() !== 'so_lieu_thong_ke') {
+    return NULL;
+  }
+
+  $value = trim((string) ($paragraph->get('field_title')->value ?? ''));
+  $label = trim((string) ($paragraph->get('field_content')->value ?? ''));
+  $unit = trim((string) ($paragraph->get('field_unit')->value ?? ''));
+  if ($value === '' && $label === '') {
+    return NULL;
+  }
+
+  return [
+    'value' => $value,
+    'unit' => $unit,
+    'label' => $label,
+  ];
+}
+
+/**
+ * Builds one process step for a service detail page.
+ *
+ * @return array{icon: ?array, title: string, description: string}|null
+ */
+function cassiopeia_dich_vu_process_step(ParagraphInterface $paragraph): ?array {
+  if ($paragraph->bundle() !== 'buoc_quy_trinh') {
+    return NULL;
+  }
+
+  $title = trim((string) ($paragraph->get('field_title')->value ?? ''));
+  $description = '';
+  if ($paragraph->hasField('field_body') && !$paragraph->get('field_body')->isEmpty()) {
+    $description = trim(html_entity_decode(strip_tags((string) $paragraph->get('field_body')->processed), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+  }
+  $icon = $paragraph->hasField('field_anh') && !$paragraph->get('field_anh')->isEmpty()
+    ? cassiopeia_image_field_item_data($paragraph->get('field_anh')->first())
+    : NULL;
+
+  if ($title === '' && $description === '' && !$icon) {
+    return NULL;
+  }
+
+  return [
+    'icon' => $icon,
+    'title' => $title,
+    'description' => $description,
+  ];
+}
+
+/**
+ * Builds one highlight block for a service detail page.
+ *
+ * @return array<string, mixed>|null
+ */
+function cassiopeia_dich_vu_highlight_block(ParagraphInterface $paragraph): ?array {
+  if ($paragraph->bundle() !== 'khoi_noi_bat') {
+    return NULL;
+  }
+
+  $image = $paragraph->hasField('field_anh') && !$paragraph->get('field_anh')->isEmpty()
+    ? cassiopeia_image_field_item_data($paragraph->get('field_anh')->first())
+    : NULL;
+  $title = trim((string) ($paragraph->get('field_title')->value ?? ''));
+  $lead = '';
+  if ($paragraph->hasField('field_body') && !$paragraph->get('field_body')->isEmpty()) {
+    $lead = (string) $paragraph->get('field_body')->processed;
+  }
+
+  $items = [];
+  if ($paragraph->hasField('field_para_para_content') && !$paragraph->get('field_para_para_content')->isEmpty()) {
+    foreach ($paragraph->get('field_para_para_content') as $item) {
+      $child = $item->entity;
+      if (!$child instanceof ParagraphInterface || $child->bundle() !== 'muc_noi_bat') {
+        continue;
+      }
+      $item_title = trim((string) ($child->get('field_title')->value ?? ''));
+      $body = '';
+      if ($child->hasField('field_body') && !$child->get('field_body')->isEmpty()) {
+        $body = (string) $child->get('field_body')->processed;
+      }
+      $icon = $child->hasField('field_anh') && !$child->get('field_anh')->isEmpty()
+        ? cassiopeia_image_field_item_data($child->get('field_anh')->first())
+        : NULL;
+      if ($item_title === '' && $body === '' && !$icon) {
+        continue;
+      }
+      $items[] = [
+        'icon' => $icon,
+        'title' => $item_title,
+        'body' => $body,
+      ];
+    }
+  }
+
+  if ($title === '' && $lead === '' && !$image && $items === []) {
+    return NULL;
+  }
+
+  $style = 'list';
+  foreach ($items as $item) {
+    if ($item['title'] !== '') {
+      $style = 'cards';
+      break;
+    }
+  }
+
+  return [
+    'image' => $image,
+    'title' => $title,
+    'lead' => $lead,
+    'items' => $items,
+    'style' => $style,
+  ];
+}
+
+/**
+ * Builds one gallery tab for a service detail page.
+ *
+ * @return array{title: string, images: array<int, array{url: string, alt: string}>}|null
+ */
+function cassiopeia_dich_vu_gallery_tab(ParagraphInterface $paragraph): ?array {
+  if ($paragraph->bundle() !== 'tab_hinh_anh') {
+    return NULL;
+  }
+
+  $title = trim((string) ($paragraph->get('field_title')->value ?? ''));
+  $images = [];
+  if ($paragraph->hasField('field_hinh_anh') && !$paragraph->get('field_hinh_anh')->isEmpty()) {
+    foreach ($paragraph->get('field_hinh_anh') as $item) {
+      $image = cassiopeia_image_field_item_data($item);
+      if ($image) {
+        $images[] = $image + ['alt' => $image['alt'] ?: $title];
+      }
+    }
+  }
+
+  if ($images === []) {
+    return NULL;
+  }
+
+  return [
+    'title' => $title,
+    'images' => $images,
+  ];
+}
+
+/**
+ * Builds one "why choose us" item for a service detail page.
+ *
+ * @return array{number: string, title: string, text: string}|null
+ */
+function cassiopeia_dich_vu_why_item(ParagraphInterface $paragraph): ?array {
+  if ($paragraph->bundle() !== 'tai_sao_chon') {
+    return NULL;
+  }
+
+  $number = trim((string) ($paragraph->get('field_content')->value ?? ''));
+  $title = trim((string) ($paragraph->get('field_title')->value ?? ''));
+  $text = '';
+  if ($paragraph->hasField('field_body') && !$paragraph->get('field_body')->isEmpty()) {
+    $text = trim(html_entity_decode(strip_tags((string) $paragraph->get('field_body')->processed), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+  }
+
+  if ($number === '' && $title === '' && $text === '') {
+    return NULL;
+  }
+
+  return [
+    'number' => $number,
+    'title' => $title,
+    'text' => $text,
+  ];
+}
+
+/**
+ * Builds featured project card data for a service detail page.
+ *
+ * @return array<string, mixed>|null
+ */
+function cassiopeia_dich_vu_featured_project(NodeInterface $project): ?array {
+  if ($project->bundle() !== 'projects' || !$project->isPublished()) {
+    return NULL;
+  }
+
+  $teaser = cassiopeia_projects_teaser_data($project);
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+
+  return $teaser + [
+    'badge_icon' => '/' . $theme_path . '/images/factory-icon.svg',
+    'location_icon' => '/' . $theme_path . '/images/svg/location-green.svg',
+  ];
+}
+
+/**
+ * Builds customer logos for a service detail page.
+ *
+ * @return array<int, array{url: string, alt: string, link: string}>
+ */
+function cassiopeia_dich_vu_customer_logos(NodeInterface $node): array {
+  $language = $node->language();
+  $partner_url = Url::fromUserInput('/doi-tac-khach-hang', ['language' => $language])->toString();
+  $logos = [];
+
+  if ($node->hasField('field_anh') && !$node->get('field_anh')->isEmpty()) {
+    foreach ($node->get('field_anh') as $item) {
+      $image = cassiopeia_image_field_item_data($item);
+      if ($image) {
+        $logos[] = $image + [
+          'alt' => $image['alt'] ?: $node->label(),
+          'link' => $partner_url,
+        ];
+      }
+    }
+  }
+
+  if ($logos !== []) {
+    return $logos;
+  }
+
+  $fallback = cassiopeia_projects_customer_logos($node);
+  foreach ($fallback as &$logo) {
+    $logo['link'] = $partner_url;
+  }
+  return $fallback;
+}
+
+/**
+ * Builds hero image variables for a dich_vu node.
+ *
+ * @return array{hero_image: string, hero_image_alt: string}
+ */
+function cassiopeia_dich_vu_hero_image(NodeInterface $node, LanguageInterface $language): array {
+  if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
+    $image = cassiopeia_image_field_item_data($node->get('field_image')->first());
+    if ($image) {
+      return [
+        'hero_image' => $image['url'],
+        'hero_image_alt' => $image['alt'] ?: $node->label(),
+      ];
+    }
+  }
+
+  $banner = cassiopeia_page_banner('services', $node->label(), $language);
+  return [
+    'hero_image' => $banner['hero_image'],
+    'hero_image_alt' => $banner['hero_image_alt'],
+  ];
+}
+
+/**
+ * Builds variables for dich_vu detail templates.
+ */
+function cassiopeia_dich_vu_detail_variables(NodeInterface $node): array {
+  $language = $node->language();
+  $title = $node->label();
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+  $hero = cassiopeia_dich_vu_hero_image($node, $language);
+  $front_url = Url::fromRoute('<front>', [], ['language' => $language])->toString();
+  $services_url = Url::fromUserInput('/dich-vu', ['language' => $language])->toString();
+  $contact_url = cassiopeia_contact_url(['language' => $language]);
+
+  $intro_image = NULL;
+  if ($node->hasField('field_intro_image') && !$node->get('field_intro_image')->isEmpty()) {
+    $intro_image = cassiopeia_image_field_item_data($node->get('field_intro_image')->first());
+    if ($intro_image) {
+      $intro_image['alt'] = $intro_image['alt'] ?: $title;
+    }
+  }
+
+  $why_image = NULL;
+  if ($node->hasField('field_why_image') && !$node->get('field_why_image')->isEmpty()) {
+    $why_image = cassiopeia_image_field_item_data($node->get('field_why_image')->first());
+    if ($why_image) {
+      $why_image['alt'] = $why_image['alt'] ?: $title;
+    }
+  }
+
+  $stats = [];
+  if ($node->hasField('field_so_lieu') && !$node->get('field_so_lieu')->isEmpty()) {
+    foreach ($node->get('field_so_lieu') as $item) {
+      $paragraph = $item->entity;
+      if ($paragraph instanceof ParagraphInterface) {
+        $stat = cassiopeia_dich_vu_stat_item($paragraph);
+        if ($stat) {
+          $stats[] = $stat;
+        }
+      }
+    }
+  }
+
+  $highlights = [];
+  if ($node->hasField('field_khoi_noi_bat') && !$node->get('field_khoi_noi_bat')->isEmpty()) {
+    foreach ($node->get('field_khoi_noi_bat') as $item) {
+      $paragraph = $item->entity;
+      if ($paragraph instanceof ParagraphInterface) {
+        $block = cassiopeia_dich_vu_highlight_block($paragraph);
+        if ($block) {
+          $highlights[] = $block;
+        }
+      }
+    }
+  }
+
+  $solutions = [];
+  if ($node->hasField('field_giai_phap') && !$node->get('field_giai_phap')->isEmpty()) {
+    foreach ($node->get('field_giai_phap') as $item) {
+      $paragraph = $item->entity;
+      if ($paragraph instanceof ParagraphInterface) {
+        $card = cassiopeia_dich_vu_solution_card($paragraph);
+        if ($card) {
+          $solutions[] = $card;
+        }
+      }
+    }
+  }
+
+  $process = [];
+  if ($node->hasField('field_quy_trinh') && !$node->get('field_quy_trinh')->isEmpty()) {
+    foreach ($node->get('field_quy_trinh') as $item) {
+      $paragraph = $item->entity;
+      if ($paragraph instanceof ParagraphInterface) {
+        $step = cassiopeia_dich_vu_process_step($paragraph);
+        if ($step) {
+          $process[] = $step;
+        }
+      }
+    }
+  }
+
+  $gallery_tabs = [];
+  if ($node->hasField('field_hinh_anh_tabs') && !$node->get('field_hinh_anh_tabs')->isEmpty()) {
+    foreach ($node->get('field_hinh_anh_tabs') as $item) {
+      $paragraph = $item->entity;
+      if ($paragraph instanceof ParagraphInterface) {
+        $tab = cassiopeia_dich_vu_gallery_tab($paragraph);
+        if ($tab) {
+          $gallery_tabs[] = $tab;
+        }
+      }
+    }
+  }
+
+  $why_items = [];
+  if ($node->hasField('field_tai_sao') && !$node->get('field_tai_sao')->isEmpty()) {
+    foreach ($node->get('field_tai_sao') as $item) {
+      $paragraph = $item->entity;
+      if ($paragraph instanceof ParagraphInterface) {
+        $why = cassiopeia_dich_vu_why_item($paragraph);
+        if ($why) {
+          $why_items[] = $why;
+        }
+      }
+    }
+  }
+
+  $featured_projects = [];
+  if ($node->hasField('field_du_an') && !$node->get('field_du_an')->isEmpty()) {
+    foreach ($node->get('field_du_an') as $item) {
+      $project = $item->entity;
+      if ($project instanceof NodeInterface) {
+        $card = cassiopeia_dich_vu_featured_project($project);
+        if ($card) {
+          $featured_projects[] = $card;
+        }
+      }
+    }
+  }
+
+  $process_has_descriptions = FALSE;
+  foreach ($process as $step) {
+    if ($step['description'] !== '') {
+      $process_has_descriptions = TRUE;
+      break;
+    }
+  }
+
+  $gallery_show_tabs = count($gallery_tabs) > 1;
+  foreach ($gallery_tabs as $tab) {
+    if ($tab['title'] === '') {
+      $gallery_show_tabs = FALSE;
+      break;
+    }
+  }
+
+  $highlight_cards = [];
+  $highlight_lists = [];
+  foreach ($highlights as $highlight) {
+    if (($highlight['style'] ?? '') === 'cards') {
+      $highlight_cards[] = $highlight;
+    }
+    else {
+      $highlight_lists[] = $highlight;
+    }
+  }
+
+  return [
+    'title' => $title,
+    'hero_image' => $hero['hero_image'],
+    'hero_image_alt' => $hero['hero_image_alt'],
+    'intro_paragraphs' => cassiopeia_projects_intro_paragraphs($node),
+    'intro_image' => $intro_image,
+    'stats' => $stats,
+    'highlight_cards' => $highlight_cards,
+    'highlight_lists' => $highlight_lists,
+    'solutions' => $solutions,
+    'solutions_layout' => count($solutions) > 2 ? 'carousel' : 'grid',
+    'process' => $process,
+    'process_compact' => !$process_has_descriptions,
+    'gallery_tabs' => $gallery_tabs,
+    'gallery_show_tabs' => $gallery_show_tabs,
+    'customers' => cassiopeia_dich_vu_customer_logos($node),
+    'featured_projects' => $featured_projects,
+    'why_items' => $why_items,
+    'why_image' => $why_image,
+    'contact_url' => $contact_url,
+    'contact_form_image' => '/' . $theme_path . '/images/services/contact-panel.png',
+    'process_box_image' => '/' . $theme_path . '/images/pt-box.png',
+    'gallery_arrow_left' => '/' . $theme_path . '/images/svg/gallery-arrow-left.svg',
+    'gallery_arrow_right' => '/' . $theme_path . '/images/svg/gallery-arrow-right.svg',
+    'breadcrumb' => [
+      ['label' => t('Home'), 'url' => $front_url],
+      ['label' => t('Services'), 'url' => $services_url],
+      ['label' => $title, 'url' => NULL],
+    ],
+    'labels' => [
+      'contact_us' => (string) t('Contact us'),
+      'solutions' => (string) t('Comprehensive solutions'),
+      'fields' => (string) t('Areas of activity'),
+      'process' => (string) t('Process'),
+      'gallery' => (string) t('Gallery'),
+      'customers' => (string) t('Our customers'),
+      'featured_projects' => (string) t('Featured projects'),
+      'why_choose' => (string) t('Why choose CNC Industrial?'),
+      'contact_request' => (string) t('Contact request'),
+      'contact_note' => (string) t('Note: Fields marked with (*) are required.'),
     ],
   ];
 }

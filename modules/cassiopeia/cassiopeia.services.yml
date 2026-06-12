@@ -1,4 +1,6 @@
 services:
+  cassiopeia.dich_vu_content_installer:
+    class: Drupal\cassiopeia\Service\DichVuContentInstaller
   cassiopeia.CassiopeiaRenderTemplate:
     class: Drupal\cassiopeia\Service\CassiopeiaRenderTemplate
     arguments: ['@extension.path.resolver']

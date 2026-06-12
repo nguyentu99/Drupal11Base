@@ -6,11 +6,15 @@ core_version_requirement: ^10 || ^11
 dependencies:
   - drupal:user
   - drupal:file
+  - drupal:image
+  - drupal:text
   - drupal:node
   - drupal:taxonomy
   - drupal:views
   - drupal:block
   - drupal:system
+  - paragraphs:paragraphs
+  - entity_reference_revisions:entity_reference_revisions
 
 # Information added by Drupal.org packaging script on 2024-10-31
 version: '11.x-1.01'
