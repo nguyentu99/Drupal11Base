@@ -1,0 +1,10 @@
+{#
+/**
+ * @file
+ * Contact form submit button with site CTA styling.
+ */
+#}
+<button{{ attributes.addClass('btn-see-more', 'btn-see-more--solid', 'contact-form__submit') }} type="submit">
+  {{ safe_value_label|raw }}
+  <span class="btn-see-more__icon btn-see-more__icon--sm" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>
+</button>{{ children }}

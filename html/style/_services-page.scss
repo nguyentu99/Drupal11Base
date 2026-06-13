@@ -360,6 +360,7 @@
         --bs-gutter-x: 30px;
         justify-content: center;
         margin: 0 auto;
+        width: 80%;
     }
 
     &__card {
@@ -875,10 +876,7 @@
         position: relative;
         width: 100%;
 
-        &:first-child {
-            border-top: 0;
-            padding-top: 0;
-        }
+      
 
         &:has(.services-leadership__item:hover) {
             z-index: 3;

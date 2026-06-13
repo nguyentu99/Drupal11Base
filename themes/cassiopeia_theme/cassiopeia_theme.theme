@@ -119,6 +119,15 @@ function cassiopeia_theme_form_user_login_form_alter(array &$form, FormStateInte
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter() for the public contact form.
+ */
+function cassiopeia_theme_form_cassiopeia_contact_form_alter(array &$form, FormStateInterface $form_state, $form_id): void {
+  if (isset($form['actions'])) {
+    $form['actions']['#attributes']['class'][] = 'contact-form__actions';
+  }
+}
+
+/**
  * Implements hook_theme_suggestions_HOOK_alter() for input elements.
  */
 function cassiopeia_theme_theme_suggestions_input_alter(array &$suggestions, array $variables): void {
@@ -129,6 +138,9 @@ function cassiopeia_theme_theme_suggestions_input_alter(array &$suggestions, arr
   $classes = $element['#attributes']['class'] ?? [];
   if (in_array('login-form__submit', $classes, TRUE)) {
     array_unshift($suggestions, 'input__submit__login_form__submit');
+  }
+  if (in_array('contact-form__submit', $classes, TRUE)) {
+    array_unshift($suggestions, 'input__submit__cassiopeia_contact_form__submit');
   }
 }
 

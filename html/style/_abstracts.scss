@@ -8,25 +8,25 @@ $container-max: 1350px;
 $container-pad: 15px;
 
 @font-face {
-    font-family: 'Bold';
+    font-family: 'SF-Pro-Display-Bold';
     font-display: swap;
     src: url('../webfonts/SF-Pro-Display-Bold.otf') format('truetype');
 }
 
 @font-face {
-    font-family: 'Medium';
+    font-family: 'SF-Pro-Display-Medium';
     font-display: swap;
     src: url('../webfonts/SF-Pro-Display-Medium.otf') format('truetype');
 }
 
 @font-face {
-    font-family: 'Regular';
+    font-family: 'SF-Pro-Display-Regular';
     font-display: swap;
     src: url('../webfonts/SF-Pro-Display-Regular.otf') format('truetype');
 }
 
 @font-face {
-    font-family: 'SemiBold';
+    font-family: 'SF-Pro-Display-Semibold';
     font-display: swap;
     src: url('../webfonts/SF-Pro-Display-Semibold.otf') format('truetype');
 }
@@ -73,19 +73,19 @@ $container-pad: 15px;
 
 
 @mixin Bold {
-    font-family: 'Bold',sans-serif;
+    font-family: 'SF-Pro-Display-Bold';
 }
 
 @mixin SemiBold {
-    font-family: 'SemiBold',sans-serif;
+    font-family: 'SF-Pro-Display-Semibold';
 }
 
 @mixin Regular {
-    font-family: 'Regular',sans-serif !important;
+    font-family: 'SF-Pro-Display-Regular';
 }
 
 @mixin Medium {
-    font-family: 'Medium',sans-serif;
+    font-family: 'SF-Pro-Display-Medium';
 }
 
 @mixin maxWidth($width) {

@@ -71,23 +71,28 @@
 })();
 
 /* --------------------------------------------------------------------------
-   2. index.html — stat-counter
-   Section: Về chúng tôi / chỉ số (.stat-card__num[data-count])
+   2. stat-counter
+   Section: .stat-card__num[data-count], .services-page__stat-value[data-count]
    Chức năng: đếm số khi scroll vào viewport
    -------------------------------------------------------------------------- */
 (function () {
-    var nums = document.querySelectorAll('.stat-card__num[data-count]');
+    var nums = document.querySelectorAll('.stat-card__num[data-count], .services-page__stat-value[data-count]');
     if (!nums.length) return;
 
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var duration = 2000;
+
+    function formatValue(el, value) {
+        var suffix = el.getAttribute('data-suffix') || '';
+        return String(value) + suffix;
+    }
 
     function runCounter(el) {
         var target = parseInt(el.getAttribute('data-count'), 10);
         if (isNaN(target)) return;
 
         if (reduced) {
-            el.textContent = String(target);
+            el.textContent = formatValue(el, target);
             return;
         }
 
@@ -96,11 +101,11 @@
         function tick(now) {
             var progress = Math.min((now - start) / duration, 1);
             var eased = 1 - Math.pow(1 - progress, 3);
-            el.textContent = String(Math.round(target * eased));
+            el.textContent = formatValue(el, Math.round(target * eased));
             if (progress < 1) {
                 requestAnimationFrame(tick);
             } else {
-                el.textContent = String(target);
+                el.textContent = formatValue(el, target);
             }
         }
 
@@ -204,12 +209,8 @@
     }
 
     function initMarquees() {
-        var scrollY = window.scrollY;
         initCustomersLogosMarquee();
         initProjectCustomersMarquee();
-        requestAnimationFrame(function () {
-            window.scrollTo(0, scrollY);
-        });
     }
 
     if (document.readyState === 'loading') {
@@ -224,8 +225,6 @@
    -------------------------------------------------------------------------- */
 (function ($) {
     'use strict';
-
-    var isFrontPage = document.body.classList.contains('path-frontpage') && !window.location.hash;
 
     /* ------------------------------------------------------------------------
        5. dich-vu.html — services-milestones
@@ -355,116 +354,63 @@
     }
 
     /* ------------------------------------------------------------------------
-       8. index.html — services-showcase
+       8. index.html — services-showcase (CNCTech home-box-2 pattern)
        Section: Dịch vụ hero (.services-showcase)
-       Chức năng: hover label đổi ảnh nền, phân trang label desktop
        ------------------------------------------------------------------------ */
     var ITEMS_PER_PAGE = 4;
     var DESKTOP_MQ = window.matchMedia('(min-width: 992px)');
 
     function initShowcase($showcase) {
-        var slideEl = $showcase.find('.services-showcase__slide').get(0);
-        if (!slideEl) return;
-
-        var $labelsWrap = $showcase.find('.services-showcase__labels');
+        var $itemsWrap = $showcase.find('.services-showcase__items');
+        var $mediaItems = $showcase.find('.services-showcase__media-item');
         var $prevBtn = $showcase.find('.services-showcase__nav-btn--prev');
         var $nextBtn = $showcase.find('.services-showcase__nav-btn--next');
-        var bgs = slideEl.querySelectorAll('.services-showcase__bg');
 
-        if (!$labelsWrap.length || bgs.length < 2) return;
+        if (!$itemsWrap.length || !$mediaItems.length) return;
 
-        var defaultBg = slideEl.getAttribute('data-default-bg') || bgs[0].getAttribute('src');
-        var active = 0;
-        var busy = false;
-        var pendingSrc = null;
-        var labelIndex = -1;
+        var activeIndex = 0;
         var pageIndex = 0;
         var pageCount = 0;
 
-        function getLabels() {
-            return Array.from(slideEl.querySelectorAll('.services-showcase__label[data-bg]'));
+        function getItems() {
+            return $showcase.find('.services-showcase__item');
         }
 
-        function preload(src) {
-            return new Promise(function (resolve) {
-                var img = new Image();
-                img.onload = img.onerror = function () {
-                    resolve();
-                };
-                img.src = src;
-            });
+        function setMedia(index) {
+            $mediaItems.removeClass('is-active');
+            $mediaItems.filter('[data-index="' + index + '"]').addClass('is-active');
         }
 
-        function crossfade(src) {
-            var currentEl = bgs[active];
-
-            if (currentEl.getAttribute('src') === src && currentEl.classList.contains('is-visible')) {
-                busy = false;
-                pendingSrc = null;
-                return;
-            }
-
-            busy = true;
-
-            var nextIdx = active === 0 ? 1 : 0;
-            var nextEl = bgs[nextIdx];
-
-            preload(src).then(function () {
-                nextEl.setAttribute('src', src);
-                nextEl.classList.add('is-visible');
-                currentEl.classList.remove('is-visible');
-                active = nextIdx;
-                busy = false;
-
-                if (pendingSrc && pendingSrc !== src) {
-                    crossfade(pendingSrc);
-                } else {
-                    pendingSrc = null;
-                }
-            });
+        function clearItemActive() {
+            getItems().removeClass('is-active');
         }
 
-        function applyBg(src) {
-            if (!src) return;
+        function setActive(index) {
+            var items = getItems();
+            if (!items[index]) return;
 
-            var currentEl = bgs[active];
-            if (currentEl.getAttribute('src') === src && currentEl.classList.contains('is-visible')) {
-                pendingSrc = null;
-                return;
-            }
-
-            pendingSrc = src;
-
-            if (!busy) {
-                crossfade(src);
-            }
+            activeIndex = index;
+            clearItemActive();
+            items.eq(index).addClass('is-active');
+            setMedia(index);
         }
 
-        function clearLabelActive() {
-            getLabels().forEach(function (label) {
-                label.classList.remove('is-active');
-            });
+        function resetHoverState() {
+            clearItemActive();
+            setMedia(pageStart(pageIndex));
         }
 
-        function activateLabel(index) {
-            var labels = getLabels();
-            if (!labels[index]) return;
-
-            labelIndex = index;
-            labels.forEach(function (label, i) {
-                label.classList.toggle('is-active', i === index);
-            });
-            applyBg(labels[index].getAttribute('data-bg'));
+        function pageStart(page) {
+            return page * ITEMS_PER_PAGE;
         }
 
         function goToPage(nextPage, animate) {
             if (nextPage < 0 || nextPage >= pageCount) return;
 
-            clearLabelActive();
-            labelIndex = -1;
             pageIndex = nextPage;
-            var owlIndex = DESKTOP_MQ.matches ? nextPage * ITEMS_PER_PAGE : nextPage;
-            $labelsWrap.trigger('to.owl.carousel', [owlIndex, animate ? 450 : 0, true]);
+            var owlIndex = DESKTOP_MQ.matches ? pageStart(nextPage) : nextPage;
+            $itemsWrap.trigger('to.owl.carousel', [owlIndex, animate ? 450 : 0, true]);
+            resetHoverState();
             updateNavState();
         }
 
@@ -479,39 +425,46 @@
             $nextBtn.toggleClass('is-disabled', pageIndex >= pageCount - 1);
         }
 
-        function bindLabelInteractions() {
-            getLabels().forEach(function (label, index) {
-                label.onmouseenter = function () {
-                    activateLabel(index);
+        function bindItemInteractions() {
+            getItems().each(function (index) {
+                var item = this;
+
+                item.onmouseenter = function () {
+                    if (!DESKTOP_MQ.matches) return;
+                    setActive(index);
                 };
 
-                label.onfocusin = function () {
-                    activateLabel(index);
+                item.onfocusin = function () {
+                    if (!DESKTOP_MQ.matches) return;
+                    setActive(index);
                 };
             });
+
+            $showcase.find('.services-showcase__content')
+                .off('mouseleave.servicesShowcase')
+                .on('mouseleave.servicesShowcase', function () {
+                    if (!DESKTOP_MQ.matches) return;
+                    resetHoverState();
+                });
         }
 
         function destroyOwl() {
-            if (!$labelsWrap.hasClass('owl-loaded')) return;
+            if (!$itemsWrap.hasClass('owl-loaded')) return;
 
-            $labelsWrap.trigger('destroy.owl.carousel');
-            $labelsWrap.removeClass('owl-carousel owl-loaded');
-            $labelsWrap.off('.owl.carousel');
+            $itemsWrap.trigger('destroy.owl.carousel');
+            $itemsWrap.removeClass('owl-carousel owl-loaded');
+            $itemsWrap.off('.owl.carousel');
         }
 
         function initOwl() {
             destroyOwl();
-            bindLabelInteractions();
+            bindItemInteractions();
 
-            clearLabelActive();
-            labelIndex = -1;
-            applyBg(defaultBg);
-
-            $labelsWrap.addClass('owl-carousel');
-            $labelsWrap.owlCarousel({
+            $itemsWrap.addClass('owl-carousel');
+            $itemsWrap.owlCarousel({
                 loop: false,
                 rewind: false,
-                margin: 16,
+                margin: DESKTOP_MQ.matches ? 16 : 16,
                 nav: false,
                 dots: false,
                 slideBy: 1,
@@ -530,35 +483,26 @@
             });
 
             pageCount = DESKTOP_MQ.matches
-                ? Math.ceil(getLabels().length / ITEMS_PER_PAGE)
-                : getLabels().length;
+                ? Math.ceil(getItems().length / ITEMS_PER_PAGE)
+                : getItems().length;
 
-            $labelsWrap.on('changed.owl.carousel initialized.owl.carousel', function (event) {
+            $itemsWrap.on('changed.owl.carousel initialized.owl.carousel', function (event) {
                 if (!event.namespace) return;
 
                 pageIndex = DESKTOP_MQ.matches
                     ? Math.floor((event.item.index || 0) / ITEMS_PER_PAGE)
                     : (event.item.index || 0);
-                clearLabelActive();
-                labelIndex = -1;
+
+                if (!DESKTOP_MQ.matches) {
+                    setActive(event.item.index || 0);
+                }
+
                 updateNavState();
             });
 
+            resetHoverState();
             updateNavState();
         }
-        
-        slideEl.addEventListener('mouseleave', function () {
-            var labels = getLabels();
-
-            clearLabelActive();
-
-            if (labelIndex >= 0 && labels[labelIndex]) {
-                applyBg(labels[labelIndex].getAttribute('data-bg'));
-                return;
-            }
-
-            applyBg(defaultBg);
-        });
 
         $prevBtn.off('click.servicesShowcase').on('click.servicesShowcase', function () {
             if ($(this).hasClass('is-disabled')) return;
@@ -975,15 +919,5 @@
             var target = $(this).index() * itemsPerDot();
             $marketCarousel.trigger('to.owl.carousel', [target, 450, true]);
         });
-    }
-
-    if (isFrontPage) {
-        window.scrollTo(0, 0);
-        requestAnimationFrame(function () {
-            window.scrollTo(0, 0);
-        });
-        window.addEventListener('load', function () {
-            window.scrollTo(0, 0);
-        }, { once: true });
     }
 })(jQuery);

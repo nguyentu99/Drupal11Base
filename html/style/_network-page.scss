@@ -22,6 +22,12 @@
         z-index: 0;
     }
 
+    &__video {
+        aspect-ratio: 1920 / 756;
+        height: auto;
+        object-fit: cover;
+    }
+
     &__content {
         bottom: 32px;
         left: 0;

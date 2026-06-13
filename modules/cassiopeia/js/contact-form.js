@@ -4,7 +4,7 @@
   Drupal.behaviors.cassiopeiaContactForm = {
     attach: function (context) {
       context.querySelectorAll('form.contact-form .contact-form__submit').forEach(function (submit) {
-        if (submit.dataset.cassiopeiaIcon === '1') {
+        if (submit.dataset.cassiopeiaIcon === '1' || submit.querySelector('.btn-see-more__icon')) {
           return;
         }
         submit.dataset.cassiopeiaIcon = '1';

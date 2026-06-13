@@ -75,24 +75,34 @@
             </div>
         </div>
         <div class="services-showcase">
-            <div class="services-showcase__slide" data-default-bg="{{ homepage.services_default_bg }}">
-                <div class="services-showcase__bgs">
-                    <img width="1920" height="768" class="services-showcase__bg is-visible" src="{{ homepage.services_default_bg }}"
-                        alt="">
-                    <img width="1920" height="768" class="services-showcase__bg" alt="">
-                </div>
-                <div class="services-showcase__labels">
+            <div class="services-showcase__content">
+                <div class="services-showcase__media">
                     {% for service in homepage.services %}
-                    <article class="services-showcase__label" tabindex="0" data-bg="{{ service.bg }}">
-                        <h3 class="services-showcase__label-title">{{ service.title_html|raw }}</h3>
-                        <div class="services-showcase__label-body">
-                            <p class="services-showcase__label-desc">{{ service.description }}</p>
-                            <span class="services-showcase__label-rule"></span>
-                            <a class="btn-see-more" href="{{ service.url }}">xem thêm<span
-                                    class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
-                        </div>
-                    </article>
+                    <div class="services-showcase__media-item{{ loop.first ? ' is-active' : '' }}" data-index="{{ loop.index0 }}">
+                        <img class="services-showcase__media-img" src="{{ service.bg }}" alt="">
+                    </div>
                     {% endfor %}
+                </div>
+                <div class="services-showcase__list">
+                    <div class="services-showcase__items">
+                        {% for service in homepage.services %}
+                        <article class="services-showcase__item" data-index="{{ loop.index0 }}" tabindex="0">
+                            <div class="services-showcase__item-thumb">
+                                <img src="{{ service.bg }}" alt="">
+                            </div>
+                            <div class="services-showcase__item-first">
+                                <h3 class="services-showcase__item-title">{{ service.title_html|raw }}</h3>
+                            </div>
+                            <div class="services-showcase__item-panel">
+                                <h3 class="services-showcase__item-title">{{ service.title_html|raw }}</h3>
+                                <p class="services-showcase__item-desc">{{ service.description }}</p>
+                                <span class="services-showcase__item-rule"></span>
+                                <a class="btn-see-more" href="{{ service.url }}">xem thêm<span
+                                        class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
+                            </div>
+                        </article>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
             <div class="services-showcase__nav">
