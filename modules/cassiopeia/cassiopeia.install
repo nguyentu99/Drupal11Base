@@ -316,3 +316,43 @@ function cassiopeia_update_11020(): string {
   $messages = $installer->configureSvgImageFields();
   return implode(' ', $messages);
 }
+
+/**
+ * Migrates interface label config from Vietnamese defaults to English sources.
+ */
+function cassiopeia_update_11021(): string {
+  $config = \Drupal::configFactory()->getEditable('cassiopeia.settings');
+  $strip = $config->get('contact_strip') ?: [];
+  $form = $config->get('contact_form') ?: [];
+
+  $strip_map = [
+    'phone_label' => ['Điện thoại' => 'Phone'],
+    'social_label' => ['Kết nối với chúng tôi:' => 'Connect with us:'],
+    'map_label' => ['google map' => 'Google map'],
+  ];
+  foreach ($strip_map as $key => $replacements) {
+    $value = (string) ($strip[$key] ?? '');
+    if (isset($replacements[$value])) {
+      $strip[$key] = $replacements[$value];
+    }
+  }
+
+  $form_map = [
+    'consent_before' => ['Tôi đồng ý với' => 'I agree to the'],
+    'consent_link_text' => ['điều khoản chấp thuận' => 'terms of consent'],
+    'consent_after' => ['cung cấp thông tin của CNC Industrial' => 'for providing information to CNC Industrial'],
+  ];
+  foreach ($form_map as $key => $replacements) {
+    $value = (string) ($form[$key] ?? '');
+    if (isset($replacements[$value])) {
+      $form[$key] = $replacements[$value];
+    }
+  }
+
+  $config
+    ->set('contact_strip', $strip)
+    ->set('contact_form', $form)
+    ->save();
+
+  return (string) t('Updated Cassiopeia interface label config to English sources for translation.');
+}

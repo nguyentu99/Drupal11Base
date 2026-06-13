@@ -1384,9 +1384,9 @@ function cassiopeia_error_page_variables(int $status_code): array {
     return [
       'code' => 403,
       'tone' => 'denied',
-      'title' => (string) t('Không có quyền truy cập'),
-      'message' => (string) t('Bạn không có quyền xem nội dung này. Vui lòng đăng nhập bằng tài khoản phù hợp hoặc quay về trang chủ.'),
-      'breadcrumb_label' => (string) t('Truy cập bị từ chối'),
+      'title' => (string) t('Access denied'),
+      'message' => (string) t('You do not have permission to view this content. Please log in with an appropriate account or return to the home page.'),
+      'breadcrumb_label' => (string) t('Access denied'),
       'home_url' => $home_url,
       'contact_url' => $contact_url,
       'login_url' => $login_url,
@@ -1397,9 +1397,9 @@ function cassiopeia_error_page_variables(int $status_code): array {
   return [
     'code' => 404,
     'tone' => 'not-found',
-    'title' => (string) t('Không tìm thấy trang'),
-    'message' => (string) t('Trang bạn đang tìm kiếm không tồn tại, đã bị xóa hoặc địa chỉ URL không chính xác.'),
-    'breadcrumb_label' => (string) t('Không tìm thấy trang'),
+    'title' => (string) t('Page not found'),
+    'message' => (string) t('The page you are looking for does not exist, has been removed, or the URL is incorrect.'),
+    'breadcrumb_label' => (string) t('Page not found'),
     'home_url' => $home_url,
     'contact_url' => $contact_url,
     'login_url' => $login_url,
@@ -1464,16 +1464,16 @@ function cassiopeia_site_config(?string $section = NULL): array {
 
     $built = [
       'contact_strip' => [
-        'phone_label' => (string) ($strip['phone_label'] ?? ''),
+        'phone_label' => (string) t((string) ($strip['phone_label'] ?: 'Phone')),
         'phone' => (string) ($strip['phone'] ?? ''),
         'phone_link' => $phone_link,
-        'email_label' => (string) ($strip['email_label'] ?? ''),
+        'email_label' => (string) t((string) ($strip['email_label'] ?: 'Email')),
         'email' => (string) ($strip['email'] ?? ''),
-        'social_label' => (string) ($strip['social_label'] ?? ''),
+        'social_label' => (string) t((string) ($strip['social_label'] ?: 'Connect with us:')),
         'facebook_url' => (string) ($strip['facebook_url'] ?? ''),
         'youtube_url' => (string) ($strip['youtube_url'] ?? ''),
         'linkedin_url' => (string) ($strip['linkedin_url'] ?? ''),
-        'map_label' => (string) ($strip['map_label'] ?? ''),
+        'map_label' => (string) t((string) ($strip['map_label'] ?: 'Google map')),
         'address' => (string) ($strip['address'] ?? ''),
         'map_url' => $map_url,
       ],
@@ -1483,6 +1483,7 @@ function cassiopeia_site_config(?string $section = NULL): array {
         'phone' => (string) ($cta['phone'] ?? ''),
         'phone_link' => $cta_phone_link,
         'quote_url' => $quote_url,
+        'quote_label' => (string) t('Get a quote'),
         'video_path' => (string) ($cta['video_path'] ?? $theme_path . '/images/video-thuml.mp4'),
       ],
     ];
@@ -1576,9 +1577,9 @@ function cassiopeia_contact_form_settings(): array {
     'success_message' => (string) t('Thank you. We have received your request and will contact you soon.'),
     'notify_email' => (string) ($raw['notify_email'] ?? ''),
     'terms_url' => $terms_url,
-    'consent_before' => (string) ($raw['consent_before'] ?? (string) t('I agree to the')),
-    'consent_link_text' => (string) ($raw['consent_link_text'] ?? (string) t('terms of consent')),
-    'consent_after' => (string) ($raw['consent_after'] ?? (string) t('for providing information to CNC Industrial')),
+    'consent_before' => (string) t('I agree to the'),
+    'consent_link_text' => (string) t('terms of consent'),
+    'consent_after' => (string) t('for providing information to CNC Industrial'),
   ];
 }
 
@@ -3461,7 +3462,7 @@ function cassiopeia_form_alter(array &$form, FormStateInterface $form_state, $fo
 
   $form['translation_link'] = [
     '#type' => 'link',
-    '#title' => t('Dịch nội dung'),
+    '#title' => t('Translate content'),
     '#url' => Url::fromRoute('entity.node.content_translation_overview', ['node' => $node->id()]),
     '#attributes' => [
       'class' => ['button', 'button--primary', 'mb-3'],

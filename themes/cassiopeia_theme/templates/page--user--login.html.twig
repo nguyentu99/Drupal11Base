@@ -12,7 +12,7 @@
     <div class="container">
       <nav class="page-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
         <ol class="breadcrumb page-hero__breadcrumb">
-          <li class="breadcrumb-item"><a href="{{ login_page.home_url }}">{{ 'Trang chủ'|t }}</a></li>
+          <li class="breadcrumb-item"><a href="{{ login_page.home_url }}">{{ 'Home'|t }}</a></li>
           <li class="breadcrumb-item active" aria-current="page">{{ login_page.hero_title }}</li>
         </ol>
       </nav>
@@ -40,8 +40,8 @@
         {{ page.content }}
       </div>
       <div class="login-panel__links">
-        {# <a class="login-panel__link" href="{{ login_page.forgot_password_url }}">{{ 'Quên mật khẩu?'|t }}</a> #}
-        <a class="login-panel__link login-panel__link--muted" href="{{ login_page.home_url }}">{{ 'Về trang chủ'|t }}</a>
+        {# <a class="login-panel__link" href="{{ login_page.forgot_password_url }}">{{ 'Forgot password?'|t }}</a> #}
+        <a class="login-panel__link login-panel__link--muted" href="{{ login_page.home_url }}">{{ 'Back to home'|t }}</a>
       </div>
     </div>
   </div>

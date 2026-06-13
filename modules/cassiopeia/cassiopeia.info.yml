@@ -19,3 +19,5 @@ dependencies:
 # Information added by Drupal.org packaging script on 2024-10-31
 version: '11.x-1.01'
 datestamp: 1730409975
+interface translation project: cassiopeia
+interface translation server pattern: modules/cassiopeia/translations/%language.po

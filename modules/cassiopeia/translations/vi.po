@@ -1,0 +1,310 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: cassiopeia 11.x-1.01\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Access denied"
+msgstr "Không có quyền truy cập"
+
+msgid "You do not have permission to view this content. Please log in with an appropriate account or return to the home page."
+msgstr "Bạn không có quyền xem nội dung này. Vui lòng đăng nhập bằng tài khoản phù hợp hoặc quay về trang chủ."
+
+msgid "Page not found"
+msgstr "Không tìm thấy trang"
+
+msgid "The page you are looking for does not exist, has been removed, or the URL is incorrect."
+msgstr "Trang bạn đang tìm kiếm không tồn tại, đã bị xóa hoặc địa chỉ URL không chính xác."
+
+msgid "Phone"
+msgstr "Điện thoại"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Connect with us:"
+msgstr "Kết nối với chúng tôi:"
+
+msgid "Google map"
+msgstr "google map"
+
+msgid "Get a quote"
+msgstr "nhận báo giá"
+
+msgid "Full name"
+msgstr "Họ và tên"
+
+msgid "Email address"
+msgstr "Địa chỉ email"
+
+msgid "Phone number"
+msgstr "Số điện thoại"
+
+msgid "Consultation request"
+msgstr "Yêu cầu tư vấn"
+
+msgid "Enter your message…"
+msgstr "Nhập nội dung tin nhắn…"
+
+msgid "Send information"
+msgstr "Gửi thông tin"
+
+msgid "Thank you. We have received your request and will contact you soon."
+msgstr "Cảm ơn bạn. Chúng tôi đã nhận được yêu cầu và sẽ liên hệ với bạn sớm."
+
+msgid "I agree to the"
+msgstr "Tôi đồng ý với"
+
+msgid "terms of consent"
+msgstr "điều khoản chấp thuận"
+
+msgid "for providing information to CNC Industrial"
+msgstr "cung cấp thông tin của CNC Industrial"
+
+msgid "Home"
+msgstr "Trang chủ"
+
+msgid "News"
+msgstr "Tin tức"
+
+msgid "All"
+msgstr "Tất cả"
+
+msgid "No articles found in this category."
+msgstr "Không tìm thấy bài viết trong danh mục này."
+
+msgid "No articles found."
+msgstr "Không tìm thấy bài viết."
+
+msgid "Market research"
+msgstr "Nghiên cứu thị trường"
+
+msgid "Resources"
+msgstr "Tài nguyên"
+
+msgid "No market research reports found."
+msgstr "Không tìm thấy báo cáo nghiên cứu thị trường."
+
+msgid "Market reports"
+msgstr "Báo cáo thị trường"
+
+msgid "Investment handbook"
+msgstr "Cẩm nang đầu tư"
+
+msgid "No documents found."
+msgstr "Không tìm thấy tài liệu."
+
+msgid "Photo gallery"
+msgstr "Thư viện ảnh"
+
+msgid "No photo albums found."
+msgstr "Không tìm thấy album ảnh."
+
+msgid "Contact"
+msgstr "Liên hệ"
+
+msgid "Location map"
+msgstr "Bản đồ vị trí"
+
+msgid "Office location map"
+msgstr "Bản đồ vị trí văn phòng"
+
+msgid "Documents"
+msgstr "Tài liệu"
+
+msgid "Search documents…"
+msgstr "Tìm kiếm tài liệu…"
+
+msgid "Search documents"
+msgstr "Tìm kiếm tài liệu"
+
+msgid "Search"
+msgstr "Tìm kiếm"
+
+msgid "CNC Industrial industrial park"
+msgstr "Khu công nghiệp CNC Industrial"
+
+msgid "Contact us"
+msgstr "Liên hệ"
+
+msgid "Would you like more details about this project?"
+msgstr "Bạn muốn biết thêm chi tiết về dự án này?"
+
+msgid "Contact us for advice"
+msgstr "Liên hệ tư vấn"
+
+msgid "View album"
+msgstr "Xem album"
+
+msgid "Gallery pagination"
+msgstr "Phân trang thư viện ảnh"
+
+msgid "Search reports…"
+msgstr "Tìm kiếm báo cáo…"
+
+msgid "Search reports"
+msgstr "Tìm kiếm báo cáo"
+
+msgid "Report pagination"
+msgstr "Phân trang báo cáo"
+
+msgid "Search news…"
+msgstr "Tìm kiếm tin tức…"
+
+msgid "Search news"
+msgstr "Tìm kiếm tin tức"
+
+msgid "Filter news"
+msgstr "Lọc tin tức"
+
+msgid "News pagination"
+msgstr "Phân trang tin tức"
+
+msgid "CNC Industrial active network map in Vietnam"
+msgstr "Bản đồ mạng lưới hoạt động CNC Industrial tại Việt Nam"
+
+msgid "Office headquarters"
+msgstr "Trụ sở văn phòng"
+
+msgid "Projects"
+msgstr "Dự án"
+
+msgid "All locations"
+msgstr "Tất cả địa điểm"
+
+msgid "About us"
+msgstr "Về chúng tôi"
+
+msgid "Customer stories"
+msgstr "Câu chuyện khách hàng"
+
+msgid "We are a trusted partner of customers worldwide"
+msgstr "Chúng tôi là đối tác tin cậy của khách hàng trên toàn thế giới"
+
+msgid "Total area"
+msgstr "Tổng diện tích"
+
+msgid "Project name"
+msgstr "Tên dự án"
+
+msgid "Land use"
+msgstr "Mục đích sử dụng đất"
+
+msgid "Address"
+msgstr "Địa chỉ"
+
+msgid "Price"
+msgstr "Giá"
+
+msgid "Document"
+msgstr "Tài liệu"
+
+msgid "Download"
+msgstr "Tải xuống"
+
+msgid "Project gallery"
+msgstr "Thư viện dự án"
+
+msgid "Technical specifications"
+msgstr "Thông số kỹ thuật"
+
+msgid "Expand table"
+msgstr "Mở rộng bảng"
+
+msgid "Collapse table"
+msgstr "Thu gọn bảng"
+
+msgid "Location"
+msgstr "Vị trí"
+
+msgid "2D zoning"
+msgstr "Quy hoạch 2D"
+
+msgid "Infrastructure"
+msgstr "Hạ tầng"
+
+msgid "Tax incentives"
+msgstr "Ưu đãi thuế"
+
+msgid "Contact us now"
+msgstr "Liên hệ ngay"
+
+msgid "Existing customers"
+msgstr "Khách hàng hiện hữu"
+
+msgid "Contact request"
+msgstr "Yêu cầu liên hệ"
+
+msgid "Note: Fields marked with (*) are required."
+msgstr "Lưu ý: Các trường có dấu (*) là bắt buộc."
+
+msgid "Other projects"
+msgstr "Dự án khác"
+
+msgid "See more"
+msgstr "xem thêm"
+
+msgid "Services"
+msgstr "Dịch vụ"
+
+msgid "Comprehensive solutions"
+msgstr "Giải pháp toàn diện"
+
+msgid "Areas of activity"
+msgstr "Lĩnh vực hoạt động"
+
+msgid "Process"
+msgstr "Quy trình"
+
+msgid "Gallery"
+msgstr "Thư viện ảnh"
+
+msgid "Our customers"
+msgstr "Khách hàng của chúng tôi"
+
+msgid "Featured projects"
+msgstr "Dự án nổi bật"
+
+msgid "Why choose CNC Industrial?"
+msgstr "Vì sao chọn CNC Industrial?"
+
+msgid "Translate content"
+msgstr "Dịch nội dung"
+
+msgid "New contact submission from @name"
+msgstr "Liên hệ mới từ @name"
+
+msgid "Name: @name"
+msgstr "Họ tên: @name"
+
+msgid "Email: @email"
+msgstr "Email: @email"
+
+msgid "Phone: @phone"
+msgstr "Điện thoại: @phone"
+
+msgid "Message: @message"
+msgstr "Tin nhắn: @message"
+
+msgid "(empty)"
+msgstr "(trống)"
+
+msgid "Submitted: @date"
+msgstr "Gửi lúc: @date"
+
+msgid "Corporate income tax: Based on taxable income, 100% tax exemption for the first 2 years and a 50% reduction of payable tax for the following 4 years."
+msgstr "Thuế thu nhập doanh nghiệp: Căn cứ thu nhập chịu thuế, miễn 100% thuế trong 2 năm đầu và giảm 50% số thuế phải nộp trong 4 năm tiếp theo."
+
+msgid "VAT: Imported machinery, equipment, and specialized vehicles serving production are VAT-exempt if not yet manufactured domestically. Tax rate: 0%."
+msgstr "VAT: Máy móc, thiết bị, phương tiện chuyên dụng phục vụ sản xuất nhập khẩu được miễn VAT nếu chưa sản xuất trong nước. Thuế suất: 0%."
+
+msgid "Tax incentives at @project"
+msgstr "Ưu đãi thuế tại @project"
+
+msgid "Customer @num"
+msgstr "Khách hàng @num"
+
+msgid "Updated Cassiopeia interface label config to English sources for translation."
+msgstr "Đã cập nhật cấu hình nhãn giao diện Cassiopeia sang tiếng Anh để dịch."

@@ -1308,6 +1308,10 @@ a, a:hover, a:focus {
     padding: 0;
 }
 
+.cassiopeia-admin-dashboard .row>* {
+  padding: 0 5px;
+}
+
 .paragraphs-tabs-wrapper .tabledrag-toggle-weight-wrapper {
     display: none;
 }

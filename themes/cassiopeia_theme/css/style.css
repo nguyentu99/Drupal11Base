@@ -86,7 +86,7 @@
   padding: 10px 0;
   position: sticky;
   top: 0;
-  z-index: 1030;
+  z-index: 99;
   height: 108px;
 }
 .site-header__inner {

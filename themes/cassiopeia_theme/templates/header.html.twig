@@ -14,7 +14,7 @@
                         </button>
                         <span class="site-header__vsep"></span>
                         {{ include('@cassiopeia_theme/templates/header-lang-switcher.html.twig') }}
-                        <a class="site-header__cta" href="{{ path('cassiopeia.contact') }}">Đặt lịch tham quan</a>
+                        <a class="site-header__cta" href="{{ path('cassiopeia.contact') }}">{{ 'Schedule a visit'|t }}</a>
                     </div>
                     <div class="site-header__mobile-bar d-flex d-lg-none align-items-center">
                         <button type="button" class="site-header__search">
@@ -23,19 +23,19 @@
                         <span class="site-header__vsep"></span>
                         {{ include('@cassiopeia_theme/templates/header-lang-switcher.html.twig') }}
                         <button class="site-header__menu-toggle navbar-toggler border-0 shadow-none" type="button"
-                            data-bs-toggle="collapse" data-bs-target=".main-nav" aria-label="Menu">
+                            data-bs-toggle="collapse" data-bs-target=".main-nav" aria-label="{{ 'Menu'|t }}">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                     </div>
                     <nav class="navbar navbar-expand-lg p-0">
                         <div class="collapse navbar-collapse justify-content-lg-end main-nav">
                             <button type="button" class="site-header__nav-close d-lg-none" data-bs-toggle="collapse"
-                                data-bs-target=".main-nav" aria-label="Đóng menu">
+                                data-bs-target=".main-nav" aria-label="{{ 'Close menu'|t }}">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                             {{ cassiopeia_menu('main', 1, 0, true) }}
                             <div class="site-header__mobile-cta d-lg-none mt-3 pt-3 border-top">
-                                <a class="site-header__cta" href="{{ path('cassiopeia.contact') }}">Đặt lịch tham quan</a>
+                                <a class="site-header__cta" href="{{ path('cassiopeia.contact') }}">{{ 'Schedule a visit'|t }}</a>
                             </div>
                         </div>
                     </nav>

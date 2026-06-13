@@ -1,0 +1,148 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: cassiopeia_theme 5.0.1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "See more"
+msgstr "xem thêm"
+
+msgid "Previous service"
+msgstr "Dịch vụ trước"
+
+msgid "Next service"
+msgstr "Dịch vụ tiếp theo"
+
+msgid "Country"
+msgstr "Quốc gia"
+
+msgid "Customers"
+msgstr "Khách hàng"
+
+msgid "Latest news"
+msgstr "Tin tức cập nhật"
+
+msgid "Certifications"
+msgstr "Chứng nhận"
+
+msgid "Schedule a visit"
+msgstr "Đặt lịch tham quan"
+
+msgid "Menu"
+msgstr "Menu"
+
+msgid "Close menu"
+msgstr "Đóng menu"
+
+msgid "Download company profile"
+msgstr "Tải hồ sơ năng lực"
+
+msgid "A member of CNCTech Group"
+msgstr "một thành viên của CNCTech Group"
+
+msgid "Copyright © @year CNC Industrial. All rights reserved."
+msgstr "Copyright © @year CNC Industrial. All rights reserved."
+
+msgid "Privacy policy"
+msgstr "Chính sách bảo mật"
+
+msgid "Home"
+msgstr "Trang chủ"
+
+msgid "Back to home"
+msgstr "Về trang chủ"
+
+msgid "Log in"
+msgstr "Đăng nhập"
+
+msgid "Contact support"
+msgstr "Liên hệ hỗ trợ"
+
+msgid "Forgot password?"
+msgstr "Quên mật khẩu?"
+
+msgid "Breadcrumb"
+msgstr "Đường dẫn"
+
+msgid "Footer"
+msgstr "Chân trang"
+
+msgid "Skip to main content"
+msgstr "Chuyển đến nội dung chính"
+
+msgid "Close"
+msgstr "Đóng"
+
+msgid "Slide @num"
+msgstr "Slide @num"
+
+msgid "Previous image"
+msgstr "Ảnh trước"
+
+msgid "Next image"
+msgstr "Ảnh tiếp theo"
+
+msgid "Gallery pagination"
+msgstr "Phân trang thư viện ảnh"
+
+msgid "Play video"
+msgstr "Phát video"
+
+msgid "YouTube video"
+msgstr "Video YouTube"
+
+msgid "Filter locations"
+msgstr "Lọc địa điểm"
+
+msgid "Document table of contents"
+msgstr "Mục lục tài liệu"
+
+msgid "Download"
+msgstr "Tải xuống"
+
+msgid "Related documents"
+msgstr "Tài liệu liên quan"
+
+msgid "Share"
+msgstr "Chia sẻ"
+
+msgid "Share report"
+msgstr "Chia sẻ báo cáo"
+
+msgid "Share on Facebook"
+msgstr "Chia sẻ lên Facebook"
+
+msgid "Share on LinkedIn"
+msgstr "Chia sẻ lên LinkedIn"
+
+msgid "Copy link"
+msgstr "Sao chép liên kết"
+
+msgid "Featured news"
+msgstr "Tin nổi bật"
+
+msgid "Related reports"
+msgstr "Báo cáo liên quan"
+
+msgid "Related report @num"
+msgstr "Báo cáo liên quan @num"
+
+msgid "Share article"
+msgstr "Chia sẻ bài viết"
+
+msgid "Related news"
+msgstr "Tin tức liên quan"
+
+msgid "Related news @num"
+msgstr "Tin liên quan @num"
+
+msgid "Log in to your account"
+msgstr "Đăng nhập tài khoản"
+
+msgid "Access the CNC Industrial content administration area."
+msgstr "Truy cập khu vực quản trị nội dung CNC Industrial."
+
+msgid "Enter your credentials to continue."
+msgstr "Nhập thông tin đăng nhập để tiếp tục."

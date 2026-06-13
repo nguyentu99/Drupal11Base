@@ -76,13 +76,13 @@
                             <img width="313" height="54" src="/themes/cassiopeia_theme/images/cnc-logo.png" alt="CNC Industrial">
                         </a>
                         <a class="site-footer__download d-inline-flex mt-3" href="{{ base_path }}#">
-                            Tải hồ sơ năng lực
+                            {{ 'Download company profile'|t }}
                             <i class="fa-regular fa-download" aria-hidden="true"></i>
                         </a>
                     </div>
                     <div class="col-md-6 col-lg-auto text-md-end">
                         <div class="site-footer__brand-right d-inline-flex flex-column align-items-md-end gap-3">
-                            <p class="site-footer__group-label mb-0">một thành viên của CNCTech Group</p>
+                            <p class="site-footer__group-label mb-0">{{ 'A member of CNCTech Group'|t }}</p>
                             <img width="186" height="48" class="site-footer__group-logo" src="/themes/cassiopeia_theme/images/logo-red.png"
                                 alt="CNCTech Group">
                         </div>
@@ -91,10 +91,10 @@
                 {{ cassiopeia_menu('main', 1, 0, true, 'menu__main__footer') }}
                 <div class="row align-items-center justify-content-between g-3">
                     <div class="col-md">
-                        <p class="site-footer__copy mb-0">Copyright © 2026 CNC Industrial. All rights reserved.</p>
+                        <p class="site-footer__copy mb-0">{{ 'Copyright © @year CNC Industrial. All rights reserved.'|t({'@year': '2026'}) }}</p>
                     </div>
                     <div class="col-md-auto">
-                        <a class="site-footer__privacy" href="{{ base_path }}#">Chính sách bảo mật</a>
+                        <a class="site-footer__privacy" href="{{ base_path }}#">{{ 'Privacy policy'|t }}</a>
                     </div>
                 </div>
             </div>

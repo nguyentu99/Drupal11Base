@@ -1,10 +1,10 @@
 contact_strip:
-  phone_label: 'Điện thoại'
+  phone_label: 'Phone'
   phone: '(+84) 866 505 509'
   phone_link: '+84866505509'
   email_label: 'Email'
   email: 'hello@cisgroup.vn'
-  social_label: 'Kết nối với chúng tôi:'
+  social_label: 'Connect with us:'
   facebook_url: ''
   youtube_url: ''
   linkedin_url: ''
@@ -50,6 +50,6 @@ contact_page:
 contact_form:
   notify_email: 'hello@cisgroup.vn'
   terms_url: ''
-  consent_before: 'Tôi đồng ý với'
-  consent_link_text: 'điều khoản chấp thuận'
-  consent_after: 'cung cấp thông tin của CNC Industrial'
+  consent_before: 'I agree to the'
+  consent_link_text: 'terms of consent'
+  consent_after: 'for providing information to CNC Industrial'

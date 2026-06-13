@@ -23,7 +23,9 @@ libraries-override:
         css/components/bootstrap-icons.css: false
 
 version: '5.0.1'
-#project: 'cassiopeia'
+project: 'cassiopeia_theme'
 datestamp: 1726511779
+interface translation project: cassiopeia_theme
+interface translation server pattern: themes/cassiopeia_theme/translations/%language.po
 
 

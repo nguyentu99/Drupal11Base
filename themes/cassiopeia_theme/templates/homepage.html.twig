@@ -97,7 +97,7 @@
                                 <h3 class="services-showcase__item-title">{{ service.title_html|raw }}</h3>
                                 <p class="services-showcase__item-desc">{{ service.description }}</p>
                                 <span class="services-showcase__item-rule"></span>
-                                <a class="btn-see-more" href="{{ service.url }}">xem thêm<span
+                                <a class="btn-see-more" href="{{ service.url }}">{{ 'See more'|t }}<span
                                         class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
                             </div>
                         </article>
@@ -107,11 +107,11 @@
             </div>
             <div class="services-showcase__nav">
                 <button type="button" class="services-showcase__nav-btn services-showcase__nav-btn--prev is-disabled"
-                    aria-label="Dịch vụ trước">
+                    aria-label="{{ 'Previous service'|t }}">
                     <img width="48" height="48" src="/themes/cassiopeia_theme/images/svg/services-arrow-left.svg" alt="">
                 </button>
                 <button type="button" class="services-showcase__nav-btn services-showcase__nav-btn--next"
-                    aria-label="Dịch vụ tiếp theo">
+                    aria-label="{{ 'Next service'|t }}">
                     <img width="48" height="48" src="/themes/cassiopeia_theme/images/svg/services-arrow-left.svg" alt="">
                 </button>
             </div>
@@ -144,7 +144,7 @@
                         {{ featured.address }}
                     </p>
                 </div>
-                <a class="btn-see-more" href="{{ featured.url }}">xem thêm<span
+                <a class="btn-see-more" href="{{ featured.url }}">{{ 'See more'|t }}<span
                         class="btn-see-more__icon"><i class="fa-solid fa-arrow-right"></i></span></a>
             </div>
         </article>
@@ -161,7 +161,7 @@
                                 <img width="20" height="20" src="{{ project.location_icon }}" alt="">
                                 {{ project.address }}
                             </p>
-                            <span class="btn-see-more btn-see-more--solid project-card__btn">xem thêm<span
+                            <span class="btn-see-more btn-see-more--solid project-card__btn">{{ 'See more'|t }}<span
                                     class="btn-see-more__icon btn-see-more__icon--sm"><i
                                         class="fa-solid fa-arrow-right"></i></span></span>
                         </div>
@@ -203,8 +203,8 @@
                         <table class="table mb-0">
                             <thead>
                                 <tr>
-                                    <th scope="col">Quốc gia</th>
-                                    <th scope="col" class="text-center">Khách hàng</th>
+                                    <th scope="col">{{ 'Country'|t }}</th>
+                                    <th scope="col" class="text-center">{{ 'Customers'|t }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -308,7 +308,7 @@
     {% if homepage.news is not empty %}
     <div class="section section--gray section--news">
         <div class="container">
-            <h2 class="t-heading-1 section--news__title">Tin tức cập nhật</h2>
+            <h2 class="t-heading-1 section--news__title">{{ 'Latest news'|t }}</h2>
             <div class="section--news__carousel-wrap">
                 <div class="news-carousel owl-carousel">
                     {% for item in homepage.news %}
@@ -362,7 +362,7 @@
                     </a>
                     {% endif %}
                     <a class="cta-btn cta-btn--quote" href="{{ cta.quote_url }}">
-                        <span class="cta-btn__label">nhận báo giá</span>
+                        <span class="cta-btn__label">{{ cta.quote_label }}</span>
                         <span class="cta-btn__icon"><i class="fa-solid fa-arrow-right"></i></span>
                     </a>
                 </div>
@@ -371,7 +371,7 @@
     </section>
 
     {% if homepage.certifications is not empty %}
-    <section class="certifications" aria-label="Chứng nhận">
+    <section class="certifications" aria-label="{{ 'Certifications'|t }}">
         <div class="container">
             <ul class="certifications__list">
                 {% for cert in homepage.certifications %}

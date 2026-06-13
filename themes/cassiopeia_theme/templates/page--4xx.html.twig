@@ -11,7 +11,7 @@
   <div class="container">
     {# <nav class="error-page__breadcrumb" aria-label="{{ 'Breadcrumb'|t }}">
       <ol class="breadcrumb error-page__breadcrumb-list">
-        <li class="breadcrumb-item"><a href="{{ error_page.home_url }}">{{ 'Trang chủ'|t }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ error_page.home_url }}">{{ 'Home'|t }}</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{ error_page.breadcrumb_label }}</li>
       </ol>
     </nav> #}
@@ -32,16 +32,16 @@
 
       <div class="error-page__actions">
         <a class="btn-see-more btn-see-more--solid error-page__action" href="{{ error_page.home_url }}">
-          {{ 'Về trang chủ'|t }}
+          {{ 'Back to home'|t }}
           <span class="btn-see-more__icon btn-see-more__icon--sm"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
         </a>
         {% if error_page.show_login %}
           <a class="btn-see-more error-page__action error-page__action--secondary" href="{{ error_page.login_url }}">
-            {{ 'Đăng nhập'|t }}
+            {{ 'Log in'|t }}
             <span class="btn-see-more__icon btn-see-more__icon--sm"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
           </a>
         {% endif %}
-        <a class="error-page__link" href="{{ error_page.contact_url }}">{{ 'Liên hệ hỗ trợ'|t }}</a>
+        <a class="error-page__link" href="{{ error_page.contact_url }}">{{ 'Contact support'|t }}</a>
       </div>
     </div>
   </div>

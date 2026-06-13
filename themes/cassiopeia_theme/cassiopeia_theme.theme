@@ -43,10 +43,10 @@ function cassiopeia_theme_preprocess_page(array &$variables): void {
     $variables['#attached']['library'][] = 'cassiopeia_theme/login-page';
     $variables['login_page'] = [
       'hero_image' => '/' . $theme_path . '/images/services/operations/hero-banner.jpg',
-      'hero_title' => (string) t('Đăng nhập'),
-      'hero_lead' => (string) t('Truy cập khu vực quản trị nội dung CNC Industrial.'),
-      'panel_title' => (string) t('Đăng nhập tài khoản'),
-      'panel_lead' => (string) t('Nhập thông tin đăng nhập để tiếp tục.'),
+      'hero_title' => (string) t('Log in'),
+      'hero_lead' => (string) t('Access the CNC Industrial content administration area.'),
+      'panel_title' => (string) t('Log in to your account'),
+      'panel_lead' => (string) t('Enter your credentials to continue.'),
       'forgot_password_url' => Url::fromRoute('user.pass', [], ['language' => $language])->toString(),
       'home_url' => Url::fromRoute('<front>', [], ['language' => $language])->toString(),
     ];
