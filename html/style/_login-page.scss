@@ -1,0 +1,246 @@
+// ——— Login ———
+
+.page-hero--login {
+    .page-hero__content {
+        bottom: 32px;
+    }
+
+    .page-hero__lead {
+        @include Mona-Medium();
+        color: #fff;
+        font-size: 18px;
+        line-height: 26px;
+        margin: 0;
+        max-width: 624px;
+    }
+}
+
+.login-page {
+    background: linear-gradient(180deg, #f3f4f4 0%, #fff 100%);
+    padding: 64px 0 80px;
+}
+
+.login-panel {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 34, 109, 0.15);
+    margin: 0 auto;
+    max-width: 480px;
+    overflow: hidden;
+    padding: 40px 32px 32px;
+
+    &__brand {
+        margin-bottom: 24px;
+        text-align: center;
+    }
+
+    &__logo {
+        display: inline-block;
+        height: auto;
+        max-width: 100%;
+    }
+
+    &__intro {
+        margin-bottom: 28px;
+        text-align: center;
+    }
+
+    &__title {
+        @include Mona-Medium();
+        color: $black;
+        font-size: 28px;
+        line-height: 36px;
+        margin: 0 0 8px;
+    }
+
+    &__lead {
+        @include Mona-Regular();
+        color: #434343;
+        font-size: 16px;
+        line-height: 24px;
+        margin: 0;
+    }
+
+    &__form {
+        margin-bottom: 20px;
+    }
+
+    &__links {
+        border-top: 1px solid rgba(216, 216, 216, 0.5);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 20px;
+        text-align: center;
+    }
+
+    &__link {
+        @include Mona-Medium();
+        color: $green;
+        font-size: 15px;
+        line-height: 22px;
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+            color: darken($green, 8%);
+            text-decoration: underline;
+        }
+
+        &--muted {
+            color: #595959;
+
+            &:hover,
+            &:focus-visible {
+                color: $black;
+            }
+        }
+    }
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .form-item {
+        margin: 0;
+    }
+
+    .form-label,
+    label {
+        @include Mona-Medium();
+        color: $black;
+        display: block;
+        font-size: 16px;
+        line-height: 24px;
+        margin-bottom: 6px;
+    }
+
+    &__required {
+        color: $red;
+    }
+
+    .form-label.form-required::after,
+    label.form-required::after {
+        background: none;
+        content: '*';
+        color: $red;
+        display: inline;
+        font-size: 16px;
+        height: auto;
+        line-height: inherit;
+        margin: 0 0 0 4px;
+        vertical-align: baseline;
+        width: auto;
+    }
+
+    .form-control,
+    input[type='text'],
+    input[type='password'] {
+        @include Mona-Regular();
+        background: #fff;
+        border: 1px solid rgba(216, 216, 216, 0.5);
+        border-radius: 8px;
+        color: $black;
+        font-size: 16px;
+        line-height: 24px;
+        min-height: 48px;
+        padding: 12px 16px;
+        width: 100%;
+
+        &:focus {
+            border-color: $green;
+            box-shadow: 0 0 0 2px rgba(6, 96, 66, 0.12);
+            outline: 0;
+        }
+    }
+
+    .form-actions,
+    .login-form__actions {
+        align-self: stretch;
+        margin: 12px 0 0;
+        width: 100%;
+    }
+}
+
+.login-form__submit {
+    align-items: center;
+    background: $green;
+    border: 0;
+    border-radius: 40px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: 'Mona-Medium', sans-serif;
+    font-size: 16px;
+    gap: 8px;
+    justify-content: center;
+    line-height: 24px;
+    min-height: 48px;
+    padding: 8px 8px 8px 20px;
+    text-transform: uppercase;
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.3s ease;
+    width: 100%;
+
+    &:hover,
+    &:focus-visible {
+        background: darken($green, 8%);
+        box-shadow: 0 6px 20px rgba(6, 96, 66, 0.45);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    &-text {
+        flex: 1;
+        text-align: center;
+    }
+
+    &-icon {
+        align-items: center;
+        background: #fff;
+        border-radius: 50%;
+        color: $red;
+        display: inline-flex;
+        flex-shrink: 0;
+        height: 32px;
+        justify-content: center;
+        transition: transform 0.3s ease;
+        width: 32px;
+
+        i {
+            font-size: 14px;
+        }
+    }
+
+    &:hover &-icon,
+    &:focus-visible &-icon {
+        transform: scale(1.08);
+    }
+}
+
+.login-form {
+    .messages,
+    .alert {
+        margin: 0;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .login-page {
+        padding: 40px 0 56px;
+    }
+
+    .login-panel {
+        padding: 32px 20px 24px;
+
+        &__title {
+            font-size: 24px;
+            line-height: 32px;
+        }
+    }
+}

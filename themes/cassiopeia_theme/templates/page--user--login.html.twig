@@ -1,0 +1,50 @@
+{#
+/**
+ * @file
+ * Login page layout.
+ */
+#}
+{# {{ include('@cassiopeia_theme/templates/header.html.twig') }} #}
+<div class="site-status-messages">{{ page.status_messages }}</div>
+
+<div class="page-hero page-hero--login">
+  <div class="page-hero__content">
+    <div class="container">
+      <nav class="page-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
+        <ol class="breadcrumb page-hero__breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ login_page.home_url }}">{{ 'Trang chủ'|t }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ login_page.hero_title }}</li>
+        </ol>
+      </nav>
+      <h1 class="page-hero__title">{{ login_page.hero_title }}</h1>
+      {% if login_page.hero_lead %}
+        <p class="page-hero__lead">{{ login_page.hero_lead }}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<main id="main-content" class="login-page">
+  <div class="container">
+    <div class="login-panel">
+      <div class="login-panel__brand">
+        <img class="login-panel__logo" src="/themes/cassiopeia_theme/images/cnc-logo.png" alt="CNC Industrial" width="232" height="40">
+      </div>
+      <div class="login-panel__intro">
+        <h2 class="login-panel__title">{{ login_page.panel_title }}</h2>
+        {% if login_page.panel_lead %}
+          <p class="login-panel__lead">{{ login_page.panel_lead }}</p>
+        {% endif %}
+      </div>
+      <div class="login-panel__form">
+        {{ page.content }}
+      </div>
+      <div class="login-panel__links">
+        {# <a class="login-panel__link" href="{{ login_page.forgot_password_url }}">{{ 'Quên mật khẩu?'|t }}</a> #}
+        <a class="login-panel__link login-panel__link--muted" href="{{ login_page.home_url }}">{{ 'Về trang chủ'|t }}</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+{# {{ include('@cassiopeia_theme/templates/footer.html.twig') }} #}

@@ -7,6 +7,8 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\taxonomy\TermInterface;
 
 /**
@@ -15,6 +17,9 @@ use Drupal\taxonomy\TermInterface;
 function cassiopeia_theme_preprocess_html(array &$variables): void {
   if (!empty($variables['is_front'])) {
     $variables['attributes']['class'][] = 'path-frontpage';
+  }
+  if (\Drupal::routeMatch()->getRouteName() === 'user.login') {
+    $variables['attributes']['class'][] = 'path-user-login';
   }
 }
 
@@ -25,6 +30,21 @@ function cassiopeia_theme_preprocess_page(array &$variables): void {
   // Static homepage markup — do not render Drupal frontpage view in content.
   if (!empty($variables['is_front'])) {
     $variables['page']['content'] = [];
+  }
+
+  if (\Drupal::routeMatch()->getRouteName() === 'user.login') {
+    $language = \Drupal::languageManager()->getCurrentLanguage();
+    $theme_path = \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme');
+    $variables['#attached']['library'][] = 'cassiopeia_theme/login-page';
+    $variables['login_page'] = [
+      'hero_image' => '/' . $theme_path . '/images/services/operations/hero-banner.jpg',
+      'hero_title' => (string) t('Đăng nhập'),
+      'hero_lead' => (string) t('Truy cập khu vực quản trị nội dung CNC Industrial.'),
+      'panel_title' => (string) t('Đăng nhập tài khoản'),
+      'panel_lead' => (string) t('Nhập thông tin đăng nhập để tiếp tục.'),
+      'forgot_password_url' => Url::fromRoute('user.pass', [], ['language' => $language])->toString(),
+      'home_url' => Url::fromRoute('<front>', [], ['language' => $language])->toString(),
+    ];
   }
 
   // Header menu + language switcher cache metadata.
@@ -41,6 +61,42 @@ function cassiopeia_theme_preprocess_page(array &$variables): void {
     'config:configurable_language_list',
     'config:language.negotiation',
   ]);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user login.
+ */
+function cassiopeia_theme_form_user_login_form_alter(array &$form, FormStateInterface $form_state, $form_id): void {
+  $form['#attributes']['class'][] = 'login-form';
+
+  foreach (['name', 'pass'] as $field_name) {
+    if (!isset($form[$field_name])) {
+      continue;
+    }
+    $form[$field_name]['#attributes']['class'][] = 'form-control';
+    $form[$field_name]['#attributes']['class'][] = 'login-form__input';
+    $form[$field_name]['#wrapper_attributes']['class'][] = 'login-form__field';
+    $form[$field_name]['#label_attributes']['class'][] = 'form-label';
+  }
+
+  if (isset($form['actions']['submit'])) {
+    $form['actions']['submit']['#attributes']['class'] = ['login-form__submit'];
+    $form['actions']['#attributes']['class'][] = 'login-form__actions';
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for input elements.
+ */
+function cassiopeia_theme_theme_suggestions_input_alter(array &$suggestions, array $variables): void {
+  $element = $variables['element'];
+  if (($element['#type'] ?? '') !== 'submit') {
+    return;
+  }
+  $classes = $element['#attributes']['class'] ?? [];
+  if (in_array('login-form__submit', $classes, TRUE)) {
+    array_unshift($suggestions, 'input__submit__login_form__submit');
+  }
 }
 
 /**

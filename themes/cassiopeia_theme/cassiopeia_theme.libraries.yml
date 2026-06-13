@@ -80,6 +80,14 @@ partner-video:
     - core/once
     - cassiopeia/bootstrap
 
+login-page:
+  version: VERSION
+  css:
+    component:
+      css/login-page.css: {}
+  dependencies:
+    - cassiopeia_theme/global-styling
+
 global-styling:
   version: VERSION
   dependencies:

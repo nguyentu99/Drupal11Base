@@ -1,0 +1,10 @@
+{#
+/**
+ * @file
+ * Login submit button with site CTA styling.
+ */
+#}
+<button{{ attributes.addClass('login-form__submit') }} type="submit">
+  <span class="login-form__submit-text">{{ safe_value_label|raw }}</span>
+  <span class="login-form__submit-icon" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>
+</button>{{ children }}
