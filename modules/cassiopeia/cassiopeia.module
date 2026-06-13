@@ -1372,6 +1372,42 @@ function cassiopeia_contact_url(array $options = []): string {
 }
 
 /**
+ * Builds variables for themed 403/404 error pages.
+ */
+function cassiopeia_error_page_variables(int $status_code): array {
+  $language = \Drupal::languageManager()->getCurrentLanguage();
+  $home_url = Url::fromRoute('<front>', [], ['language' => $language])->toString();
+  $contact_url = cassiopeia_contact_url(['language' => $language]);
+  $login_url = Url::fromRoute('user.login', [], ['language' => $language])->toString();
+
+  if ($status_code === 403) {
+    return [
+      'code' => 403,
+      'tone' => 'denied',
+      'title' => (string) t('Không có quyền truy cập'),
+      'message' => (string) t('Bạn không có quyền xem nội dung này. Vui lòng đăng nhập bằng tài khoản phù hợp hoặc quay về trang chủ.'),
+      'breadcrumb_label' => (string) t('Truy cập bị từ chối'),
+      'home_url' => $home_url,
+      'contact_url' => $contact_url,
+      'login_url' => $login_url,
+      'show_login' => TRUE,
+    ];
+  }
+
+  return [
+    'code' => 404,
+    'tone' => 'not-found',
+    'title' => (string) t('Không tìm thấy trang'),
+    'message' => (string) t('Trang bạn đang tìm kiếm không tồn tại, đã bị xóa hoặc địa chỉ URL không chính xác.'),
+    'breadcrumb_label' => (string) t('Không tìm thấy trang'),
+    'home_url' => $home_url,
+    'contact_url' => $contact_url,
+    'login_url' => $login_url,
+    'show_login' => FALSE,
+  ];
+}
+
+/**
  * Returns a public URL for a config-managed file ID.
  */
 function cassiopeia_config_file_url(int $fid, ?string $fallback = NULL): ?string {
@@ -3202,12 +3238,12 @@ function cassiopeia_home_config_data(?NodeInterface $node, string $theme_path): 
 
   $services_lead = '';
   if ($node->hasField('field_services_lead') && !$node->get('field_services_lead')->isEmpty()) {
-    $services_lead = (string) $node->get('field_services_lead')->value;
+    $services_lead = (string) $node->get('field_services_lead')->processed;
   }
 
   $projects_lead = '';
   if ($node->hasField('field_projects_lead') && !$node->get('field_projects_lead')->isEmpty()) {
-    $projects_lead = (string) $node->get('field_projects_lead')->value;
+    $projects_lead = (string) $node->get('field_projects_lead')->processed;
   }
 
   $partner_stats = [];

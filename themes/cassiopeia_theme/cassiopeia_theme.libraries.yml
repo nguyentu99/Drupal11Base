@@ -88,6 +88,14 @@ login-page:
   dependencies:
     - cassiopeia_theme/global-styling
 
+error-page:
+  version: VERSION
+  css:
+    component:
+      css/error-page.css: {}
+  dependencies:
+    - cassiopeia_theme/global-styling
+
 global-styling:
   version: VERSION
   dependencies:

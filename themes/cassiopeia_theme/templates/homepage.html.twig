@@ -70,7 +70,7 @@
                 <h2 class="t-heading-1">{{ homepage.services_heading.title }}</h2>
                 {% endif %}
                 {% if homepage.services_heading is defined and homepage.services_heading.lead %}
-                <p class="t-body">{{ homepage.services_heading.lead }}</p>
+                <div class="t-body">{{ homepage.services_heading.lead|raw }}</div>
                 {% endif %}
             </div>
         </div>
@@ -117,7 +117,7 @@
                 <h2 class="t-heading-1">{{ homepage.projects_heading.title|nl2br }}</h2>
                 {% endif %}
                 {% if homepage.projects_heading is defined and homepage.projects_heading.lead %}
-                <p class="t-body">{{ homepage.projects_heading.lead }}</p>
+                <div class="t-body">{{ homepage.projects_heading.lead|raw }}</div>
                 {% endif %}
             </div>
         </div>

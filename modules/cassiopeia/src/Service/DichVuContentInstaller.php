@@ -15,6 +15,45 @@ use Drupal\paragraphs\Entity\ParagraphsType;
 class DichVuContentInstaller {
 
   /**
+   * Default image field instance settings.
+   *
+   * SVG is allowed because imported service icons use vector assets.
+   *
+   * @var array<string, mixed>
+   */
+  private const IMAGE_FIELD_SETTINGS = [
+    'file_directory' => '[date:custom:Y]-[date:custom:m]',
+    'file_extensions' => 'png gif jpg jpeg webp svg',
+    'max_filesize' => '',
+    'max_resolution' => '',
+    'min_resolution' => '',
+    'alt_field' => TRUE,
+    'alt_field_required' => FALSE,
+    'title_field' => FALSE,
+    'title_field_required' => FALSE,
+    'default_image' => [
+      'uuid' => NULL,
+      'alt' => '',
+      'title' => '',
+      'width' => NULL,
+      'height' => NULL,
+    ],
+  ];
+
+  /**
+   * Paragraph and node image fields that may store SVG icons or logos.
+   *
+   * @var string[]
+   */
+  private const SVG_IMAGE_FIELD_IDS = [
+    'paragraph.linh_vuc_hoat_dong.field_anh',
+    'paragraph.buoc_quy_trinh.field_anh',
+    'paragraph.muc_noi_bat.field_anh',
+    'paragraph.khoi_noi_bat.field_anh',
+    'node.dich_vu.field_anh',
+  ];
+
+  /**
    * Installs or updates service detail content structures.
    */
   public function install(): void {
@@ -24,6 +63,42 @@ class DichVuContentInstaller {
     $this->installNodeType();
     $this->installNodeFields();
     $this->installDisplays();
+    $this->configureSvgImageFields();
+  }
+
+  /**
+   * Allows SVG uploads on service icon and logo image fields.
+   *
+   * @return string[]
+   *   Status messages.
+   */
+  public function configureSvgImageFields(): array {
+    $messages = [];
+
+    foreach (self::SVG_IMAGE_FIELD_IDS as $field_id) {
+      $field = FieldConfig::load($field_id);
+      if (!$field) {
+        continue;
+      }
+
+      $settings = $field->getSettings();
+      $extensions = preg_split('/\s+/', trim((string) ($settings['file_extensions'] ?? '')), -1, PREG_SPLIT_NO_EMPTY);
+      if (in_array('svg', $extensions, TRUE)) {
+        continue;
+      }
+
+      $extensions[] = 'svg';
+      $settings['file_extensions'] = implode(' ', $extensions);
+      $field->setSettings($settings);
+      $field->save();
+      $messages[] = (string) t('Allowed SVG uploads on @field.', ['@field' => $field_id]);
+    }
+
+    if ($messages === []) {
+      $messages[] = (string) t('Service image fields already allow SVG uploads.');
+    }
+
+    return $messages;
   }
 
   /**
@@ -549,8 +624,12 @@ class DichVuContentInstaller {
       'translatable' => TRUE,
     ];
 
+    if (($info['type'] ?? '') === 'image') {
+      $values['settings'] = self::IMAGE_FIELD_SETTINGS;
+    }
+
     if (!empty($info['settings'])) {
-      $values['settings'] = $info['settings'];
+      $values['settings'] = array_merge($values['settings'] ?? [], $info['settings']);
     }
 
     FieldConfig::create($values)->save();

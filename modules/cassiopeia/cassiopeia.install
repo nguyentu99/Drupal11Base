@@ -306,3 +306,13 @@ function cassiopeia_update_11019(): string {
   $installer->configureMarketResearchDisplays();
   return (string) t('Configured cropped image styles for news, services, handbook and market research.');
 }
+
+/**
+ * Allows SVG uploads on Dịch vụ icon and logo image fields.
+ */
+function cassiopeia_update_11020(): string {
+  /** @var \Drupal\cassiopeia\Service\DichVuContentInstaller $installer */
+  $installer = \Drupal::service('cassiopeia.dich_vu_content_installer');
+  $messages = $installer->configureSvgImageFields();
+  return implode(' ', $messages);
+}

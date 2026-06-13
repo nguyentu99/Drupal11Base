@@ -10,6 +10,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\taxonomy\TermInterface;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
@@ -20,6 +21,10 @@ function cassiopeia_theme_preprocess_html(array &$variables): void {
   }
   if (\Drupal::routeMatch()->getRouteName() === 'user.login') {
     $variables['attributes']['class'][] = 'path-user-login';
+  }
+  $error_code = cassiopeia_theme_error_status_code();
+  if ($error_code !== NULL) {
+    $variables['attributes']['class'][] = 'path-error-' . $error_code;
   }
 }
 
@@ -47,6 +52,13 @@ function cassiopeia_theme_preprocess_page(array &$variables): void {
     ];
   }
 
+  $error_code = cassiopeia_theme_error_status_code();
+  if ($error_code !== NULL) {
+    $variables['#attached']['library'][] = 'cassiopeia_theme/error-page';
+    $variables['error_page'] = cassiopeia_error_page_variables($error_code);
+    $variables['page']['content'] = [];
+  }
+
   // Header menu + language switcher cache metadata.
   $variables['#cache']['contexts'] = Cache::mergeContexts($variables['#cache']['contexts'] ?? [], [
     'languages:language_interface',
@@ -61,6 +73,27 @@ function cassiopeia_theme_preprocess_page(array &$variables): void {
     'config:configurable_language_list',
     'config:language.negotiation',
   ]);
+}
+
+/**
+ * Resolves the HTTP error status code for themed 403/404 pages.
+ */
+function cassiopeia_theme_error_status_code(): ?int {
+  $request = \Drupal::request();
+  $exception = $request->attributes->get('exception');
+  if ($exception instanceof HttpExceptionInterface) {
+    $code = $exception->getStatusCode();
+    if (in_array($code, [403, 404], TRUE)) {
+      return $code;
+    }
+  }
+
+  $route = \Drupal::routeMatch()->getRouteName();
+  return match ($route) {
+    'system.403' => 403,
+    'system.404' => 404,
+    default => NULL,
+  };
 }
 
 /**
