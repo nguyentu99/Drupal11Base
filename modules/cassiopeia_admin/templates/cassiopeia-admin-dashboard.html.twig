@@ -38,31 +38,4 @@
       {% endfor %}
     </div>
   {% endif %}
-
-  {% if link_groups %}
-    <div class="row">
-      {% for group in link_groups %}
-        <div class="col-lg-4 col-md-6 col-12 mb-3">
-          <div class="card card-outline card-primary h-100">
-            <div class="card-header">
-              <h3 class="card-title mb-0">{{ group.title }}</h3>
-            </div>
-            <div class="card-body p-0">
-              <ul class="nav flex-column cassiopeia-admin-dashboard__links">
-                {% for link in group.links %}
-                  <li class="nav-item">
-                    <a href="{{ link.url }}" class="nav-link">{{ link.title }}</a>
-                  </li>
-                {% endfor %}
-              </ul>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <div class="alert alert-info mb-0">
-      {{ 'No quick links configured yet. Add items in the administrator sidebar menu.'|t }}
-    </div>
-  {% endif %}
 </div>

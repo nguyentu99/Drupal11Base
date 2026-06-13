@@ -2019,11 +2019,15 @@ function cassiopeia_projects_teaser_data(NodeInterface $node): array {
   $image_url = $fallback_image;
   $image_alt = $node->label();
 
-  if ($node->hasField('field_anh') && !$node->get('field_anh')->isEmpty()) {
-    $image = cassiopeia_image_field_item_data($node->get('field_anh')->first());
+  foreach (['field_image', 'field_anh'] as $field_name) {
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+    $image = cassiopeia_image_field_item_data($node->get($field_name)->first());
     if ($image) {
       $image_url = $image['url'];
       $image_alt = $image['alt'] ?: $image_alt;
+      break;
     }
   }
 
@@ -2285,6 +2289,16 @@ function cassiopeia_projects_customer_logos(NodeInterface $node): array {
  * @return array{hero_image: string, hero_image_alt: string}
  */
 function cassiopeia_projects_hero_image(NodeInterface $node, LanguageInterface $language): array {
+  if ($node->hasField('field_banner') && !$node->get('field_banner')->isEmpty()) {
+    $image = cassiopeia_image_field_item_data($node->get('field_banner')->first());
+    if ($image) {
+      return [
+        'hero_image' => $image['url'],
+        'hero_image_alt' => $image['alt'] ?: $node->label(),
+      ];
+    }
+  }
+
   $banner = cassiopeia_page_banner('projects', $node->label(), $language);
   $banner_node = cassiopeia_banner_index($language)['projects'] ?? NULL;
   if ($banner_node instanceof NodeInterface) {
@@ -2292,16 +2306,6 @@ function cassiopeia_projects_hero_image(NodeInterface $node, LanguageInterface $
       'hero_image' => $banner['hero_image'],
       'hero_image_alt' => $banner['hero_image_alt'],
     ];
-  }
-
-  if ($node->hasField('field_anh') && !$node->get('field_anh')->isEmpty()) {
-    $image = cassiopeia_image_field_item_data($node->get('field_anh')->first());
-    if ($image) {
-      return [
-        'hero_image' => $image['url'],
-        'hero_image_alt' => $image['alt'] ?: $node->label(),
-      ];
-    }
   }
 
   return [
