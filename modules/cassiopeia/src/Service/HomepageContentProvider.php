@@ -40,11 +40,15 @@ class HomepageContentProvider {
 
     $home_config_node = cassiopeia_home_config_node($language);
     $config = cassiopeia_home_config_data($home_config_node, $theme_path);
+    $services = $this->buildServices($language);
 
     return array_merge($config, [
       'hero' => $this->buildHero($language),
-      'services' => $this->buildServices($theme_path, $language),
-      'services_default_bg' => $theme_path . '/images/services-bg.jpg',
+      'services' => $services,
+      'services_default_bg' => $services[0]['bg'] ?? cassiopeia_theme_image_styled_url(
+        'services-bg.jpg',
+        cassiopeia_projects_image_style('services_showcase'),
+      ),
       'projects' => $this->buildProjects($theme_path, $language),
       'news' => $this->buildNews($theme_path, $language),
     ]);
@@ -67,7 +71,7 @@ class HomepageContentProvider {
    *
    * @return array<int, array<string, string>>
    */
-  private function buildServices(string $theme_path, LanguageInterface $language): array {
+  private function buildServices(LanguageInterface $language): array {
     $nids = $this->loadPublishedNodeIds('dich_vu', $language);
     if ($nids === []) {
       return [];
@@ -76,6 +80,7 @@ class HomepageContentProvider {
     $items = [];
     /** @var \Drupal\node\NodeInterface[] $nodes */
     $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
+    $image_style = cassiopeia_projects_image_style('services_showcase');
     $index = 0;
     foreach ($nids as $nid) {
       if (!isset($nodes[$nid])) {
@@ -83,11 +88,21 @@ class HomepageContentProvider {
       }
       $node = $nodes[$nid];
       $bg_file = self::SERVICE_BG_IMAGES[$index % count(self::SERVICE_BG_IMAGES)];
+      $bg = '';
+      if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
+        $image = cassiopeia_image_field_item_data($node->get('field_image')->first(), $image_style);
+        if ($image) {
+          $bg = $image['url'];
+        }
+      }
+      if ($bg === '') {
+        $bg = cassiopeia_theme_image_styled_url($bg_file, $image_style);
+      }
       $items[] = [
         'title_html' => $this->serviceTitleHtml($node->label()),
         'description' => $this->nodeIntroText($node),
         'url' => $node->toUrl('canonical', ['language' => $language])->toString(),
-        'bg' => $theme_path . '/images/' . $bg_file,
+        'bg' => $bg,
       ];
       $index++;
     }
@@ -132,11 +147,12 @@ class HomepageContentProvider {
 
     $featured_node = $nodes[$nids[0]];
     $featured_teaser = cassiopeia_projects_teaser_data($featured_node);
+    $featured_banner = cassiopeia_projects_hero_image($featured_node, $language);
     $featured = [
       'title' => $featured_teaser['title'],
       'title_html' => $this->projectFeaturedTitleHtml($featured_teaser['title']),
-      'image' => $featured_teaser['image'],
-      'image_alt' => $featured_teaser['image_alt'],
+      'image' => $featured_banner['hero_image'],
+      'image_alt' => $featured_banner['hero_image_alt'],
       'address' => $featured_teaser['address'],
       'url' => $featured_teaser['url'],
       'location_icon' => $location_icon_white,
@@ -221,13 +237,6 @@ class HomepageContentProvider {
   }
 
   private function serviceTitleHtml(string $title): string {
-    if (str_contains($title, '<br')) {
-      return $title;
-    }
-    $parts = preg_split('/\s+(và|&)\s+/u', $title, 2);
-    if (is_array($parts) && count($parts) === 2) {
-      return $parts[0] . '<br>' . $parts[1];
-    }
     return $title;
   }
 

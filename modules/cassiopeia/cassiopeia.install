@@ -272,3 +272,37 @@ function cassiopeia_update_11016(): string {
   $messages = $importer->import();
   return implode(' ', $messages);
 }
+
+/**
+ * Adds cropped image styles for projects banner and card images.
+ */
+function cassiopeia_update_11017(): string {
+  /** @var \Drupal\cassiopeia\Service\ProjectsContentInstaller $installer */
+  $installer = \Drupal::service('cassiopeia.projects_content_installer');
+  $installer->install();
+  return (string) t('Configured cropped image styles for projects banner and card images.');
+}
+
+/**
+ * Adds cropped showcase style for homepage services background images.
+ */
+function cassiopeia_update_11018(): string {
+  /** @var \Drupal\cassiopeia\Service\ProjectsContentInstaller $installer */
+  $installer = \Drupal::service('cassiopeia.projects_content_installer');
+  $installer->installImageStyles();
+  $installer->configureDichVuDisplays();
+  return (string) t('Configured cropped image style for services showcase backgrounds.');
+}
+
+/**
+ * Adds cropped image styles for news, handbook, market research and service hero.
+ */
+function cassiopeia_update_11019(): string {
+  /** @var \Drupal\cassiopeia\Service\ProjectsContentInstaller $installer */
+  $installer = \Drupal::service('cassiopeia.projects_content_installer');
+  $installer->installImageStyles();
+  $installer->configureArticleDisplays();
+  $installer->configureHandbookDisplays();
+  $installer->configureMarketResearchDisplays();
+  return (string) t('Configured cropped image styles for news, services, handbook and market research.');
+}

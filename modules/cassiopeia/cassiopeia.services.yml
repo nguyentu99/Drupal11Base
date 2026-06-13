@@ -12,6 +12,8 @@ services:
   cassiopeia.projects_content_importer:
     class: Drupal\cassiopeia\Service\ProjectsContentImporter
     arguments: ['@file_system', '@file.repository']
+  cassiopeia.projects_content_installer:
+    class: Drupal\cassiopeia\Service\ProjectsContentInstaller
   cassiopeia.home_config_content_installer:
     class: Drupal\cassiopeia\Service\HomeConfigContentInstaller
   cassiopeia.home_config_content_importer:

@@ -481,45 +481,12 @@ function cassiopeia_article_related_items(NodeInterface $node, int $limit = 3): 
 
   $date_formatter = \Drupal::service('date.formatter');
   $file_url_generator = \Drupal::service('file_url_generator');
-  $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
-    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
 
   $items = [];
   /** @var \Drupal\node\NodeInterface[] $nodes */
   $nodes = $storage->loadMultiple($nids);
   foreach ($nodes as $related_node) {
-    $related_category = '';
-    if ($related_node->hasField('field_tx_article') && !$related_node->get('field_tx_article')->isEmpty()) {
-      $term = $related_node->get('field_tx_article')->entity;
-      if ($term instanceof TermInterface) {
-        $related_category = $term->label();
-      }
-    }
-
-    $related_image = NULL;
-    if ($related_node->hasField('field_image') && !$related_node->get('field_image')->isEmpty()) {
-      $image_item = $related_node->get('field_image')->first();
-      $file = $image_item?->entity;
-      if ($file) {
-        $uri = $file->getFileUri();
-        $related_image = [
-          'url' => cassiopeia_image_url($uri, $image_style),
-          'alt' => (string) ($image_item->alt ?: $related_node->label()),
-          'width' => $image_item->width ?? NULL,
-          'height' => $image_item->height ?? NULL,
-        ];
-      }
-    }
-
-    $created = (int) $related_node->getCreatedTime();
-    $items[] = [
-      'title' => $related_node->label(),
-      'url' => $related_node->toUrl()->toString(),
-      'category' => $related_category,
-      'date' => $date_formatter->format($created, 'custom', 'd-m-Y'),
-      'date_iso' => $date_formatter->format($created, 'html_date'),
-      'image' => $related_image,
-    ];
+    $items[] = cassiopeia_article_teaser_data($related_node, $date_formatter, $file_url_generator);
   }
 
   return $items;
@@ -547,8 +514,7 @@ function cassiopeia_article_teaser_data(
 ): array {
   $date_formatter ??= \Drupal::service('date.formatter');
   $file_url_generator ??= \Drupal::service('file_url_generator');
-  $image_style ??= \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
-    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+  $image_style ??= cassiopeia_content_image_style('content_card');
 
   $category = '';
   if ($node->hasField('field_tx_article') && !$node->get('field_tx_article')->isEmpty()) {
@@ -649,8 +615,6 @@ function cassiopeia_news_page_variables(?TermInterface $term = NULL, ?Request $r
 
   $date_formatter = \Drupal::service('date.formatter');
   $file_url_generator = \Drupal::service('file_url_generator');
-  $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
-    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
   $storage = \Drupal::entityTypeManager()->getStorage('node');
 
   $featured = [];
@@ -658,7 +622,7 @@ function cassiopeia_news_page_variables(?TermInterface $term = NULL, ?Request $r
     $nodes = $storage->loadMultiple($featured_nids);
     foreach ($featured_nids as $nid) {
       if (isset($nodes[$nid])) {
-        $featured[] = cassiopeia_article_teaser_data($nodes[$nid], $date_formatter, $file_url_generator, $image_style);
+        $featured[] = cassiopeia_article_teaser_data($nodes[$nid], $date_formatter, $file_url_generator);
       }
     }
   }
@@ -668,7 +632,7 @@ function cassiopeia_news_page_variables(?TermInterface $term = NULL, ?Request $r
     $nodes = $storage->loadMultiple($list_nids);
     foreach ($list_nids as $nid) {
       if (isset($nodes[$nid])) {
-        $list_items[] = cassiopeia_article_teaser_data($nodes[$nid], $date_formatter, $file_url_generator, $image_style, TRUE);
+        $list_items[] = cassiopeia_article_teaser_data($nodes[$nid], $date_formatter, $file_url_generator, NULL, TRUE);
       }
     }
   }
@@ -784,8 +748,7 @@ function cassiopeia_market_research_teaser_data(
 ): array {
   $date_formatter ??= \Drupal::service('date.formatter');
   $file_url_generator ??= \Drupal::service('file_url_generator');
-  $image_style ??= \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
-    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+  $image_style ??= cassiopeia_content_image_style('content_card');
 
   $image = NULL;
   if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
@@ -839,8 +802,6 @@ function cassiopeia_market_research_page_variables(?Request $request = NULL): ar
 
   $date_formatter = \Drupal::service('date.formatter');
   $file_url_generator = \Drupal::service('file_url_generator');
-  $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
-    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
   $storage = \Drupal::entityTypeManager()->getStorage('node');
 
   $items = [];
@@ -848,7 +809,7 @@ function cassiopeia_market_research_page_variables(?Request $request = NULL): ar
     $nodes = $storage->loadMultiple($nids);
     foreach ($nids as $nid) {
       if (isset($nodes[$nid])) {
-        $items[] = cassiopeia_market_research_teaser_data($nodes[$nid], $date_formatter, $file_url_generator, $image_style);
+        $items[] = cassiopeia_market_research_teaser_data($nodes[$nid], $date_formatter, $file_url_generator);
       }
     }
   }
@@ -903,7 +864,7 @@ function cassiopeia_market_research_page_variables(?Request $request = NULL): ar
  *
  * @return array<int, array<string, mixed>>
  */
-function cassiopeia_market_research_related_items(NodeInterface $node, int $limit = 4): array {
+function cassiopeia_market_research_related_items(NodeInterface $node, int $limit = 4, string $image_purpose = 'content_card'): array {
   $query = cassiopeia_market_research_node_query()
     ->condition('nid', $node->id(), '<>')
     ->sort('created', 'DESC')
@@ -920,8 +881,7 @@ function cassiopeia_market_research_related_items(NodeInterface $node, int $limi
 
   $date_formatter = \Drupal::service('date.formatter');
   $file_url_generator = \Drupal::service('file_url_generator');
-  $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
-    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+  $image_style = cassiopeia_content_image_style($image_purpose);
 
   $items = [];
   $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
@@ -981,8 +941,8 @@ function cassiopeia_market_research_detail_variables(NodeInterface $node): array
         'url' => NULL,
       ],
     ],
-    'sidebar' => cassiopeia_market_research_related_items($node, 4),
-    'related' => cassiopeia_market_research_related_items($node, 9),
+    'sidebar' => cassiopeia_market_research_related_items($node, 4, 'content_thumb'),
+    'related' => cassiopeia_market_research_related_items($node, 9, 'content_card'),
   ];
 }
 
@@ -1020,8 +980,7 @@ function cassiopeia_investment_handbook_node_query(): QueryInterface {
  * Builds teaser data for an investment_handbook node.
  */
 function cassiopeia_investment_handbook_teaser_data(NodeInterface $node, $image_style = NULL): array {
-  $image_style ??= \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
-    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+  $image_style ??= cassiopeia_content_image_style('handbook_card');
 
   $image = NULL;
   if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
@@ -1128,8 +1087,6 @@ function cassiopeia_investment_handbook_page_variables(?Request $request = NULL)
     ->sort('title', 'ASC')
     ->execute());
 
-  $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
-    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
   $storage = \Drupal::entityTypeManager()->getStorage('node');
 
   $items = [];
@@ -1137,7 +1094,7 @@ function cassiopeia_investment_handbook_page_variables(?Request $request = NULL)
     $nodes = $storage->loadMultiple($nids);
     foreach ($nids as $nid) {
       if (isset($nodes[$nid])) {
-        $items[] = cassiopeia_investment_handbook_teaser_data($nodes[$nid], $image_style);
+        $items[] = cassiopeia_investment_handbook_teaser_data($nodes[$nid]);
       }
     }
   }
@@ -1195,14 +1152,11 @@ function cassiopeia_investment_handbook_related_items(NodeInterface $node, int $
     return [];
   }
 
-  $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
-    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
-
   $items = [];
   $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
   foreach ($nids as $nid) {
     if (isset($nodes[$nid])) {
-      $items[] = cassiopeia_investment_handbook_teaser_data($nodes[$nid], $image_style);
+      $items[] = cassiopeia_investment_handbook_teaser_data($nodes[$nid]);
     }
   }
 
@@ -1898,15 +1852,96 @@ function cassiopeia_active_network_detail_variables(NodeInterface $node): array 
  *
  * @return array{url: string, alt: string}|null
  */
-function cassiopeia_image_field_item_data($item): ?array {
+function cassiopeia_image_field_item_data($item, $image_style = NULL): ?array {
   if (!$item || !$item->entity) {
     return NULL;
   }
   $file = $item->entity;
   return [
-    'url' => cassiopeia_image_url($file->getFileUri()),
+    'url' => cassiopeia_image_url($file->getFileUri(), $image_style),
     'alt' => trim((string) ($item->alt ?? '')),
   ];
+}
+
+/**
+ * Loads a cropped image style used on listing and detail pages.
+ */
+function cassiopeia_projects_image_style(string $purpose) {
+  $map = [
+    'teaser' => \Drupal\cassiopeia\Service\ProjectsContentInstaller::STYLE_TEASER,
+    'hero' => \Drupal\cassiopeia\Service\ProjectsContentInstaller::STYLE_HERO,
+    'services_showcase' => \Drupal\cassiopeia\Service\ProjectsContentInstaller::STYLE_SERVICES_SHOWCASE,
+    'content_card' => \Drupal\cassiopeia\Service\ProjectsContentInstaller::STYLE_CONTENT_CARD,
+    'handbook_card' => \Drupal\cassiopeia\Service\ProjectsContentInstaller::STYLE_HANDBOOK_CARD,
+    'content_thumb' => \Drupal\cassiopeia\Service\ProjectsContentInstaller::STYLE_CONTENT_THUMB,
+    'page_hero' => \Drupal\cassiopeia\Service\ProjectsContentInstaller::STYLE_PAGE_HERO,
+  ];
+  $style_id = $map[$purpose] ?? NULL;
+  if (!$style_id) {
+    return NULL;
+  }
+  return \Drupal::entityTypeManager()->getStorage('image_style')->load($style_id);
+}
+
+/**
+ * Resolves a content image style with wide/large fallback.
+ */
+function cassiopeia_content_image_style(string $purpose) {
+  return cassiopeia_projects_image_style($purpose)
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('wide')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('large');
+}
+
+/**
+ * Returns a cropped public URL for a theme/HTML image asset.
+ */
+function cassiopeia_theme_image_styled_url(string $relative_path, $image_style = NULL): string {
+  static $uri_cache = [];
+
+  $relative_path = ltrim(str_replace('\\', '/', $relative_path), '/');
+  if (str_starts_with($relative_path, 'images/')) {
+    $relative_path = substr($relative_path, 7);
+  }
+
+  if (!isset($uri_cache[$relative_path])) {
+    $roots = [
+      DRUPAL_ROOT . '/html/images/',
+      DRUPAL_ROOT . '/themes/cassiopeia_theme/images/',
+    ];
+    $absolute = NULL;
+    foreach ($roots as $root) {
+      $candidate = $root . $relative_path;
+      if (is_readable($candidate)) {
+        $absolute = $candidate;
+        break;
+      }
+    }
+    if ($absolute === NULL) {
+      return '';
+    }
+
+    $destination = 'public://homepage/' . basename($absolute);
+    $existing = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['uri' => $destination]);
+    if ($existing !== []) {
+      $uri_cache[$relative_path] = reset($existing)->getFileUri();
+    }
+    else {
+      $data = file_get_contents($absolute);
+      if ($data === FALSE) {
+        return '';
+      }
+      $file = \Drupal::service('file.repository')->writeData(
+        $data,
+        $destination,
+        \Drupal\Core\File\FileSystemInterface::EXISTS_REPLACE,
+      );
+      $file->setPermanent();
+      $file->save();
+      $uri_cache[$relative_path] = $file->getFileUri();
+    }
+  }
+
+  return cassiopeia_image_url($uri_cache[$relative_path], $image_style);
 }
 
 /**
@@ -2018,12 +2053,14 @@ function cassiopeia_projects_teaser_data(NodeInterface $node): array {
   $fallback_image = '/' . $theme_path . '/images/du-an-banner.jpg';
   $image_url = $fallback_image;
   $image_alt = $node->label();
+  $image_style = cassiopeia_projects_image_style('teaser')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('medium');
 
   foreach (['field_image', 'field_anh'] as $field_name) {
     if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
       continue;
     }
-    $image = cassiopeia_image_field_item_data($node->get($field_name)->first());
+    $image = cassiopeia_image_field_item_data($node->get($field_name)->first(), $image_style);
     if ($image) {
       $image_url = $image['url'];
       $image_alt = $image['alt'] ?: $image_alt;
@@ -2289,8 +2326,11 @@ function cassiopeia_projects_customer_logos(NodeInterface $node): array {
  * @return array{hero_image: string, hero_image_alt: string}
  */
 function cassiopeia_projects_hero_image(NodeInterface $node, LanguageInterface $language): array {
+  $image_style = cassiopeia_projects_image_style('hero')
+    ?: \Drupal::entityTypeManager()->getStorage('image_style')->load('wide');
+
   if ($node->hasField('field_banner') && !$node->get('field_banner')->isEmpty()) {
-    $image = cassiopeia_image_field_item_data($node->get('field_banner')->first());
+    $image = cassiopeia_image_field_item_data($node->get('field_banner')->first(), $image_style);
     if ($image) {
       return [
         'hero_image' => $image['url'],
@@ -2792,7 +2832,8 @@ function cassiopeia_dich_vu_customer_logos(NodeInterface $node): array {
  */
 function cassiopeia_dich_vu_hero_image(NodeInterface $node, LanguageInterface $language): array {
   if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
-    $image = cassiopeia_image_field_item_data($node->get('field_image')->first());
+    $image_style = cassiopeia_content_image_style('page_hero');
+    $image = cassiopeia_image_field_item_data($node->get('field_image')->first(), $image_style);
     if ($image) {
       return [
         'hero_image' => $image['url'],
