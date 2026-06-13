@@ -28,3 +28,9 @@ contact-form:
     js/contact-form.js: {}
   dependencies:
     - core/drupal
+
+contact-submissions-admin:
+  version: VERSION
+  css:
+    component:
+      css/contact-submissions-admin.css: {}

@@ -1,0 +1,251 @@
+.cassiopeia-contact-submissions,
+.cassiopeia-contact-submission-view {
+  font-family: var(--cassiopeia-admin-font, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+}
+
+.cassiopeia-contact-submissions__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.cassiopeia-contact-submissions__summary {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--cassiopeia-admin-muted, #6b7280);
+}
+
+.cassiopeia-contact-submissions__filters {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  padding: 0.25rem;
+  border: 1px solid var(--cassiopeia-admin-border, #e5e7eb);
+  border-radius: var(--cassiopeia-admin-radius-lg, 0.5rem);
+  background: #f9fafb;
+}
+
+.cassiopeia-contact-submissions__filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.4375rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--cassiopeia-admin-text, #1f2937);
+  text-decoration: none;
+  border-radius: calc(var(--cassiopeia-admin-radius, 0.375rem) - 0.0625rem);
+  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.cassiopeia-contact-submissions__filter:hover,
+.cassiopeia-contact-submissions__filter:focus {
+  color: var(--cassiopeia-admin-accent, #2563eb);
+  background: #fff;
+  text-decoration: none;
+}
+
+.cassiopeia-contact-submissions__filter.is-active {
+  color: var(--cassiopeia-admin-accent, #2563eb);
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 8%);
+}
+
+.cassiopeia-contact-submissions__filter-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.375rem;
+  height: 1.375rem;
+  padding: 0 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--cassiopeia-admin-muted, #6b7280);
+  background: #eef2f7;
+  border-radius: 999px;
+}
+
+.cassiopeia-contact-submissions__filter.is-active .cassiopeia-contact-submissions__filter-count {
+  color: var(--cassiopeia-admin-accent, #2563eb);
+  background: var(--cassiopeia-admin-accent-soft, #eff6ff);
+}
+
+.cassiopeia-contact-submissions__table-wrap {
+  overflow-x: auto;
+}
+
+.cassiopeia-contact-submissions__table {
+  min-width: 56rem;
+}
+
+.cassiopeia-contact-submissions__table .views-empty,
+.cassiopeia-contact-submissions__empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--cassiopeia-admin-muted, #6b7280);
+}
+
+.cassiopeia-contact-submissions__name-link {
+  font-weight: 600;
+  color: var(--cassiopeia-admin-text, #1f2937);
+}
+
+.cassiopeia-contact-submissions__name-link:hover,
+.cassiopeia-contact-submissions__name-link:focus {
+  color: var(--cassiopeia-admin-accent, #2563eb);
+}
+
+.cassiopeia-contact-submissions__meta-link {
+  color: var(--cassiopeia-admin-accent, #2563eb);
+  word-break: break-word;
+}
+
+.cassiopeia-contact-submissions__status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1875rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-transform: capitalize;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.cassiopeia-contact-submissions__status--new {
+  color: #1d4ed8;
+  background: #eff6ff;
+}
+
+.cassiopeia-contact-submissions__status--read {
+  color: #047857;
+  background: #ecfdf5;
+}
+
+.cassiopeia-contact-submissions__pager {
+  margin-top: 1rem;
+}
+
+.cassiopeia-contact-submissions__pager .pager__items {
+  margin-bottom: 0;
+}
+
+.cassiopeia-contact-submission-view__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.cassiopeia-contact-submission-view__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.4375rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--cassiopeia-admin-text, #1f2937);
+  background: #fff;
+  border: 1px solid var(--cassiopeia-admin-border, #e5e7eb);
+  border-radius: var(--cassiopeia-admin-radius, 0.375rem);
+  text-decoration: none;
+}
+
+.cassiopeia-contact-submission-view__back:hover,
+.cassiopeia-contact-submission-view__back:focus {
+  color: var(--cassiopeia-admin-accent, #2563eb);
+  border-color: #bfd4fe;
+  background: var(--cassiopeia-admin-accent-soft, #eff6ff);
+  text-decoration: none;
+}
+
+.cassiopeia-contact-submission-view__delete {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4375rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--cassiopeia-admin-danger, #b42318);
+  background: var(--cassiopeia-admin-danger-soft, #fef3f2);
+  border: 1px solid #fecdca;
+  border-radius: var(--cassiopeia-admin-radius, 0.375rem);
+  text-decoration: none;
+}
+
+.cassiopeia-contact-submission-view__delete:hover,
+.cassiopeia-contact-submission-view__delete:focus {
+  color: #912018;
+  background: #fee4e2;
+  text-decoration: none;
+}
+
+.cassiopeia-contact-submission-view__detail {
+  width: 100%;
+  margin: 0;
+  border: 1px solid var(--cassiopeia-admin-border, #e5e7eb);
+  border-radius: var(--cassiopeia-admin-radius-lg, 0.5rem);
+  overflow: hidden;
+  background: #fff;
+}
+
+.cassiopeia-contact-submission-view__detail tbody tr {
+  border-top: 1px solid var(--cassiopeia-admin-border-soft, #f0f1f3);
+}
+
+.cassiopeia-contact-submission-view__detail tbody tr:first-child {
+  border-top: 0;
+}
+
+.cassiopeia-contact-submission-view__detail tbody td {
+  padding: 0.875rem 1rem;
+  vertical-align: top;
+}
+
+.cassiopeia-contact-submission-view__detail tbody td:first-child {
+  width: 11rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--cassiopeia-admin-muted, #6b7280);
+  background: #f9fafb;
+}
+
+.cassiopeia-contact-submission-view__detail tbody td:last-child {
+  color: var(--cassiopeia-admin-text, #1f2937);
+  word-break: break-word;
+}
+
+.cassiopeia-contact-submission-view__message {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.cassiopeia-contact-submission-view__detail a {
+  color: var(--cassiopeia-admin-accent, #2563eb);
+  word-break: break-word;
+}
+
+@media (max-width: 767.98px) {
+  .cassiopeia-contact-submission-view__detail tbody tr,
+  .cassiopeia-contact-submission-view__detail tbody td {
+    display: block;
+    width: 100%;
+  }
+
+  .cassiopeia-contact-submission-view__detail tbody td:first-child {
+    padding-bottom: 0.375rem;
+    border-bottom: 0;
+  }
+
+  .cassiopeia-contact-submission-view__detail tbody td:last-child {
+    padding-top: 0;
+  }
+}

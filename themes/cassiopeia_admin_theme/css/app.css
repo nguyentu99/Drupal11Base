@@ -1325,3 +1325,11 @@ a, a:hover, a:focus {
   border-radius: 8px;
   font-size: 14px;
 }
+
+.sidebar-wrapper .nav-link {
+    align-items: center;
+}
+
+.sidebar-wrapper .nav-link i {
+    width: 16px;
+}
