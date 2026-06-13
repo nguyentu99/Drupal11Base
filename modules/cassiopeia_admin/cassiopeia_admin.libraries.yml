@@ -12,6 +12,18 @@ floating_admin_link:
     component:
       css/floating-admin-link.css: {}
 
+dashboard:
+  version: VERSION
+  css:
+    component:
+      css/dashboard.css: {}
+
+floating_entity_quick_actions:
+  version: VERSION
+  css:
+    component:
+      css/floating-entity-quick-actions.css: {}
+
 form.CassiopeiaAdminAdministratorBlockAddForm:
   version: VERSION
   dependencies:

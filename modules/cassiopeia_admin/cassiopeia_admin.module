@@ -2,6 +2,7 @@
 
 use Drupal\cassiopeia_admin\Entity\AdministratorBlock;
 use Drupal\cassiopeia_admin\Entity\AdministratorBlockItem;
+use Drupal\cassiopeia_admin\Service\FloatingEntityQuickActionsBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -203,6 +204,21 @@ function cassiopeia_admin_theme($existing, $type, $theme, $path) {
         'blocks' => [],
       ],
     ],
+    'cassiopeia_admin_floating_quick_actions' => [
+      'variables' => [
+        'actions' => [],
+      ],
+      'template' => 'cassiopeia-admin-floating-quick-actions',
+    ],
+    'cassiopeia_admin_dashboard' => [
+      'variables' => [
+        'welcome_title' => NULL,
+        'welcome_message' => NULL,
+        'stats' => [],
+        'link_groups' => [],
+      ],
+      'template' => 'cassiopeia-admin-dashboard',
+    ],
   ];
 }
 
@@ -223,9 +239,30 @@ function cassiopeia_admin_requirements(string $phase): array {
 }
 
 /**
+ * Builds floating quick-action links for entity detail pages.
+ */
+function cassiopeia_admin_floating_entity_quick_actions_build(): array {
+  $builder = new FloatingEntityQuickActionsBuilder(
+    \Drupal::routeMatch(),
+    \Drupal::service('router.admin_context'),
+    \Drupal::currentUser(),
+    \Drupal::service('plugin.manager.menu.local_task'),
+    \Drupal::entityTypeManager(),
+  );
+
+  return $builder->build();
+}
+
+/**
  * Implements hook_page_bottom().
  */
 function cassiopeia_admin_page_bottom(array &$page_bottom) {
+  $quick_actions = cassiopeia_admin_floating_entity_quick_actions_build();
+  if ($quick_actions !== []) {
+    $page_bottom['cassiopeia_admin_floating_quick_actions'] = $quick_actions;
+    return;
+  }
+
   $user = \Drupal::currentUser();
   $admin_context = \Drupal::service('router.admin_context');
   if ($admin_context->isAdminRoute() || !$user->hasPermission('cassiopeia admin content manager')) {
@@ -236,7 +273,7 @@ function cassiopeia_admin_page_bottom(array &$page_bottom) {
     '#attributes' => [
       'class' => ['cassiopeia-admin-floating-link'],
     ],
-    'link' => Link::fromTextAndUrl(t('Administration'), Url::fromUri('internal:/admin'))->toRenderable(),
+    'link' => Link::fromTextAndUrl(t('Quản trị'), Url::fromRoute('cassiopeia_admin.dashboard'))->toRenderable(),
     '#attached' => [
       'library' => ['cassiopeia_admin/floating_admin_link'],
     ],

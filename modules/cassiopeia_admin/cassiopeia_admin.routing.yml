@@ -1,3 +1,11 @@
+cassiopeia_admin.dashboard:
+  path: '/admin/dashboard'
+  defaults:
+    _controller: '\Drupal\cassiopeia_admin\Controller\DashboardController::content'
+    _title: 'Dashboard'
+  requirements:
+    _permission: 'cassiopeia admin content manager'
+
 cassiopeia_admin.administrator_block:
   path: '/admin/cassiopeia/administrator/blocks'
   defaults:

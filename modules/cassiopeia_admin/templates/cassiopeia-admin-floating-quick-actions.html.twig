@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Floating quick-action buttons for entity detail pages.
+ *
+ * Available variables:
+ * - actions: Array of action items with label, url, and active keys.
+ */
+#}
+{% if actions %}
+  <nav class="cassiopeia-admin-quick-actions" aria-label="{{ 'Quick actions'|t }}">
+    {% for action in actions %}
+      <a href="{{ action.url }}"
+         class="cassiopeia-admin-quick-actions__item{{ action.active ? ' is-active' : '' }}"
+         {% if action.active %}aria-current="page"{% endif %}>
+        <span>{{ action.label }}</span>
+      </a>
+    {% endfor %}
+  </nav>
+{% endif %}

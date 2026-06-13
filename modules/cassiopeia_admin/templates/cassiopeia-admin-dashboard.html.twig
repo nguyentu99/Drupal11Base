@@ -1,0 +1,68 @@
+{#
+/**
+ * @file
+ * Cassiopeia administration dashboard.
+ *
+ * Available variables:
+ * - welcome_title: Dashboard heading.
+ * - welcome_message: Short intro text.
+ * - stats: Stat widgets for the top row.
+ * - link_groups: Grouped quick links from the sidebar menu.
+ */
+#}
+<div class="cassiopeia-admin-dashboard">
+  <div class="mb-4">
+    <h4 class="mb-1">{{ welcome_title }}</h4>
+    <p class="text-muted mb-0">{{ welcome_message }}</p>
+  </div>
+
+  {% if stats %}
+    <div class="row">
+      {% for stat in stats %}
+        <div class="col-lg-3 col-md-6 col-12 mb-3">
+          <div class="small-box text-bg-{{ stat.color }}">
+            <div class="inner">
+              <h3>{{ stat.value }}</h3>
+              <p>{{ stat.label }}</p>
+            </div>
+            <div class="small-box-icon">
+              <i class="bi {{ stat.icon }}"></i>
+            </div>
+            {% if stat.url %}
+              <a href="{{ stat.url }}" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+                {{ 'More info'|t }} <i class="bi bi-arrow-right-circle"></i>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if link_groups %}
+    <div class="row">
+      {% for group in link_groups %}
+        <div class="col-lg-4 col-md-6 col-12 mb-3">
+          <div class="card card-outline card-primary h-100">
+            <div class="card-header">
+              <h3 class="card-title mb-0">{{ group.title }}</h3>
+            </div>
+            <div class="card-body p-0">
+              <ul class="nav flex-column cassiopeia-admin-dashboard__links">
+                {% for link in group.links %}
+                  <li class="nav-item">
+                    <a href="{{ link.url }}" class="nav-link">{{ link.title }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info mb-0">
+      {{ 'No quick links configured yet. Add items in the administrator sidebar menu.'|t }}
+    </div>
+  {% endif %}
+</div>

@@ -1,0 +1,21 @@
+.cassiopeia-admin-dashboard .small-box-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 70px;
+  line-height: 1;
+  opacity: 0.25;
+}
+
+.cassiopeia-admin-dashboard .small-box {
+  position: relative;
+  overflow: hidden;
+}
+
+.cassiopeia-admin-dashboard__links .nav-link {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.cassiopeia-admin-dashboard__links .nav-item:last-child .nav-link {
+  border-bottom: none;
+}
