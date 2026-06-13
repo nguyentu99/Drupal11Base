@@ -4,12 +4,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Thư viện ảnh — CNC Industrial</title>
+    <title>Tiện ích nhà ở, văn phòng — CNC Industrial</title>
     <meta name="description"
-        content="Thư viện ảnh CNC Industrial — album hình ảnh tiến độ dự án, công trình và hoạt động tại các khu công nghiệp.">
+        content="Phát triển và vận hành nhà ở công nhân, nhà ở chuyên gia, căn hộ dịch vụ và văn phòng gắn với khu công nghiệp CNCTech.">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="style/all.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
+        rel="stylesheet">
     <link href="style/style.css" rel="stylesheet">
 </head>
 
@@ -134,7 +137,7 @@
                                 </li>
                                 <li class="nav-item dropdown nav-item--dropdown">
                                     <div class="site-header__nav-dropdown-head">
-                                        <a class="nav-link site-header__nav-parent" href="dich-vu.html">Dịch vụ
+                                        <a class="nav-link site-header__nav-parent active" href="dich-vu.html">Dịch vụ
                                             <svg class="d-none d-lg-block" xmlns="http://www.w3.org/2000/svg" width="12"
                                                 height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -179,8 +182,8 @@
                                         <li><a class="site-header__submenu-link" href="tu-van-phap-ly-dau-tu.html">Tư
                                                 vấn pháp lý đầu
                                                 tư</a></li>
-                                        <li><a class="site-header__submenu-link"
-                                                href="tien-ich-nha-o-van-phong.html">Tiện ích nhà ở, văn
+                                        <li><a class="site-header__submenu-link active"
+                                                href="tien-ich-nha-o-van-phong.html" aria-current="page">Tiện ích nhà ở, văn
                                                 phòng</a></li>
                                     </ul>
                                 </li>
@@ -232,7 +235,8 @@
                                         rel="noopener noreferrer">Cơ hội nghề nghiệp</a>
                                 </li>
                                 <li class="nav-item dropdown nav-item--dropdown">
-                                    <a class="nav-link dropdown-toggle active" 
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">Tài nguyên 
                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
                                             <path fill-rule="evenodd" clip-rule="evenodd" d="M10.0303 3.96971C10.3232 4.2626 10.3232 4.73747 10.0303 5.03037L6.53033 8.53037C6.38968 8.67102 6.19891 8.75004 6 8.75004C5.80109 8.75004 5.61032 8.67102 5.46967 8.53037L1.96967 5.03037C1.67678 4.73747 1.67678 4.2626 1.96967 3.96971C2.26256 3.67681 2.73744 3.67681 3.03033 3.96971L6 6.93938L8.96967 3.96971C9.26256 3.67681 9.73744 3.67681 10.0303 3.96971Z" fill="#121212"/>
                                           </svg>
@@ -243,7 +247,7 @@
                                         <li><a class="site-header__submenu-link"
                                                 href="nghien-cuu-thi-truong.html">Nghiên cứu thị trường</a>
                                         </li>
-                                        <li><a class="site-header__submenu-link active" href="thu-vien-anh.html" aria-current="page">Thư viện hình
+                                        <li><a class="site-header__submenu-link" href="thu-vien-anh.html">Thư viện hình
                                                 ảnh</a></li>
                                     </ul>
                                 </li>
@@ -258,210 +262,412 @@
         </div>
     </header>
 
-    <div class="page-hero">
-        <img class="page-hero__media" src="images/tai-lieu-banner1.jpg" alt="">
+    <div class="page-hero page-hero--project">
+        <img class="page-hero__media" src="images/nha-o-van-phong.jpg"
+            alt="Tiện ích nhà ở, văn phòng">
         <div class="page-hero__content">
             <div class="container">
                 <nav class="page-hero__breadcrumb-nav" aria-label="Breadcrumb">
                     <ol class="breadcrumb page-hero__breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
-                        <li class="breadcrumb-item"><a href="cam-nang-dau-tu.html">Tài nguyên</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Thư viện ảnh</li>
+                        <li class="breadcrumb-item"><a href="dich-vu.html">Dịch vụ</a></li>
+                        <li class="breadcrumb-item"><a href="dich-vu.html">Giải pháp công nghiệp</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Tiện ích nhà ở, văn phòng</li>
                     </ol>
                 </nav>
-                <h1 class="page-hero__title">Thư viện ảnh</h1>
+                <h1 class="page-hero__title">Tiện ích nhà ở, văn phòng</h1>
             </div>
         </div>
     </div>
 
-    <main class="gallery-page">
-        <div class="container">
-            <div class="row gallery-page__grid g-4">
-                <div class="col-md-4">
-                    <article class="gallery-card">
-                        <a class="gallery-card__media" href="kcn-nam-binh-xuyen-green-park.html">
-                            <img class="gallery-card__img" src="images/thu-vien-1.jpg" alt="">
-                            <span class="gallery-card__overlay" aria-hidden="true"></span>
-                            <span class="gallery-card__hover">
-                                <span class="gallery-card__hover-icon" aria-hidden="true"><i class="fa-light fa-magnifying-glass-plus"></i></span>
-                                <span class="gallery-card__hover-label">xem album</span>
-                            </span>
-                            <span class="gallery-card__count">
-                               <img src="./images/svg/album-icon.svg" alt="">
-                                <span>3</span>
-                            </span>
-                        </a>
-                        <h2 class="gallery-card__title"><a href="kcn-nam-binh-xuyen-green-park.html">Tiến độ dự án</a></h2>
-                    </article>
+    <main class="service-detail">
+        <section class="service-detail__intro service-detail__intro--white">
+            <div class="container">
+                <div class="row service-detail__intro-row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="d-flex flex-column gap-4 align-items-start pe-lg-4">
+                            <h2 class="service-detail__title">Tiện ích nhà ở, văn phòng</h2>
+                            <div class="service-detail__text mt-0">
+                                <p>Phát triển và vận hành hệ thống nhà ở công nhân, nhà ở chuyên gia, căn hộ dịch vụ và văn phòng cho thuê gắn với khu công nghiệp. Tạo hệ sinh thái dịch vụ – tiện ích đồng bộ (nhà ở, làm việc, thương mại – dịch vụ) nhằm nâng cao chất lượng sống và giữ chân nguồn nhân lực.</p>
+                            </div>
+                            <a class="btn-see-more btn-see-more--solid service-detail__cta mt-0" href="lien-he.html">Liên hệ với
+                                chúng tôi<span class="btn-see-more__icon btn-see-more__icon--sm"><i
+                                        class="fa-solid fa-arrow-right"></i></span></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="service-detail__media">
+                            <img class="service-detail__photo" src="images/nha-o.jpg"
+                                alt="Tiện ích nhà ở, văn phòng">
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <article class="gallery-card">
-                        <a class="gallery-card__media" href="cnctech-ba-thien-1.html">
-                            <img class="gallery-card__img" src="images/thu-vien-2.jpg" alt="">
-                            <span class="gallery-card__overlay" aria-hidden="true"></span>
-                            <span class="gallery-card__hover">
-                                <span class="gallery-card__hover-icon" aria-hidden="true"><i class="fa-light fa-magnifying-glass-plus"></i></span>
-                                <span class="gallery-card__hover-label">xem album</span>
-                            </span>
-                            <span class="gallery-card__count">
-                                <img src="./images/svg/album-icon.svg" alt="">
-                                <span>3</span>
-                            </span>
-                        </a>
-                        <h2 class="gallery-card__title"><a href="cnctech-ba-thien-1.html">Tiến độ dự án</a></h2>
-                    </article>
+            </div>
+        </section>
+
+        <section class="service-detail__section service-detail__section--white">
+            <div class="container">
+                <h2 class="t-heading-1 service-detail__section-title">Quy trình triển khai</h2>
+                <div class="service-process service-process--operations">
+                    <div class="service-process__steps">
+                        <div class="service-process__step">
+                            <img src="images/pt-box.png" alt="">
+                            <div class="service-process__content">
+                                <img class="service-process__icon" src="images/search.png" alt="">
+                                <p class="service-process__title">Quy hoạch &amp; thiết kế</p>
+                            </div>
+                        </div>
+                        <div class="service-process__step">
+                            <img src="images/pt-box.png" alt="">
+                            <div class="service-process__content">
+                                <img class="service-process__icon" src="images/San-nen.png" alt="">
+                                <p class="service-process__title">Xây dựng &amp; hoàn thiện</p>
+                            </div>
+                        </div>
+                        <div class="service-process__step">
+                            <img src="images/pt-box.png" alt="">
+                            <div class="service-process__content">
+                                <img class="service-process__icon" src="images/setting.png" alt="">
+                                <p class="service-process__title">Vận hành &amp; khai thác</p>
+                            </div>
+                        </div>
+                        <div class="service-process__step">
+                            <img src="images/pt-box.png" alt="">
+                            <div class="service-process__content">
+                                <img class="service-process__icon" src="images/Thoat-nuoc.png" alt="">
+                                <p class="service-process__title">Quản lý dịch vụ &amp; tiện ích</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <article class="gallery-card">
-                        <a class="gallery-card__media" href="kcn-thang-long-3.html">
-                            <img class="gallery-card__img" src="images/thu-vien-3.jpg" alt="">
-                            <span class="gallery-card__overlay" aria-hidden="true"></span>
-                            <span class="gallery-card__hover">
-                                <span class="gallery-card__hover-icon" aria-hidden="true"><i class="fa-light fa-magnifying-glass-plus"></i></span>
-                                <span class="gallery-card__hover-label">xem album</span>
-                            </span>
-                            <span class="gallery-card__count">
-                                <img src="./images/svg/album-icon.svg" alt="">
-                                <span>3</span>
-                            </span>
-                        </a>
-                        <h2 class="gallery-card__title"><a href="kcn-thang-long-3.html">Tiến độ dự án</a></h2>
-                    </article>
+            </div>
+        </section>
+
+        <section class="service-detail__section service-detail__section--white">
+            <div class="container">
+                <h2 class="t-heading-1 service-detail__section-title">hình ảnh</h2>
+                <div class="service-gallery">
+                    <!-- <ul class="nav nav-tabs service-gallery__tabs" role="tablist" aria-label="Danh mục hình ảnh">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="service-gallery-tab-1" data-bs-toggle="tab"
+                                data-bs-target="#service-gallery-pane-1" type="button" role="tab"
+                                aria-controls="service-gallery-pane-1" aria-selected="true">Tổng thể quy hoạch - San nền
+                                - Giao thông - Cấp điện</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="service-gallery-tab-2" data-bs-toggle="tab"
+                                data-bs-target="#service-gallery-pane-2" type="button" role="tab"
+                                aria-controls="service-gallery-pane-2" aria-selected="false">Cấp nước- Thoát
+                                nước</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="service-gallery-tab-3" data-bs-toggle="tab"
+                                data-bs-target="#service-gallery-pane-3" type="button" role="tab"
+                                aria-controls="service-gallery-pane-3" aria-selected="false">Xử lý nước thải - Viễn
+                                thông - Cây xanh</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="service-gallery-tab-4" data-bs-toggle="tab"
+                                data-bs-target="#service-gallery-pane-4" type="button" role="tab"
+                                aria-controls="service-gallery-pane-4" aria-selected="false">Hạ tầng môi trường</button>
+                        </li>
+                    </ul> -->
+                    <div class="tab-content service-gallery__content">
+                        <div class="tab-pane fade show active service-gallery__panel" id="service-gallery-pane-1"
+                            role="tabpanel" aria-labelledby="service-gallery-tab-1" tabindex="0">
+                            <div class="service-gallery__slider owl-carousel">
+                                <div class="service-gallery__slide"><img src="images/image 18133.jpg"
+                                    alt="Automation 1"></div>
+                            <div class="service-gallery__slide"><img src="images/image 18134.jpg"
+                                    alt="Automation 2"></div>
+                            <div class="service-gallery__slide"><img src="images/image 18135.jpg"
+                                    alt="Automation 3"></div>
+                            <div class="service-gallery__slide"><img src="images/image 18136.jpg"
+                                    alt="Automation 4"></div>
+                            </div>
+                            <div class="service-gallery__nav">
+                                <button type="button" class="service-gallery__arrow service-gallery__arrow--prev"
+                                    aria-label="Ảnh trước"><img src="images/svg/gallery-arrow-left.svg" alt=""></button>
+                                <button type="button" class="service-gallery__arrow service-gallery__arrow--next"
+                                    aria-label="Ảnh sau"><img src="images/svg/gallery-arrow-right.svg" alt=""></button>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade service-gallery__panel" id="service-gallery-pane-2" role="tabpanel"
+                            aria-labelledby="service-gallery-tab-2" tabindex="0">
+                            <div class="service-gallery__slider owl-carousel">
+                                <div class="service-gallery__slide"><img src="images/image 18133.jpg"
+                                    alt="Automation 1"></div>
+                            <div class="service-gallery__slide"><img src="images/image 18134.jpg"
+                                    alt="Automation 2"></div>
+                            <div class="service-gallery__slide"><img src="images/image 18135.jpg"
+                                    alt="Automation 3"></div>
+                            <div class="service-gallery__slide"><img src="images/image 18136.jpg"
+                                    alt="Automation 4"></div>
+                            </div>
+                            <div class="service-gallery__nav">
+                                <button type="button" class="service-gallery__arrow service-gallery__arrow--prev"
+                                    aria-label="Ảnh trước"><img src="images/svg/gallery-arrow-left.svg" alt=""></button>
+                                <button type="button" class="service-gallery__arrow service-gallery__arrow--next"
+                                    aria-label="Ảnh sau"><img src="images/svg/gallery-arrow-right.svg" alt=""></button>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade service-gallery__panel" id="service-gallery-pane-3" role="tabpanel"
+                            aria-labelledby="service-gallery-tab-3" tabindex="0">
+                            <div class="service-gallery__slider owl-carousel">
+                                <div class="service-gallery__slide"><img src="images/image 18133.jpg"
+                                    alt="Automation 1"></div>
+                            <div class="service-gallery__slide"><img src="images/image 18134.jpg"
+                                    alt="Automation 2"></div>
+                            <div class="service-gallery__slide"><img src="images/image 18135.jpg"
+                                    alt="Automation 3"></div>
+                            <div class="service-gallery__slide"><img src="images/image 18136.jpg"
+                                    alt="Automation 4"></div>
+                            </div>
+                            <div class="service-gallery__nav">
+                                <button type="button" class="service-gallery__arrow service-gallery__arrow--prev"
+                                    aria-label="Ảnh trước"><img src="images/svg/gallery-arrow-left.svg" alt=""></button>
+                                <button type="button" class="service-gallery__arrow service-gallery__arrow--next"
+                                    aria-label="Ảnh sau"><img src="images/svg/gallery-arrow-right.svg" alt=""></button>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade service-gallery__panel" id="service-gallery-pane-4" role="tabpanel"
+                            aria-labelledby="service-gallery-tab-4" tabindex="0">
+                            <div class="service-gallery__slider owl-carousel">
+                                <div class="service-gallery__slide"><img src="images/image 18133.jpg"
+                                    alt="Automation 1"></div>
+                            <div class="service-gallery__slide"><img src="images/image 18134.jpg"
+                                    alt="Automation 2"></div>
+                            <div class="service-gallery__slide"><img src="images/image 18135.jpg"
+                                    alt="Automation 3"></div>
+                            <div class="service-gallery__slide"><img src="images/image 18136.jpg"
+                                    alt="Automation 4"></div>
+                            </div>
+                            <div class="service-gallery__nav">
+                                <button type="button" class="service-gallery__arrow service-gallery__arrow--prev"
+                                    aria-label="Ảnh trước"><img src="images/svg/gallery-arrow-left.svg" alt=""></button>
+                                <button type="button" class="service-gallery__arrow service-gallery__arrow--next"
+                                    aria-label="Ảnh sau"><img src="images/svg/gallery-arrow-right.svg" alt=""></button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <article class="gallery-card">
-                        <a class="gallery-card__media" href="khu-cong-nghiep-binh-xuyen.html">
-                            <img class="gallery-card__img" src="images/gallery/album-1.jpg" alt="">
-                            <span class="gallery-card__overlay" aria-hidden="true"></span>
-                            <span class="gallery-card__hover">
-                                <span class="gallery-card__hover-icon" aria-hidden="true"><i class="fa-light fa-magnifying-glass-plus"></i></span>
-                                <span class="gallery-card__hover-label">xem album</span>
-                            </span>
-                            <span class="gallery-card__count">
-                                <img src="./images/svg/album-icon.svg" alt="">
-                                <span>3</span>
-                            </span>
-                        </a>
-                        <h2 class="gallery-card__title"><a href="khu-cong-nghiep-binh-xuyen.html">Tiến độ dự án</a></h2>
-                    </article>
+            </div>
+        </section>
+
+        <section class="service-detail__section service-detail__section--white">
+            <div class="container">
+                <h2 class="t-heading-1 service-detail__section-title">Đối tác khách hàng</h2>
+                <div class="customers__logos">
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Ability%20%C4%91en.png" alt="Ability đen"></a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Accton-Logo-Color.png" alt="Accton-Logo-Color">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Anotech.png" alt="Anotech">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Anson.png" alt="Anson">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/apd_logo-02-1.png" alt="apd logo-02-1"></a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Arts.png" alt="Arts">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/beifa.png" alt="beifa">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Bia%20H%C3%A0%20N%E1%BB%99i.png"
+                            alt="Bia Hà Nội"></a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img
+                            src="images/LOGO/ChatGPT%20Image%2020_49_07%2027%20thg%205%2C%202026.png"
+                            alt="ChatGPT Image 20 49 07 27 thg 5, 2026"></a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/DB%20Schenker.png" alt="DB Schenker"></a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/feliks.png" alt="feliks">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/FHE.png" alt="FHE">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/ghtk.png" alt="ghtk">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Glitter.png" alt="Glitter">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/I-Chain.png" alt="I-Chain">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/JOC.png" alt="JOC">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Kingstone.png" alt="Kingstone"></a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/KW.png" alt="KW">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Lesus.jpg" alt="Lesus">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/LOGO%20CTY%20KH%C3%81CH%20H%C3%80NG-06.png"
+                            alt="CTY KHÁCH HÀNG-06"></a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/logo%20mentech.png" alt="mentech"></a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/MSTD.png" alt="MSTD">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Newface.png" alt="Newface">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/SEOV.jpg" alt="SEOV">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/sirline.jpg" alt="sirline">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Skylight.png" alt="Skylight">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/SMC.png" alt="SMC">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Sunway%20logo.png" alt="Sunway logo"></a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img
+                            src="images/LOGO/uti-logo-pAs4eETPyng42iOBorMD-1734340926_upscayl_1x_upscayl-lite-4x.png"
+                            alt="uti-logo-pAs4eETPyng42iOBorMD-1734340926 upscayl 1x upscayl-lite-4x"></a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Vietnam%20Post.png" alt="Vietnam Post"></a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Vitalink.png" alt="Vitalink">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/xingtai.jpg" alt="xingtai">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img src="images/LOGO/Yingtong.png" alt="Yingtong">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img
+                            src="images/LOGO/z7799065766196_67c9803e6d07f35c8f5719df1f0178df_upscayl_2x_upscayl-lite-4x.png"
+                            alt="Khách hàng"></a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img
+                            src="images/LOGO/z7873384190963_53625650bd525f2cbc8ccfdd0288a456.jpg" alt="Khách hàng">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img
+                            src="images/LOGO/z7873384190970_99efab47d96b9c4d12314e3e117f35c3.jpg" alt="Khách hàng">
+                    </a>
+                    <a class="customers__logo" href="doi-tac-khach-hang.html"><img
+                            src="images/LOGO/z7873428053763_60a07cd5ab722fb32563af6238a09e35.jpg" alt="Khách hàng">
+                    </a>
                 </div>
-                <div class="col-md-4">
-                    <article class="gallery-card">
-                        <a class="gallery-card__media" href="tt-logistics-bac-giang.html">
-                            <img class="gallery-card__img" src="images/gallery/album-2.jpg" alt="">
-                            <span class="gallery-card__overlay" aria-hidden="true"></span>
-                            <span class="gallery-card__hover">
-                                <span class="gallery-card__hover-icon" aria-hidden="true"><i class="fa-light fa-magnifying-glass-plus"></i></span>
-                                <span class="gallery-card__hover-label">xem album</span>
-                            </span>
-                            <span class="gallery-card__count">
-                                <img src="./images/svg/album-icon.svg" alt="">
-                                <span>3</span>
-                            </span>
-                        </a>
-                        <h2 class="gallery-card__title"><a href="tt-logistics-bac-giang.html">Tiến độ dự án</a></h2>
-                    </article>
-                </div>
-                <div class="col-md-4">
-                    <article class="gallery-card">
-                        <a class="gallery-card__media" href="cnctech-ha-nam.html">
-                            <img class="gallery-card__img" src="images/gallery/album-3.jpg" alt="">
-                            <span class="gallery-card__overlay" aria-hidden="true"></span>
-                            <span class="gallery-card__hover">
-                                <span class="gallery-card__hover-icon" aria-hidden="true"><i class="fa-light fa-magnifying-glass-plus"></i></span>
-                                <span class="gallery-card__hover-label">xem album</span>
-                            </span>
-                            <span class="gallery-card__count">
-                                <img src="./images/svg/album-icon.svg" alt="">
-                                <span>3</span>
-                            </span>
-                        </a>
-                        <h2 class="gallery-card__title"><a href="cnctech-ha-nam.html">Tiến độ dự án</a></h2>
-                    </article>
-                </div>
-                <div class="col-md-4">
-                    <article class="gallery-card">
-                        <a class="gallery-card__media" href="kcn-thang-long-2.html">
-                            <img class="gallery-card__img" src="images/gallery/album-1.jpg" alt="">
-                            <span class="gallery-card__overlay" aria-hidden="true"></span>
-                            <span class="gallery-card__hover">
-                                <span class="gallery-card__hover-icon" aria-hidden="true"><i class="fa-light fa-magnifying-glass-plus"></i></span>
-                                <span class="gallery-card__hover-label">xem album</span>
-                            </span>
-                            <span class="gallery-card__count">
-                                <img src="./images/svg/album-icon.svg" alt="">
-                                <span>3</span>
-                            </span>
-                        </a>
-                        <h2 class="gallery-card__title"><a href="kcn-thang-long-2.html">Tiến độ dự án</a></h2>
-                    </article>
-                </div>
-                <div class="col-md-4">
-                    <article class="gallery-card">
-                        <a class="gallery-card__media" href="cum-cong-nghiep-hop-thinh.html">
-                            <img class="gallery-card__img" src="images/gallery/album-2.jpg" alt="">
-                            <span class="gallery-card__overlay" aria-hidden="true"></span>
-                            <span class="gallery-card__hover">
-                                <span class="gallery-card__hover-icon" aria-hidden="true"><i class="fa-light fa-magnifying-glass-plus"></i></span>
-                                <span class="gallery-card__hover-label">xem album</span>
-                            </span>
-                            <span class="gallery-card__count">
-                                <img src="./images/svg/album-icon.svg" alt="">
-                                <span>3</span>
-                            </span>
-                        </a>
-                        <h2 class="gallery-card__title"><a href="cum-cong-nghiep-hop-thinh.html">Tiến độ dự án</a></h2>
-                    </article>
-                </div>
-                <div class="col-md-4">
-                    <article class="gallery-card">
-                        <a class="gallery-card__media" href="kcn-nam-binh-xuyen-green-park.html">
-                            <img class="gallery-card__img" src="images/gallery/album-3.jpg" alt="">
-                            <span class="gallery-card__overlay" aria-hidden="true"></span>
-                            <span class="gallery-card__hover">
-                                <span class="gallery-card__hover-icon" aria-hidden="true"><i class="fa-light fa-magnifying-glass-plus"></i></span>
-                                <span class="gallery-card__hover-label">xem album</span>
-                            </span>
-                            <span class="gallery-card__count">
-                                <img src="./images/svg/album-icon.svg" alt="">
-                                <span>3</span>
-                            </span>
-                        </a>
-                        <h2 class="gallery-card__title"><a href="kcn-nam-binh-xuyen-green-park.html">Tiến độ dự án</a></h2>
-                    </article>
+            </div>
+        </section>
+
+        <div class="service-detail__section service-detail__section--gray">
+            <div class="container">
+                <h2 class="t-heading-1 service-detail__section-title">Dự án tiêu biểu</h2>
+                <div class="service-carousel-wrap">
+                    <div class="project-carousel service-carousel owl-carousel">
+                        <article class="service-featured-card">
+                            <a class="service-featured-card__link" href="tt-logistics-bac-giang.html">
+                                <div class="service-featured-card__media">
+                                    <img src="images/services/featured-projects/tt-logistics-bac-giang.jpg" alt="TT Logistics quốc tế Bắc Giang">
+                                </div>
+                                <div class="service-featured-card__body">
+                                    <span class="service-featured-card__badge" aria-hidden="true">
+                                        <img src="images/factory-icon.svg" alt="">
+                                    </span>
+                                    <h3 class="service-featured-card__title">TT Logistics quốc tế Bắc Giang</h3>
+                                    <div class="service-featured-card__loc">
+                                        <img src="images/svg/location-green.svg" alt="">
+                                        <span>Quốc lộ 1A – Phường Tiền Phong – Tỉnh Bắc Ninh – Việt Nam</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                        <article class="service-featured-card">
+                            <a class="service-featured-card__link" href="cnctech-ba-thien-1.html">
+                                <div class="service-featured-card__media">
+                                    <img src="images/services/featured-projects/cnctech-ba-thien-1.png" alt="CNCTech Bá Thiện 1">
+                                </div>
+                                <div class="service-featured-card__body">
+                                    <span class="service-featured-card__badge" aria-hidden="true">
+                                        <img src="images/factory-icon.svg" alt="">
+                                    </span>
+                                    <h3 class="service-featured-card__title">CNCTech Bá Thiện 1</h3>
+                                    <p class="service-featured-card__loc">
+                                        <img src="images/svg/location-green.svg" alt="">
+                                        Khu công nghiệp Bá Thiện - Phân khu I, Bình Xuyên, Phú Thọ
+                                    </p>
+                                </div>
+                            </a>
+                        </article>
+                        <article class="service-featured-card">
+                            <a class="service-featured-card__link" href="kcn-nam-binh-xuyen-green-park.html">
+                                <div class="service-featured-card__media">
+                                    <img src="images/services/featured-projects/kcn-nam-binh-xuyen-green-park.jpg" alt="KCN Nam Bình Xuyên Green Park">
+                                </div>
+                                <div class="service-featured-card__body">
+                                    <span class="service-featured-card__badge" aria-hidden="true">
+                                        <img src="images/factory-icon.svg" alt="">
+                                    </span>
+                                    <h3 class="service-featured-card__title">KCN Nam Bình Xuyên Green Park</h3>
+                                    <p class="service-featured-card__loc">
+                                        <img src="images/svg/location-green.svg" alt="">
+                                        KCN Nam Bình Xuyên, Xuân Lãng, Tỉnh Phú Thọ
+                                    </p>
+                                </div>
+                            </a>
+                        </article>
+                    </div>
+                    <div class="service-carousel__dots project-carousel__dots" role="tablist" aria-label="Dự án tiêu biểu">
+                        <button type="button" class="is-active" aria-label="Slide 1"></button>
+                        <button type="button" aria-label="Slide 2"></button>
+                        <button type="button" aria-label="Slide 3"></button>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <section class="service-detail__section service-detail__section--white">
+            <div class="container">
+                <div class="project-contact-card service-contact-card">
+                    <div class="project-contact-card__head">
+                        <h2 class="project-contact-card__title">Yêu cầu liên hệ</h2>
+                    </div>
+                    <div class="project-contact-card__body">
+                        <div class="project-contact-card__media">
+                            <img src="images/services/contact-panel.png" alt="">
+                        </div>
+                        <div class="project-contact-card__form-wrap">
+                            <p class="project-contact-card__note"><i class="fa-solid fa-circle-info"></i> Lưu ý: Các
+                                thông tin có dấu <span class="contact-form__required">(*)</span> là bắt buộc.</p>
+                            <form class="contact-form" action="#" method="post">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label" for="service-contact-name">Họ và tên <span
+                                                class="contact-form__required" aria-hidden="true">*</span></label>
+                                        <input class="form-control" type="text" id="service-contact-name"
+                                            name="name" placeholder="Họ và tên" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                                <label class="form-label" for="service-contact-email">Email
+                                                    <span class="contact-form__required"
+                                                        aria-hidden="true">*</span></label>
+                                                <input class="form-control" type="email"
+                                                    id="service-contact-email" name="email" placeholder="Địa chỉ email"
+                                                    required>
+                                            </div>
+                                    <div class="col-md-6">
+                                            <label class="form-label" for="service-contact-phone">Số điện
+                                                    thoại</label>
+                                                <input class="form-control" type="tel" id="service-contact-phone"
+                                                    name="phone" placeholder="Số điện thoại">
+                                            </div>
+                                    <div class="col-12">
+                                        <label class="form-label" for="service-contact-message">Tin
+                                            nhắn</label>
+                                        <textarea class="form-control" id="service-contact-message"
+                                            name="message" placeholder="Nhập nội dung..." rows="4"></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="contact-form__captcha">
+                                        <img width="216" height="60" class="contact-form__captcha-img" src="images/services/captcha.jpg" alt="Mã captcha">
+                                        <div>
+                                            <label class="form-label" for="service-contact-code">Code <span
+                                                    class="contact-form__required" aria-hidden="true">*</span></label>
+                                            <input class="form-control" type="text" id="service-contact-code"
+                                                name="captcha" required>
+                                            <p class="form-text">Nhập các ký tự hiển thị trong hình
+                                                ảnh.
+                                            </p>
+                                        </div>
+                                    </div></div>
+                                </div>
+                                <button type="submit" class="btn-see-more btn-see-more--solid contact-form__submit">
+                                    gửi thông tin
+                                    <span class="btn-see-more__icon btn-see-more__icon--sm"><i
+                                            class="fa-solid fa-arrow-right"></i></span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
-
-    <div class="cta-banner" id="lien-he">
-        <div class="cta-banner__bg" aria-hidden="true">
-            <video class="cta-banner__video" autoplay muted loop playsinline preload="metadata">
-                <source src="images/video-thuml.mp4" type="video/mp4">
-            </video>
-        </div>
-        <div class="container">
-            <div class="cta-banner__content">
-                <div class="cta-banner__copy">
-                    <h2 class="t-heading-1 cta-banner__title">Bạn cần tìm nhà xưởng/nhà kho tại Việt Nam?</h2>
-                    <p class="cta-banner__lead">Hợp tác cùng chúng tôi để tạo ra giá trị kinh doanh thực chất thông qua
-                        chiến lược, công nghệ và hệ sinh thái kết nối hiệu quả.</p>
-                </div>
-                <div class="cta-banner__actions">
-                    <a class="cta-btn cta-btn--phone" href="tel:+84866505509">
-                        <span class="cta-btn__label">(+84) 866 505 509</span>
-                        <span class="cta-btn__icon"><i class="fa-regular fa-phone"></i></span>
-                    </a>
-                    <a class="cta-btn cta-btn--quote" href="lien-he.html">
-                        <span class="cta-btn__label">nhận báo giá</span>
-                        <span class="cta-btn__icon"><i class="fa-solid fa-arrow-right"></i></span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
 
     <footer class="site-footer">
         <div class="site-footer__topbar">
@@ -605,7 +811,9 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
 </body>
 
