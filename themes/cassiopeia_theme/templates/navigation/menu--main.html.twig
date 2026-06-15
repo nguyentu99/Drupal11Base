@@ -3,13 +3,21 @@
  * @file
  * Main navigation for site header (admin/structure/menu/manage/main).
  *
- * Menu link CSS classes from admin are merged into submenu links.
- * Use "site-header__submenu-link--group" on external/group items when needed.
+ * Dropdown parents without a landing page use href="#" + dropdown-toggle.
+ * Parents with a real URL (e.g. Services → /dich-vu) use nav-dropdown-head.
+ *
+ * Add class "site-header__submenu-link--group" on external submenu links in admin.
  */
 #}
 {% import _self as menus %}
 
 {{ menus.menu_links(items, attributes, 0) }}
+
+{% macro chevron(desktop_only) %}
+  <svg{% if desktop_only %} class="d-none d-lg-block"{% endif %} xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.0303 3.96971C10.3232 4.2626 10.3232 4.73747 10.0303 5.03037L6.53033 8.53037C6.38968 8.67102 6.19891 8.75004 6 8.75004C5.80109 8.75004 5.61032 8.67102 5.46967 8.53037L1.96967 5.03037C1.67678 4.73747 1.67678 4.2626 1.96967 3.96971C2.26256 3.67681 2.73744 3.67681 3.03033 3.96971L6 6.93938L8.96967 3.96971C9.26256 3.67681 9.73744 3.67681 10.0303 3.96971Z" fill="#121212"/>
+  </svg>
+{% endmacro %}
 
 {% macro menu_links(items, attributes, menu_level) %}
   {% import _self as menus %}
@@ -22,22 +30,56 @@
     {% for item in items %}
       {% if menu_level == 0 %}
         {% if item.below %}
+          {% set is_nolink = item.url.isRouted() and item.url.routeName == '<nolink>' %}
           <li class="nav-item dropdown nav-item--dropdown{{ item.in_active_trail ? ' active' : '' }}">
-            <a href="{{ item.url }}" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-              role="button" aria-expanded="false">
-              {{ item.title }}
-              <i class="fa-solid fa-chevron-down"></i>
-            </a>
+            {% if is_nolink %}
+              <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ item.title }}
+                {{ menus.chevron(false) }}
+              </a>
+            {% else %}
+              <div class="site-header__nav-dropdown-head">
+                <a href="{{ item.url }}" class="nav-link site-header__nav-parent{{ item.in_active_trail ? ' active' : '' }}">
+                  {{ item.title }}
+                  {{ menus.chevron(true) }}
+                </a>
+                <button type="button" class="site-header__nav-submenu-toggle dropdown-toggle d-lg-none" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'Open @title menu'|t({'@title': item.title}) }}">
+                  {{ menus.chevron(false) }}
+                </button>
+              </div>
+            {% endif %}
             {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
           </li>
         {% else %}
+          {% set item_attributes = item.url.getOption('attributes')|default({}) %}
+          {% set link_classes = ['nav-link'] %}
+          {% if item.in_active_trail %}
+            {% set link_classes = link_classes|merge(['active']) %}
+          {% endif %}
+          {% if item_attributes.class is defined %}
+            {% if item_attributes.class is iterable %}
+              {% set link_classes = link_classes|merge(item_attributes.class) %}
+            {% else %}
+              {% set link_classes = link_classes|merge([item_attributes.class]) %}
+            {% endif %}
+          {% endif %}
+          {% set link_options = { 'class': link_classes } %}
+          {% if item_attributes.target is defined %}
+            {% set link_options = link_options|merge({ 'target': item_attributes.target }) %}
+          {% endif %}
+          {% if item_attributes.rel is defined %}
+            {% set link_options = link_options|merge({ 'rel': item_attributes.rel }) %}
+          {% endif %}
           <li class="nav-item{{ item.in_active_trail ? ' active' : '' }}">
-            {{ link(item.title, item.url, { 'class': ['nav-link'] }) }}
+            {{ link(item.title, item.url, link_options) }}
           </li>
         {% endif %}
       {% else %}
         {% set item_attributes = item.url.getOption('attributes')|default({}) %}
         {% set link_classes = ['site-header__submenu-link'] %}
+        {% if item.in_active_trail %}
+          {% set link_classes = link_classes|merge(['active']) %}
+        {% endif %}
         {% if item_attributes.class is defined %}
           {% if item_attributes.class is iterable %}
             {% set link_classes = link_classes|merge(item_attributes.class) %}

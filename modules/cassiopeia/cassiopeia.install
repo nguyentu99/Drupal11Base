@@ -412,3 +412,27 @@ function cassiopeia_update_11026(): string {
   $messages = $installer->importEnglishTranslations();
   return implode(' ', $messages);
 }
+
+/**
+ * @deprecated Menu structure is managed in admin; hook kept for update history.
+ */
+function cassiopeia_update_11027(): string {
+  return (string) t('Skipped — main menu structure is managed via the admin UI.');
+}
+
+/**
+ * @deprecated Menu structure is managed in admin; hook kept for update history.
+ */
+function cassiopeia_update_11028(): string {
+  return (string) t('Skipped — main menu structure is managed via the admin UI.');
+}
+
+/**
+ * Restores the original main menu data (ids 1–29); keeps Twig markup only.
+ */
+function cassiopeia_update_11029(): string {
+  /** @var \Drupal\cassiopeia\Service\MainMenuLegacyRestorer $restorer */
+  $restorer = \Drupal::service('cassiopeia.main_menu_legacy_restorer');
+  $messages = $restorer->restore();
+  return implode(' ', $messages);
+}

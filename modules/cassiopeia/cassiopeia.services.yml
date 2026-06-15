@@ -28,6 +28,8 @@ services:
     class: Drupal\cassiopeia\Service\ConfigServiceContentProvider
   cassiopeia.main_menu_translation_installer:
     class: Drupal\cassiopeia\Service\MainMenuTranslationInstaller
+  cassiopeia.main_menu_legacy_restorer:
+    class: Drupal\cassiopeia\Service\MainMenuLegacyRestorer
   cassiopeia.CassiopeiaRenderTemplate:
     class: Drupal\cassiopeia\Service\CassiopeiaRenderTemplate
     arguments: ['@extension.path.resolver']

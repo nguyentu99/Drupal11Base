@@ -730,8 +730,9 @@ nav.app-header.cassiopeia-admin-navbar .dropdown-menu .user-header {
 
 .app-content .image-widget-data {
   display: flex;
-  gap: 0.5rem;
+  gap: 0;
   min-width: 0;
+  flex-direction: column;
 }
 
 .app-content .image-widget .image-preview img,
@@ -748,7 +749,7 @@ nav.app-header.cassiopeia-admin-navbar .dropdown-menu .user-header {
 .app-content .form-managed-file > .form-item:not(:last-child) {
   width: 100%;
   max-width: 20rem;
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
 .app-content .image-widget-data .form-control,
@@ -776,6 +777,7 @@ nav.app-header.cassiopeia-admin-navbar .dropdown-menu .user-header {
 .app-content .form-managed-file .file {
   margin: 0;
   font-size: 0.875rem;
+  padding: 0;
 }
 
 .app-content .field-multiple-table input[type="file"],
