@@ -211,42 +211,6 @@
       </div>
     {% endif %}
 
-    {% if project.infrastructure %}
-      <div class="project-detail__section project-detail__section--infra">
-        <div class="container">
-          <section class="project-infra">
-            <h2 class="t-heading-1 project-infra__heading">{{ project.labels.infrastructure }}</h2>
-            <div class="row project-infra__grid">
-              {% for item in project.infrastructure %}
-                <div class="col-md-6 col-xl-4 d-flex">
-                  <article class="project-infra__card">
-                    {% if item.icon or item.title %}
-                      <div class="project-infra__head">
-                        {% if item.icon %}
-                          <span class="project-infra__icon" aria-hidden="true">
-                            <img src="{{ item.icon.url }}" alt="{{ item.icon.alt }}">
-                          </span>
-                        {% endif %}
-                        {% if item.title %}
-                          <h3 class="project-infra__title">{{ item.title }}</h3>
-                        {% endif %}
-                      </div>
-                    {% endif %}
-                    {% if item.texts %}
-                      <hr class="project-infra__divider">
-                      {% for text in item.texts %}
-                        <p class="project-infra__text">{{ text }}</p>
-                      {% endfor %}
-                    {% endif %}
-                  </article>
-                </div>
-              {% endfor %}
-            </div>
-          </section>
-        </div>
-      </div>
-    {% endif %}
-
     {% if project.zones %}
       {% set zone_tabs_id = 'projectZoneTabs' ~ node.id %}
       {% set zone_content_id = 'projectZoneTabContent' ~ node.id %}
@@ -278,6 +242,42 @@
               </div>
             {% endfor %}
           </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if project.infrastructure %}
+      <div class="project-detail__section project-detail__section--infra">
+        <div class="container">
+          {#          <section class="project-infra">#}
+          <h2 class="t-heading-1 project-infra__heading">{{ project.labels.infrastructure }}</h2>
+          <div class="row project-infra__grid">
+            {% for item in project.infrastructure %}
+              <div class="col-md-6 col-xl-4 d-flex">
+                <article class="project-infra__card">
+                  {% if item.icon or item.title %}
+                    <div class="project-infra__head">
+                      {% if item.icon %}
+                        <span class="project-infra__icon" aria-hidden="true">
+                            <img src="{{ item.icon.url }}" alt="{{ item.icon.alt }}">
+                          </span>
+                      {% endif %}
+                      {% if item.title %}
+                        <h3 class="project-infra__title">{{ item.title }}</h3>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                  {% if item.texts %}
+                    <hr class="project-infra__divider">
+                    {% for text in item.texts %}
+                      <p class="project-infra__text">{{ text }}</p>
+                    {% endfor %}
+                  {% endif %}
+                </article>
+              </div>
+            {% endfor %}
+          </div>
+          {#          </section>#}
         </div>
       </div>
     {% endif %}

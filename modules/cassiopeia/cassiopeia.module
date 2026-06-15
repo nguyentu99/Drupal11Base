@@ -3841,6 +3841,47 @@ function cassiopeia_preprocess_views_view(array &$variables): void {
 }
 
 /**
+ * Node bundles that are edited as configuration and have no public detail page.
+ *
+ * @return string[]
+ */
+function cassiopeia_node_bundles_without_detail_page(): array {
+  return [
+    'banner',
+    'home_config',
+    'config_service',
+  ];
+}
+
+/**
+ * Whether a node bundle has a public canonical detail page.
+ */
+function cassiopeia_node_bundle_has_detail_page(string $bundle): bool {
+  return !in_array($bundle, cassiopeia_node_bundles_without_detail_page(), TRUE);
+}
+
+/**
+ * Submit handler: keep editors on the edit form after saving config nodes.
+ */
+function cassiopeia_node_form_no_detail_redirect_submit(array &$form, FormStateInterface $form_state): void {
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof NodeForm) {
+    return;
+  }
+
+  $node = $form_object->getEntity();
+  if ($node->isNew() || cassiopeia_node_bundle_has_detail_page($node->bundle())) {
+    return;
+  }
+
+  $form_state->setRedirect(
+    'entity.node.edit_form',
+    ['node' => $node->id()],
+    ['language' => $node->language()]
+  );
+}
+
+/**
  * Implements hook_form_alter().
  */
 function cassiopeia_form_alter(array &$form, FormStateInterface $form_state, $form_id): void {
@@ -3850,6 +3891,10 @@ function cassiopeia_form_alter(array &$form, FormStateInterface $form_state, $fo
   }
 
   $node = $form_object->getEntity();
+  if (!cassiopeia_node_bundle_has_detail_page($node->bundle()) && isset($form['actions']['submit']['#submit'])) {
+    $form['actions']['submit']['#submit'][] = 'cassiopeia_node_form_no_detail_redirect_submit';
+  }
+
   if ($node->isNew() || !\Drupal::moduleHandler()->moduleExists('content_translation')) {
     return;
   }
