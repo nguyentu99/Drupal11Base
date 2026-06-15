@@ -34,3 +34,13 @@ contact-submissions-admin:
   css:
     component:
       css/contact-submissions-admin.css: {}
+
+imce-modern:
+  version: VERSION
+  css:
+    theme:
+      css/imce-modern.css: { weight: 200 }
+  js:
+    js/imce-modern.js: {}
+  dependencies:
+    - imce/drupal.imce
