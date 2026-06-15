@@ -402,3 +402,13 @@ function cassiopeia_update_11025(): string {
     '@count' => $deleted,
   ]);
 }
+
+/**
+ * Enables English translations for the main navigation menu.
+ */
+function cassiopeia_update_11026(): string {
+  /** @var \Drupal\cassiopeia\Service\MainMenuTranslationInstaller $installer */
+  $installer = \Drupal::service('cassiopeia.main_menu_translation_installer');
+  $messages = $installer->importEnglishTranslations();
+  return implode(' ', $messages);
+}

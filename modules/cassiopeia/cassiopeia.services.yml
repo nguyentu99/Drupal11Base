@@ -26,6 +26,8 @@ services:
     arguments: ['@file_system', '@file.repository']
   cassiopeia.config_service_content_provider:
     class: Drupal\cassiopeia\Service\ConfigServiceContentProvider
+  cassiopeia.main_menu_translation_installer:
+    class: Drupal\cassiopeia\Service\MainMenuTranslationInstaller
   cassiopeia.CassiopeiaRenderTemplate:
     class: Drupal\cassiopeia\Service\CassiopeiaRenderTemplate
     arguments: ['@extension.path.resolver']
