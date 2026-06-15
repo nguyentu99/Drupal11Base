@@ -39,11 +39,6 @@ body.layout-fixed.sidebar-expand-lg.bg-body-tertiary {
   background-color: var(--bs-body-bg, #fff);
 }
 
-nav.app-header.cassiopeia-admin-navbar {
-  border-bottom-color: #367fa9;
-  background-color: #3c8dbc;
-}
-
 .app-header .navbar {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;

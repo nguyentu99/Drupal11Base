@@ -93,13 +93,7 @@ function cassiopeia_admin_theme_preprocess_page(&$variables): void {
   $variables['account_avatar_sidebar'] = cassiopeia_admin_theme_build_user_avatar($account, [
     'img-fluid',
     'rounded-circle',
-    'sidebar-user-panel__image',
   ]);
-
-  $site_config = \Drupal::config('system.site');
-  $variables['site_name'] = $site_config->get('name') ?: 'CNC Industrial';
-  $variables['site_logo'] = '/' . \Drupal::service('extension.list.theme')->getPath('cassiopeia_theme') . '/images/cnc-logo.png';
-  $variables['front_url'] = \Drupal\Core\Url::fromRoute('<front>')->toString();
 }
 
 /**
