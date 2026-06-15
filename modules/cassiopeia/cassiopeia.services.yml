@@ -19,6 +19,13 @@ services:
   cassiopeia.home_config_content_importer:
     class: Drupal\cassiopeia\Service\HomeConfigContentImporter
     arguments: ['@file_system', '@file.repository']
+  cassiopeia.config_service_content_installer:
+    class: Drupal\cassiopeia\Service\ConfigServiceContentInstaller
+  cassiopeia.config_service_content_importer:
+    class: Drupal\cassiopeia\Service\ConfigServiceContentImporter
+    arguments: ['@file_system', '@file.repository']
+  cassiopeia.config_service_content_provider:
+    class: Drupal\cassiopeia\Service\ConfigServiceContentProvider
   cassiopeia.CassiopeiaRenderTemplate:
     class: Drupal\cassiopeia\Service\CassiopeiaRenderTemplate
     arguments: ['@extension.path.resolver']

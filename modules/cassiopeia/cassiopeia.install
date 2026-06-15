@@ -356,3 +356,49 @@ function cassiopeia_update_11021(): string {
 
   return (string) t('Updated Cassiopeia interface label config to English sources for translation.');
 }
+
+/**
+ * Installs config_service content type, fields, and paragraph bundles.
+ */
+function cassiopeia_update_11022(): string {
+  /** @var \Drupal\cassiopeia\Service\ConfigServiceContentInstaller $installer */
+  $installer = \Drupal::service('cassiopeia.config_service_content_installer');
+  $installer->install();
+  return (string) t('Installed config_service content type with fields and paragraphs.');
+}
+
+/**
+ * Seeds the config_service node from dich-vu.html content.
+ */
+function cassiopeia_update_11023(): string {
+  /** @var \Drupal\cassiopeia\Service\ConfigServiceContentImporter $importer */
+  $importer = \Drupal::service('cassiopeia.config_service_content_importer');
+  $messages = $importer->import();
+  return implode(' ', $messages);
+}
+
+/**
+ * Replaces field_video_path with field_video file upload on config_service.
+ */
+function cassiopeia_update_11024(): string {
+  /** @var \Drupal\cassiopeia\Service\ConfigServiceContentInstaller $installer */
+  $installer = \Drupal::service('cassiopeia.config_service_content_installer');
+  $messages = $installer->migrateHeroVideoToFile();
+  return implode(' ', $messages);
+}
+
+/**
+ * Removes /dich-vu path alias so the custom services route is used.
+ */
+function cassiopeia_update_11025(): string {
+  $storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+  $aliases = $storage->loadByProperties(['alias' => '/dich-vu']);
+  $deleted = 0;
+  foreach ($aliases as $alias) {
+    $alias->delete();
+    $deleted++;
+  }
+  return (string) t('Removed @count /dich-vu path alias(es) so cassiopeia.services route handles the page.', [
+    '@count' => $deleted,
+  ]);
+}

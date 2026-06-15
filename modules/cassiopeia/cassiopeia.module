@@ -54,6 +54,13 @@ function cassiopeia_theme($existing, $type, $theme, $path) {
       ],
       'template' => 'contact',
     ],
+    'cassiopeia_services_page' => [
+      'variables' => [
+        'services_page' => NULL,
+        'contact_form' => NULL,
+      ],
+      'template' => 'services-page',
+    ],
   ];
 }
 
@@ -3362,6 +3369,409 @@ function cassiopeia_home_config_data(?NodeInterface $node, string $theme_path): 
       'testimonials' => $testimonials,
     ],
     'certifications' => $certifications,
+  ];
+}
+
+/**
+ * Language-aware URL for the services landing page.
+ */
+function cassiopeia_services_url(array $options = []): string {
+  $options += ['language' => \Drupal::languageManager()->getCurrentLanguage()];
+  return Url::fromRoute('cassiopeia.services', [], $options)->toString();
+}
+
+/**
+ * Loads the published config_service node for the services landing page.
+ */
+function cassiopeia_config_service_node(?LanguageInterface $language = NULL): ?NodeInterface {
+  $language ??= \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
+  $cache_key = 'cassiopeia:config_service:' . $language->getId();
+  $static = &drupal_static(__FUNCTION__);
+  if (isset($static[$cache_key])) {
+    return $static[$cache_key];
+  }
+
+  $nids = \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('type', 'config_service')
+    ->condition('status', 1)
+    ->condition('field_link', 'services')
+    ->range(0, 1)
+    ->execute();
+
+  if ($nids === []) {
+    $static[$cache_key] = NULL;
+    return NULL;
+  }
+
+  $node = \Drupal::entityTypeManager()->getStorage('node')->load(reset($nids));
+  if ($node && $node->hasTranslation($language->getId())) {
+    $node = $node->getTranslation($language->getId());
+  }
+
+  $static[$cache_key] = $node instanceof NodeInterface ? $node : NULL;
+  return $static[$cache_key];
+}
+
+/**
+ * Builds one stat item for the services landing page (includes optional icon).
+ *
+ * @return array{value: string, unit: string, label: string, icon?: array}|null
+ */
+function cassiopeia_services_page_stat_item(ParagraphInterface $paragraph): ?array {
+  $stat = cassiopeia_dich_vu_stat_item($paragraph);
+  if ($stat === NULL) {
+    return NULL;
+  }
+  if ($paragraph->hasField('field_anh') && !$paragraph->get('field_anh')->isEmpty()) {
+    $icon = cassiopeia_image_field_item_data($paragraph->get('field_anh')->first());
+    if ($icon) {
+      $stat['icon'] = $icon;
+    }
+  }
+  return $stat;
+}
+
+/**
+ * Resolves the hero video URL for the services landing page.
+ */
+function cassiopeia_config_service_hero_video_url(?NodeInterface $node, string $theme_path): string {
+  $default = $theme_path . '/images/video-thuml.mp4';
+
+  if ($node && $node->hasField('field_video') && !$node->get('field_video')->isEmpty()) {
+    $file = $node->get('field_video')->entity;
+    if ($file) {
+      return \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+    }
+  }
+
+  return $default;
+}
+
+/**
+ * Builds services landing page data from a config_service node.
+ *
+ * @return array<string, mixed>
+ */
+function cassiopeia_config_service_data(?NodeInterface $node, string $theme_path, ?LanguageInterface $language = NULL): array {
+  $language ??= \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
+  $empty = [
+    'hero' => ['title' => '', 'video' => $theme_path . '/images/video-thuml.mp4'],
+    'intro' => ['title' => '', 'lead' => ''],
+    'stats' => [],
+    'milestones' => ['title' => '', 'panels' => []],
+    'vision' => ['title' => '', 'cards' => []],
+    'leadership' => ['title' => '', 'featured' => NULL, 'members' => []],
+    'members' => ['title' => '', 'items' => []],
+    'hub' => ['title' => '', 'rings' => [], 'services' => []],
+    'projects' => ['title' => '', 'cards' => []],
+    'contact_image' => NULL,
+    'cache_tags' => ['node_list:config_service'],
+  ];
+
+  if (!$node || $node->bundle() !== 'config_service') {
+    return $empty;
+  }
+
+  $cache_tags = array_merge($node->getCacheTags(), [
+    'node_list:dich_vu',
+    'node_list:projects',
+  ]);
+
+  $video = cassiopeia_config_service_hero_video_url($node, $theme_path);
+
+  $intro_lead = '';
+  if ($node->hasField('field_intro_lead') && !$node->get('field_intro_lead')->isEmpty()) {
+    $intro_lead = (string) $node->get('field_intro_lead')->processed;
+  }
+
+  $stats = [];
+  if ($node->hasField('field_so_lieu') && !$node->get('field_so_lieu')->isEmpty()) {
+    foreach ($node->get('field_so_lieu') as $item) {
+      $paragraph = $item->entity;
+      if ($paragraph instanceof ParagraphInterface) {
+        $stat = cassiopeia_services_page_stat_item($paragraph);
+        if ($stat) {
+          $stats[] = $stat;
+        }
+      }
+    }
+  }
+
+  $panels = [];
+  if ($node->hasField('field_cot_moc') && !$node->get('field_cot_moc')->isEmpty()) {
+    foreach ($node->get('field_cot_moc') as $item) {
+      $paragraph = $item->entity;
+      if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'cot_moc_dich_vu') {
+        continue;
+      }
+      $entries = [];
+      if ($paragraph->hasField('field_muc_cot_moc') && !$paragraph->get('field_muc_cot_moc')->isEmpty()) {
+        foreach ($paragraph->get('field_muc_cot_moc') as $entry_item) {
+          $entry = $entry_item->entity;
+          if (!$entry instanceof ParagraphInterface || $entry->bundle() !== 'muc_cot_moc') {
+            continue;
+          }
+          $image = $entry->hasField('field_anh') && !$entry->get('field_anh')->isEmpty()
+            ? cassiopeia_image_field_item_data($entry->get('field_anh')->first())
+            : NULL;
+          $text = '';
+          if ($entry->hasField('field_body') && !$entry->get('field_body')->isEmpty()) {
+            $text = (string) $entry->get('field_body')->processed;
+          }
+          $entries[] = [
+            'year' => trim((string) ($entry->get('field_title')->value ?? '')),
+            'text' => $text,
+            'image' => $image,
+          ];
+        }
+      }
+      $summary = '';
+      if ($paragraph->hasField('field_body') && !$paragraph->get('field_body')->isEmpty()) {
+        $summary = (string) $paragraph->get('field_body')->processed;
+      }
+      $panels[] = [
+        'period' => trim((string) ($paragraph->get('field_period')->value ?? '')),
+        'summary' => $summary,
+        'open' => (bool) ($paragraph->get('field_noi_bat')->value ?? FALSE),
+        'future' => trim((string) ($paragraph->get('field_key')->value ?? '')) === 'future',
+        'entries' => $entries,
+      ];
+    }
+  }
+
+  $vision_cards = [];
+  if ($node->hasField('field_tam_nhin') && !$node->get('field_tam_nhin')->isEmpty()) {
+    foreach ($node->get('field_tam_nhin') as $item) {
+      $paragraph = $item->entity;
+      if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'the_tam_nhin') {
+        continue;
+      }
+      $image = $paragraph->hasField('field_anh') && !$paragraph->get('field_anh')->isEmpty()
+        ? cassiopeia_image_field_item_data($paragraph->get('field_anh')->first())
+        : NULL;
+      $body = '';
+      if ($paragraph->hasField('field_body') && !$paragraph->get('field_body')->isEmpty()) {
+        $body = (string) $paragraph->get('field_body')->processed;
+      }
+      $vision_cards[] = [
+        'badge' => trim((string) ($paragraph->get('field_content')->value ?? '')),
+        'title' => trim((string) ($paragraph->get('field_title')->value ?? '')),
+        'body' => $body,
+        'image' => $image,
+      ];
+    }
+  }
+
+  $featured = NULL;
+  $leaders = [];
+  if ($node->hasField('field_lanh_dao') && !$node->get('field_lanh_dao')->isEmpty()) {
+    foreach ($node->get('field_lanh_dao') as $item) {
+      $paragraph = $item->entity;
+      if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'lanh_dao') {
+        continue;
+      }
+      $thumb = $paragraph->hasField('field_anh') && !$paragraph->get('field_anh')->isEmpty()
+        ? cassiopeia_image_field_item_data($paragraph->get('field_anh')->first())
+        : NULL;
+      $photo = $paragraph->hasField('field_hinh_anh') && !$paragraph->get('field_hinh_anh')->isEmpty()
+        ? cassiopeia_image_field_item_data($paragraph->get('field_hinh_anh')->first())
+        : $thumb;
+      $detail = '';
+      if ($paragraph->hasField('field_body') && !$paragraph->get('field_body')->isEmpty()) {
+        $detail = (string) $paragraph->get('field_body')->processed;
+      }
+      $leader = [
+        'prefix' => trim((string) ($paragraph->get('field_unit')->value ?? '')),
+        'name' => trim((string) ($paragraph->get('field_title')->value ?? '')),
+        'role' => trim((string) ($paragraph->get('field_content')->value ?? '')),
+        'role_html' => nl2br(trim((string) ($paragraph->get('field_content')->value ?? ''))),
+        'detail' => $detail,
+        'thumb' => $thumb,
+        'photo' => $photo,
+      ];
+      if ((bool) ($paragraph->get('field_noi_bat')->value ?? FALSE)) {
+        $featured = $leader;
+      }
+      else {
+        $leaders[] = $leader;
+      }
+    }
+  }
+
+  $member_items = [];
+  if ($node->hasField('field_thanh_vien') && !$node->get('field_thanh_vien')->isEmpty()) {
+    foreach ($node->get('field_thanh_vien') as $item) {
+      $paragraph = $item->entity;
+      if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'cong_ty_thanh_vien') {
+        continue;
+      }
+      $logo = $paragraph->hasField('field_anh') && !$paragraph->get('field_anh')->isEmpty()
+        ? cassiopeia_image_field_item_data($paragraph->get('field_anh')->first())
+        : NULL;
+      $member_items[] = [
+        'key' => trim((string) ($paragraph->get('field_key')->value ?? '')),
+        'name' => trim((string) ($paragraph->get('field_title')->value ?? '')),
+        'name_html' => nl2br(trim((string) ($paragraph->get('field_title')->value ?? ''))),
+        'logo' => $logo,
+      ];
+    }
+  }
+
+  $hub_icons = [
+    $theme_path . '/images/services-page/hub/icon-kcn.png',
+    $theme_path . '/images/services-page/hub/icon-building.png',
+  ];
+  $hub_services = [];
+  $service_nids = [];
+  if ($node->hasField('field_dich_vu') && !$node->get('field_dich_vu')->isEmpty()) {
+    foreach ($node->get('field_dich_vu') as $ref) {
+      if ($ref->target_id) {
+        $service_nids[] = (int) $ref->target_id;
+      }
+    }
+  }
+  if ($service_nids === []) {
+    $service_nids = array_map('intval', \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'dich_vu')
+      ->condition('status', 1)
+      ->sort('nid')
+      ->execute());
+  }
+  if ($service_nids !== []) {
+    /** @var \Drupal\node\NodeInterface[] $service_nodes */
+    $service_nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($service_nids);
+    $index = 0;
+    foreach ($service_nids as $nid) {
+      if (!isset($service_nodes[$nid])) {
+        continue;
+      }
+      $service_node = $service_nodes[$nid];
+      if ($service_node->hasTranslation($language->getId())) {
+        $service_node = $service_node->getTranslation($language->getId());
+      }
+      $icon = $hub_icons[$index % count($hub_icons)];
+      if ($service_node->hasField('field_image') && !$service_node->get('field_image')->isEmpty()) {
+        $image = cassiopeia_image_field_item_data($service_node->get('field_image')->first());
+        if ($image) {
+          $icon = $image['url'];
+        }
+      }
+      $hub_services[] = [
+        'position' => $index + 1,
+        'title' => $service_node->label(),
+        'url' => $service_node->toUrl('canonical', ['language' => $language])->toString(),
+        'icon' => $icon,
+        'icon_first' => $index % 2 === 0,
+      ];
+      $index++;
+    }
+  }
+
+  $rings = [
+    'outer' => $theme_path . '/images/inner.png',
+    'inner' => $theme_path . '/images/innter.png',
+    'center' => $theme_path . '/images/service-center.png',
+  ];
+  foreach ([
+    'outer' => 'field_hub_ring_outer',
+    'inner' => 'field_hub_ring_inner',
+    'center' => 'field_hub_center',
+  ] as $key => $field_name) {
+    if ($node->hasField($field_name) && !$node->get($field_name)->isEmpty()) {
+      $image = cassiopeia_image_field_item_data($node->get($field_name)->first());
+      if ($image) {
+        $rings[$key] = $image['url'];
+      }
+    }
+  }
+
+  $project_cards = [];
+  $project_nids = [];
+  if ($node->hasField('field_du_an') && !$node->get('field_du_an')->isEmpty()) {
+    foreach ($node->get('field_du_an') as $ref) {
+      if ($ref->target_id) {
+        $project_nids[] = (int) $ref->target_id;
+      }
+    }
+  }
+  if ($project_nids === []) {
+    $project_nids = array_map('intval', \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'projects')
+      ->condition('status', 1)
+      ->sort('nid')
+      ->range(0, 8)
+      ->execute());
+  }
+  if ($project_nids !== []) {
+    $location_icon = $theme_path . '/images/svg/location-green.svg';
+    /** @var \Drupal\node\NodeInterface[] $project_nodes */
+    $project_nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($project_nids);
+    foreach ($project_nids as $nid) {
+      if (!isset($project_nodes[$nid])) {
+        continue;
+      }
+      $project_node = $project_nodes[$nid];
+      if ($project_node->hasTranslation($language->getId())) {
+        $project_node = $project_node->getTranslation($language->getId());
+      }
+      $teaser = cassiopeia_projects_teaser_data($project_node);
+      $project_cards[] = [
+        'title' => $teaser['title'],
+        'url' => $teaser['url'],
+        'image' => $teaser['image'],
+        'image_alt' => $teaser['image_alt'],
+        'address' => $teaser['address'],
+        'location_icon' => $location_icon,
+      ];
+    }
+  }
+
+  $contact_image = NULL;
+  if ($node->hasField('field_contact_image') && !$node->get('field_contact_image')->isEmpty()) {
+    $contact_image = cassiopeia_image_field_item_data($node->get('field_contact_image')->first());
+  }
+
+  return [
+    'hero' => [
+      'title' => $node->label(),
+      'video' => $video,
+    ],
+    'intro' => [
+      'title' => trim((string) ($node->get('field_intro_title')->value ?? '')),
+      'lead' => $intro_lead,
+    ],
+    'stats' => $stats,
+    'milestones' => [
+      'title' => trim((string) ($node->get('field_milestones_title')->value ?? '')),
+      'panels' => $panels,
+    ],
+    'vision' => [
+      'title' => trim((string) ($node->get('field_vision_title')->value ?? '')),
+      'cards' => $vision_cards,
+    ],
+    'leadership' => [
+      'title' => trim((string) ($node->get('field_leadership_title')->value ?? '')),
+      'featured' => $featured,
+      'members' => $leaders,
+    ],
+    'members' => [
+      'title' => trim((string) ($node->get('field_members_title')->value ?? '')),
+      'items' => $member_items,
+    ],
+    'hub' => [
+      'title' => trim((string) ($node->get('field_services_title')->value ?? '')),
+      'rings' => $rings,
+      'services' => $hub_services,
+    ],
+    'projects' => [
+      'title' => trim((string) ($node->get('field_projects_title')->value ?? '')),
+      'cards' => $project_cards,
+    ],
+    'contact_image' => $contact_image,
+    'cache_tags' => $cache_tags,
   ];
 }
 

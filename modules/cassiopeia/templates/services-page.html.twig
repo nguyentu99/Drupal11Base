@@ -1,0 +1,323 @@
+{#
+/**
+ * @file
+ * Services landing page (/dich-vu).
+ */
+#}
+{% set page = services_page %}
+<div class="page-hero page-hero--project">
+  {% if page.hero.video %}
+    <video class="page-hero__media page-hero__video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+      <source src="{{ page.hero.video }}" type="video/mp4">
+    </video>
+  {% endif %}
+  <div class="page-hero__content">
+    <div class="container">
+      <nav class="page-hero__breadcrumb-nav" aria-label="{{ 'Breadcrumb'|t }}">
+        <ol class="breadcrumb page-hero__breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ path('<front>') }}">{{ 'Home'|t }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ page.hero.title }}</li>
+        </ol>
+      </nav>
+      <h1 class="page-hero__title">{{ page.hero.title }}</h1>
+    </div>
+  </div>
+</div>
+
+<main class="services-page">
+  {% if page.intro.title or page.intro.lead %}
+    <section class="services-page__intro">
+      <div class="container">
+        {% if page.intro.title %}
+          <h2 class="services-page__title">{{ page.intro.title }}</h2>
+        {% endif %}
+        {% if page.intro.lead %}
+          <div class="services-page__lead">{{ page.intro.lead }}</div>
+        {% endif %}
+        {% if page.stats %}
+          <div class="services-page__stats">
+            {% for row in [page.stats|slice(0, 3), page.stats|slice(3, 3)] %}
+              {% if row %}
+                <div class="services-page__stats-row">
+                  {% for stat in row %}
+                    <div class="services-page__stat">
+                      {% if stat.icon %}
+                        <div class="services-page__stat-icon"><img width="88" height="88" src="{{ stat.icon.url }}" alt=""></div>
+                      {% endif %}
+                      <div>
+                        <p class="services-page__stat-value" data-count="{{ stat.value }}"{% if stat.unit %} data-suffix=" {{ stat.unit }}"{% endif %}>0</p>
+                        <p class="services-page__stat-label">{{ stat.label|raw }}</p>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if page.milestones.panels %}
+    <section class="services-page__section services-page__section--gray">
+      <div class="container">
+        {% if page.milestones.title %}
+          <h2 class="t-heading-1 services-page__section-title">{{ page.milestones.title }}</h2>
+        {% endif %}
+        <div class="services-milestones">
+          {% for panel in page.milestones.panels %}
+            <div class="services-milestones__panel{{ panel.open ? ' is-open' : '' }}">
+              <button type="button" class="services-milestones__head{{ panel.future ? ' is-future' : '' }}" aria-expanded="{{ panel.open ? 'true' : 'false' }}">
+                <span class="services-milestones__head-main">
+                  <span class="services-milestones__dot{{ panel.future ? ' services-milestones__dot--future' : '' }}" aria-hidden="true"></span>
+                  <span class="services-milestones__period">{{ panel.period }}</span>
+                  <span class="services-milestones__summary">{{ panel.summary|striptags }}</span>
+                </span>
+                <i class="fa-solid fa-chevron-down services-milestones__chevron" aria-hidden="true"></i>
+              </button>
+              <div class="services-milestones__body">
+                {% if panel.entries %}
+                  <hr class="services-milestones__divider">
+                  <div class="services-milestones__content">
+                    <div class="services-milestones__timeline" aria-hidden="true">
+                      {% for entry in panel.entries %}
+                        <div class="services-milestones__timeline-item">
+                          <span class="services-milestones__timeline-dot{{ loop.first ? ' services-milestones__timeline-dot--active' : ' services-milestones__timeline-dot--muted' }}"></span>
+                          <span class="services-milestones__timeline-year{{ loop.first ? '' : ' services-milestones__timeline-year--muted' }}">{{ entry.year }}</span>
+                        </div>
+                        {% if not loop.last %}<span class="services-milestones__timeline-line"></span>{% endif %}
+                      {% endfor %}
+                    </div>
+                    <div class="services-milestones__entries">
+                      {% for entry in panel.entries %}
+                        <div class="services-milestones__entry">
+                          <div class="services-milestones__entry-main">
+                            {% if entry.image %}
+                              <img width="432" height="264" class="services-milestones__entry-photo" src="{{ entry.image.url }}" alt="{{ entry.year }}">
+                            {% endif %}
+                            <div class="services-milestones__entry-text">{{ entry.text }}</div>
+                          </div>
+                          <span class="services-milestones__entry-year">{{ entry.year }}</span>
+                        </div>
+                        {% if not loop.last %}<hr class="services-milestones__entry-divider">{% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if page.vision.cards %}
+    <section class="services-page__section">
+      <div class="container">
+        {% if page.vision.title %}
+          <h2 class="t-heading-1 services-page__section-title">{{ page.vision.title }}</h2>
+        {% endif %}
+        <div class="row services-vision__grid">
+          {% for card in page.vision.cards %}
+            <div class="col-md-6">
+              <article class="services-vision__card">
+                {% if card.image %}
+                  <img width="485" height="252" class="services-vision__photo" src="{{ card.image.url }}" alt="{{ card.title }}">
+                {% endif %}
+                {% if card.badge %}
+                  <div class="services-vision__badge"><span class="services-vision__badge-num">{{ card.badge }}</span></div>
+                {% endif %}
+                <div class="services-vision__body">
+                  <h3 class="services-vision__card-title">{{ card.title }}</h3>
+                  <div class="services-vision__card-text">{{ card.body }}</div>
+                </div>
+              </article>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if page.leadership.featured or page.leadership.members %}
+    <section class="services-page__section">
+      <div class="container d-flex flex-column align-items-center">
+        {% if page.leadership.title %}
+          <h2 class="t-heading-1 services-page__section-title">{{ page.leadership.title }}</h2>
+        {% endif %}
+        <div class="services-leadership">
+          {% if page.leadership.featured %}
+            {% set leader = page.leadership.featured %}
+            <div class="services-leadership__item services-leadership__item--featured">
+              <div class="services-leadership__summary">
+                <div class="services-leadership__photo">
+                  {% if leader.thumb %}<img src="{{ leader.thumb.url }}" alt="{{ leader.name }}">{% endif %}
+                </div>
+                <div class="services-leadership__info">
+                  {% if leader.prefix %}<p class="services-leadership__prefix">{{ leader.prefix }}</p>{% endif %}
+                  <p class="services-leadership__name">{{ leader.name }}</p>
+                  <p class="services-leadership__role">{{ leader.role_html|raw }}</p>
+                </div>
+              </div>
+              <div class="services-leadership__detail">
+                <div class="services-leadership__detail-photo">
+                  {% if leader.photo %}<img src="{{ leader.photo.url }}" alt="{{ leader.name }}">{% endif %}
+                </div>
+                <div class="services-leadership__detail-body">{{ leader.detail }}</div>
+              </div>
+            </div>
+          {% endif %}
+          {% if page.leadership.members %}
+            <div class="services-leadership__grid">
+              {% for pair in page.leadership.members|batch(2) %}
+                <div class="services-leadership__row">
+                  {% for leader in pair %}
+                    {% if leader %}
+                      <div class="services-leadership__item">
+                        <div class="services-leadership__summary">
+                          <div class="services-leadership__photo">
+                            {% if leader.thumb %}<img src="{{ leader.thumb.url }}" alt="{{ leader.name }}">{% endif %}
+                          </div>
+                          <div class="services-leadership__info">
+                            {% if leader.prefix %}<p class="services-leadership__prefix">{{ leader.prefix }}</p>{% endif %}
+                            <p class="services-leadership__name">{{ leader.name }}</p>
+                            <p class="services-leadership__role">{{ leader.role_html|raw }}</p>
+                          </div>
+                        </div>
+                        <div class="services-leadership__detail">
+                          <div class="services-leadership__detail-photo">
+                            {% if leader.photo %}<img src="{{ leader.photo.url }}" alt="{{ leader.name }}">{% endif %}
+                          </div>
+                          <div class="services-leadership__detail-body">{{ leader.detail }}</div>
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+        <div class="services-members__divider" aria-hidden="true"></div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if page.members.items %}
+    <section class="services-page__section pt-0">
+      <div class="container">
+        <div class="services-members">
+          <div class="services-members__body">
+            {% if page.members.title %}
+              <h2 class="t-heading-1 services-members__title">{{ page.members.title }}</h2>
+            {% endif %}
+            <div class="services-members__logos">
+              {% for item in page.members.items %}
+                <div class="services-members__item{{ item.key == 'vina' ? ' services-members__item--vina' : '' }}">
+                  <div class="services-members__logo{{ item.key ? ' services-members__logo--' ~ item.key : '' }}">
+                    {% if item.logo %}<img src="{{ item.logo.url }}" alt="{{ item.name|striptags }}">{% endif %}
+                  </div>
+                  <p class="services-members__name">{{ item.name_html|raw }}</p>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if page.hub.services %}
+    <section class="services-page__section services-page__section--gray" id="dich-vu">
+      <div class="container">
+        {% if page.hub.title %}
+          <h2 class="t-heading-1 services-page__section-title">{{ page.hub.title }}</h2>
+        {% endif %}
+        <div class="services-hub">
+          <div class="services-hub__stage">
+            <div class="services-hub__rings" aria-hidden="true">
+              <img width="457" height="457" class="services-hub__ring-outer" src="{{ page.hub.rings.outer }}" alt="">
+              <img width="457" height="457" class="services-hub__ring-inner" src="{{ page.hub.rings.inner }}" alt="">
+              <img width="244" height="244" class="services-hub__center" src="{{ page.hub.rings.center }}" alt="CNC Industrial">
+            </div>
+            {% for service in page.hub.services %}
+              <div class="services-hub__item services-hub__item--{{ service.position }}">
+                {% if service.icon_first %}
+                  <a class="services-hub__label" href="{{ service.url }}">{{ service.title }}</a>
+                  <span class="services-hub__icon"><img src="{{ service.icon }}" alt=""></span>
+                {% else %}
+                  <span class="services-hub__icon"><img src="{{ service.icon }}" alt=""></span>
+                  <a class="services-hub__label" href="{{ service.url }}">{{ service.title }}</a>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+          <div class="services-hub__list">
+            {% for service in page.hub.services %}
+              <a class="services-hub__list-item" href="{{ service.url }}">
+                <span class="services-hub__list-icon"><img src="{{ service.icon }}" alt=""></span>
+                <span class="services-hub__list-label">{{ service.title }}</span>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if page.projects.cards %}
+    <section class="services-page__section">
+      <div class="container">
+        {% if page.projects.title %}
+          <h2 class="t-heading-1 services-page__section-title">{{ page.projects.title }}</h2>
+        {% endif %}
+        <div class="project-carousel owl-carousel">
+          {% for card in page.projects.cards %}
+            <article class="project-card">
+              <a class="project-card__link" href="{{ card.url }}">
+                <img width="420" height="293" class="project-card__img" src="{{ card.image }}" alt="{{ card.image_alt }}">
+                <div class="project-card__body">
+                  <h3 class="project-card__title">{{ card.title }}</h3>
+                  {% if card.address %}
+                    <p class="project-card__loc">
+                      <img width="20" height="20" src="{{ card.location_icon }}" alt="">
+                      {{ card.address }}
+                    </p>
+                  {% endif %}
+                  <span class="btn-see-more btn-see-more--solid project-card__btn">{{ 'See more'|t }}<span class="btn-see-more__icon btn-see-more__icon--sm"><i class="fa-solid fa-arrow-right"></i></span></span>
+                </div>
+              </a>
+            </article>
+          {% endfor %}
+        </div>
+        <div class="project-carousel__dots">
+          {% for card in page.projects.cards %}
+            <button type="button"{{ loop.first ? ' class="is-active"' : '' }}></button>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <section class="services-page__section pt-0">
+    <div class="container">
+      <div class="project-contact-card service-contact-card">
+        <div class="project-contact-card__head">
+          <h2 class="project-contact-card__title">{{ 'Contact request'|t }}</h2>
+        </div>
+        <div class="project-contact-card__body">
+          <div class="project-contact-card__media">
+            {% if page.contact_image %}
+              <img src="{{ page.contact_image.url }}" alt="">
+            {% endif %}
+          </div>
+          <div class="project-contact-card__form-wrap">
+            {{ contact_form }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

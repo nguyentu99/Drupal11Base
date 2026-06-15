@@ -38,6 +38,14 @@ cassiopeia.contact:
   requirements:
     _permission: 'access content'
 
+cassiopeia.services:
+  path: '/dich-vu'
+  defaults:
+    _controller: '\Drupal\cassiopeia\Controller\ServicesController::content'
+    _title_callback: '\Drupal\cassiopeia\Controller\ServicesController::title'
+  requirements:
+    _permission: 'access content'
+
 cassiopeia.config:
   path: '/admin/config/cassiopeia/settings'
   defaults:

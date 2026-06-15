@@ -1333,3 +1333,9 @@ a, a:hover, a:focus {
 .sidebar-wrapper .nav-link i {
     width: 16px;
 }
+
+a.tabledrag-handle .handle {
+    width: 26px;
+    height: 26px;
+    margin: -3px 0.5em 0;
+}
