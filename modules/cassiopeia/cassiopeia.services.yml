@@ -41,3 +41,6 @@ services:
     arguments: ['@cassiopeia.image_builder', '@renderer']
     tags:
       - { name: twig.extension }
+  cassiopeia.config_managed_file:
+    class: Drupal\cassiopeia\Service\CassiopeiaConfigManagedFile
+    arguments: ['@file.usage']

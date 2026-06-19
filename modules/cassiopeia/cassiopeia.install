@@ -446,3 +446,15 @@ function cassiopeia_update_11030(): string {
   $installer->installImageStyles();
   return (string) t('Configured cropped image style for projects tax section images.');
 }
+
+/**
+ * Registers file usage for contact page config images so cron does not delete them.
+ */
+function cassiopeia_update_11031(): string {
+  /** @var \Drupal\cassiopeia\Service\CassiopeiaConfigManagedFile $helper */
+  $helper = \Drupal::service('cassiopeia.config_managed_file');
+  $count = $helper->repairContactPageFiles();
+  return (string) t('Registered permanent file usage for @count contact page image(s). Re-upload any images that were already removed by cron.', [
+    '@count' => $count,
+  ]);
+}

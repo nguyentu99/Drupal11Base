@@ -4,14 +4,37 @@ declare(strict_types=1);
 
 namespace Drupal\cassiopeia\Form;
 
+use Drupal\cassiopeia\Service\CassiopeiaConfigManagedFile;
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\file\Entity\File;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Site-wide Cassiopeia page configuration.
  */
 class CassiopeiaConfigForm extends ConfigFormBase {
+
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    TypedConfigManagerInterface $typed_config_manager,
+    private readonly CassiopeiaConfigManagedFile $configManagedFile,
+  ) {
+    parent::__construct($config_factory, $typed_config_manager);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container): static {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('config.typed'),
+      $container->get('cassiopeia.config_managed_file'),
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -161,15 +184,14 @@ class CassiopeiaConfigForm extends ConfigFormBase {
       '#rows' => 3,
       '#default_value' => $config->get('contact_page.hero_lead'),
     ];
-    $form['contact_page']['hero_image'] = [
+    $form['contact_page']['hero_image'] = $this->managedFileElement([
       '#type' => 'managed_file',
       '#title' => $this->t('Hero image'),
       '#upload_location' => 'public://cassiopeia/',
-      '#default_value' => $this->fileDefaultValue((int) $config->get('contact_page.hero_image')),
       '#upload_validators' => [
         'file_validate_extensions' => ['png jpg jpeg webp'],
       ],
-    ];
+    ], 'contact_page.hero_image', (int) $config->get('contact_page.hero_image'));
     $form['contact_page']['aside_title'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Aside title'),
@@ -182,15 +204,14 @@ class CassiopeiaConfigForm extends ConfigFormBase {
       '#rows' => 4,
       '#default_value' => $config->get('contact_page.aside_description'),
     ];
-    $form['contact_page']['aside_image'] = [
+    $form['contact_page']['aside_image'] = $this->managedFileElement([
       '#type' => 'managed_file',
       '#title' => $this->t('Aside background image'),
       '#upload_location' => 'public://cassiopeia/',
-      '#default_value' => $this->fileDefaultValue((int) $config->get('contact_page.aside_image')),
       '#upload_validators' => [
         'file_validate_extensions' => ['png jpg jpeg webp'],
       ],
-    ];
+    ], 'contact_page.aside_image', (int) $config->get('contact_page.aside_image'));
     $form['contact_page']['map_embed'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Google Maps embed URL'),
@@ -220,24 +241,22 @@ class CassiopeiaConfigForm extends ConfigFormBase {
         '#title' => $this->t('Label'),
         '#default_value' => $item['label'] ?? '',
       ];
-      $form['contact_page']['qr_codes'][$i]['image'] = [
+      $form['contact_page']['qr_codes'][$i]['image'] = $this->managedFileElement([
         '#type' => 'managed_file',
         '#title' => $this->t('QR image'),
         '#upload_location' => 'public://cassiopeia/',
-        '#default_value' => $this->fileDefaultValue((int) ($item['image'] ?? 0)),
         '#upload_validators' => [
           'file_validate_extensions' => ['png jpg jpeg webp'],
         ],
-      ];
-      $form['contact_page']['qr_codes'][$i]['logo'] = [
+      ], "contact_page.qr_codes.$i.image", (int) ($item['image'] ?? 0));
+      $form['contact_page']['qr_codes'][$i]['logo'] = $this->managedFileElement([
         '#type' => 'managed_file',
         '#title' => $this->t('Optional logo overlay'),
         '#upload_location' => 'public://cassiopeia/',
-        '#default_value' => $this->fileDefaultValue((int) ($item['logo'] ?? 0)),
         '#upload_validators' => [
           'file_validate_extensions' => ['png jpg jpeg webp svg'],
         ],
-      ];
+      ], "contact_page.qr_codes.$i.logo", (int) ($item['logo'] ?? 0));
     }
 
     $form['contact_page']['address_title'] = [
@@ -303,17 +322,36 @@ class CassiopeiaConfigForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     parent::submitForm($form, $form_state);
 
+    $config = $this->config('cassiopeia.settings');
     $values = $form_state->getValues();
+    $previous = $config->get('contact_page') ?: [];
     $contact_page = $values['contact_page'];
-    $contact_page['hero_image'] = $this->saveManagedFile($contact_page['hero_image'] ?? []);
-    $contact_page['aside_image'] = $this->saveManagedFile($contact_page['aside_image'] ?? []);
+    $contact_page['hero_image'] = $this->configManagedFile->persist(
+      $this->configManagedFile->extractFid($contact_page['hero_image'] ?? []),
+      'contact_page.hero_image',
+      (int) ($previous['hero_image'] ?? 0),
+    );
+    $contact_page['aside_image'] = $this->configManagedFile->persist(
+      $this->configManagedFile->extractFid($contact_page['aside_image'] ?? []),
+      'contact_page.aside_image',
+      (int) ($previous['aside_image'] ?? 0),
+    );
 
     $qr_codes = [];
-    foreach ($contact_page['qr_codes'] as $item) {
+    foreach ($contact_page['qr_codes'] as $index => $item) {
+      $previous_item = $previous['qr_codes'][$index] ?? [];
       $qr_codes[] = [
         'label' => $item['label'] ?? '',
-        'image' => $this->saveManagedFile($item['image'] ?? []),
-        'logo' => $this->saveManagedFile($item['logo'] ?? []),
+        'image' => $this->configManagedFile->persist(
+          $this->configManagedFile->extractFid($item['image'] ?? []),
+          "contact_page.qr_codes.$index.image",
+          (int) ($previous_item['image'] ?? 0),
+        ),
+        'logo' => $this->configManagedFile->persist(
+          $this->configManagedFile->extractFid($item['logo'] ?? []),
+          "contact_page.qr_codes.$index.logo",
+          (int) ($previous_item['logo'] ?? 0),
+        ),
       ];
     }
     $contact_page['qr_codes'] = $qr_codes;
@@ -327,26 +365,52 @@ class CassiopeiaConfigForm extends ConfigFormBase {
   }
 
   /**
+   * Builds a managed_file element with upload-time persistence.
+   */
+  protected function managedFileElement(array $element, string $usage_key, int $fid): array {
+    $element['#default_value'] = $this->fileDefaultValue($fid);
+    $element['#cassiopeia_file_usage_key'] = $usage_key;
+    $element['#after_build'][] = [$this, 'attachManagedFileUploadPersist'];
+    return $element;
+  }
+
+  /**
+   * Registers a submit handler to persist files immediately after AJAX upload.
+   */
+  public function attachManagedFileUploadPersist(array $element, FormStateInterface $form_state): array {
+    if (isset($element['upload_button'])) {
+      $element['upload_button']['#submit'][] = [static::class, 'submitPersistUploadedManagedFile'];
+    }
+    return $element;
+  }
+
+  /**
+   * Marks uploaded files permanent as soon as the Upload button is used.
+   */
+  public static function submitPersistUploadedManagedFile(array $form, FormStateInterface $form_state): void {
+    $triggering = $form_state->getTriggeringElement();
+    $parents = $triggering['#array_parents'];
+    array_pop($parents);
+    $element = NestedArray::getValue($form, $parents);
+    $usage_key = $element['#cassiopeia_file_usage_key'] ?? '';
+    if ($usage_key === '') {
+      return;
+    }
+
+    $value = NestedArray::getValue($form_state->getValues(), $element['#parents']);
+    /** @var \Drupal\cassiopeia\Service\CassiopeiaConfigManagedFile $helper */
+    $helper = \Drupal::service('cassiopeia.config_managed_file');
+    $fid = $helper->extractFid($value);
+    if ($fid > 0) {
+      $helper->persist($fid, $usage_key);
+    }
+  }
+
+  /**
    * Builds managed_file default value from a file ID.
    */
   protected function fileDefaultValue(int $fid): array {
     return $fid > 0 ? [$fid] : [];
-  }
-
-  /**
-   * Persists an uploaded file and returns its ID.
-   */
-  protected function saveManagedFile(array $value): int {
-    $fid = (int) ($value[0] ?? 0);
-    if ($fid <= 0) {
-      return 0;
-    }
-    $file = File::load($fid);
-    if ($file) {
-      $file->setPermanent();
-      $file->save();
-    }
-    return $fid;
   }
 
 }
