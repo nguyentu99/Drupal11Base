@@ -1,0 +1,7 @@
+name: 'CKEditor 5 Legacy Features'
+type: module
+description: 'Restores classic CKEditor 4 features (font family, size, colors, alignment) in CKEditor 5.'
+package: Custom
+core_version_requirement: ^11
+dependencies:
+  - drupal:ckeditor5

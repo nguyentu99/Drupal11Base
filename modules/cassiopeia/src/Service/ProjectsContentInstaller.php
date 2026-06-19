@@ -25,6 +25,8 @@ class ProjectsContentInstaller {
 
   public const STYLE_PAGE_HERO = 'page_hero';
 
+  public const STYLE_TAX = 'projects_629x385';
+
   /**
    * Installs image styles and display configuration.
    */
@@ -48,6 +50,7 @@ class ProjectsContentInstaller {
     $this->ensureImageStyle(self::STYLE_HANDBOOK_CARD, 'Handbook card (420×312)', 420, 312);
     $this->ensureImageStyle(self::STYLE_CONTENT_THUMB, 'Content thumb (110×78)', 110, 78);
     $this->ensureImageStyle(self::STYLE_PAGE_HERO, 'Page hero (1920×756)', 1920, 756);
+    $this->ensureImageStyle(self::STYLE_TAX, 'Projects tax section (629×385)', 629, 385);
   }
 
   /**

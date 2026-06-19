@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for CKEditor 5 Legacy Features.
+ *
+ * Hook implementations are in src/Hook/CustomCke5LegacyHooks.php.
+ */

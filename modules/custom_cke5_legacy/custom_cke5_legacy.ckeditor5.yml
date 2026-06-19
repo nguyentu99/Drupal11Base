@@ -1,0 +1,45 @@
+custom_cke5_legacy_legacy_features:
+  ckeditor5:
+    plugins:
+      - font.FontFamily
+      - font.FontSize
+      - font.FontColor
+      - font.FontBackgroundColor
+      - htmlSupport.GeneralHtmlSupport
+    config:
+      fontFamily:
+        options:
+          - default
+          - 'Arial, Helvetica, sans-serif'
+          - 'Courier New, Courier, monospace'
+          - 'Georgia, serif'
+          - 'Lucida Sans Unicode, Lucida Grande, sans-serif'
+          - 'Tahoma, Geneva, sans-serif'
+          - 'Times New Roman, Times, serif'
+          - 'Trebuchet MS, Helvetica, sans-serif'
+          - 'Verdana, Geneva, sans-serif'
+        supportAllValues: true
+      fontSize:
+        options:
+          - tiny
+          - small
+          - default
+          - big
+          - huge
+  drupal:
+    label: 'Legacy text formatting'
+    class: Drupal\custom_cke5_legacy\Plugin\CKEditor5Plugin\LegacyFeatures
+    library: custom_cke5_legacy/ckeditor5
+    admin_library: custom_cke5_legacy/admin
+    toolbar_items:
+      fontFamily:
+        label: 'Font family'
+      fontSize:
+        label: 'Font size'
+      fontColor:
+        label: 'Font color'
+      fontBackgroundColor:
+        label: 'Font background color'
+    elements:
+      - <span>
+      - <span class="text-tiny text-small text-big text-huge">

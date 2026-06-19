@@ -1,0 +1,23 @@
+/**
+ * @file
+ * Frontend styles for legacy CKEditor formatting output.
+ *
+ * Font size presets use the same class names as CKEditor 5's font plugin.
+ * Alignment uses Drupal core's text-align-* classes from system module.
+ */
+
+.text-tiny {
+  font-size: 0.7em;
+}
+
+.text-small {
+  font-size: 0.85em;
+}
+
+.text-big {
+  font-size: 1.4em;
+}
+
+.text-huge {
+  font-size: 1.8em;
+}

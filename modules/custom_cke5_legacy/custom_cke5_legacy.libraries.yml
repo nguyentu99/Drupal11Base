@@ -1,0 +1,20 @@
+ckeditor5:
+  version: VERSION
+  js:
+    js/build/index.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+    - core/ckeditor5.htmlSupport
+    - core/ckeditor5.translations
+
+admin:
+  version: VERSION
+  css:
+    theme:
+      css/admin.css: {}
+
+legacy_content:
+  version: VERSION
+  css:
+    theme:
+      css/legacy-content.css: {}

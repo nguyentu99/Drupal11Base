@@ -1,0 +1,24 @@
+{
+  "name": "custom_cke5_legacy",
+  "version": "1.0.0",
+  "description": "CKEditor 5 legacy features build for Drupal.",
+  "private": true,
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "build": "webpack --mode production && node scripts/copy-translations.js",
+    "watch": "webpack --mode development --watch"
+  },
+  "devDependencies": {
+    "@ckeditor/ckeditor5-dev-utils": "^47.0.0",
+    "@ckeditor/ckeditor5-font": "~47.6.0",
+    "@ckeditor/ckeditor5-theme-lark": "~47.6.0",
+    "ckeditor5": "~47.6.0",
+    "css-loader": "^7.1.2",
+    "postcss": "^8.5.3",
+    "postcss-loader": "^8.1.1",
+    "style-loader": "^4.0.0",
+    "terser-webpack-plugin": "^5.3.14",
+    "webpack": "^5.99.5",
+    "webpack-cli": "^6.0.1"
+  }
+}         

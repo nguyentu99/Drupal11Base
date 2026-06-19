@@ -1919,6 +1919,7 @@ function cassiopeia_projects_image_style(string $purpose) {
     'handbook_card' => \Drupal\cassiopeia\Service\ProjectsContentInstaller::STYLE_HANDBOOK_CARD,
     'content_thumb' => \Drupal\cassiopeia\Service\ProjectsContentInstaller::STYLE_CONTENT_THUMB,
     'page_hero' => \Drupal\cassiopeia\Service\ProjectsContentInstaller::STYLE_PAGE_HERO,
+    'tax' => \Drupal\cassiopeia\Service\ProjectsContentInstaller::STYLE_TAX,
   ];
   $style_id = $map[$purpose] ?? NULL;
   if (!$style_id) {
@@ -2275,9 +2276,10 @@ function cassiopeia_projects_tax_benefits(NodeInterface $node): array {
  * @return array{url: string, alt: string}
  */
 function cassiopeia_projects_tax_image(NodeInterface $node, string $title): array {
+  $image_style = cassiopeia_projects_image_style('tax');
   foreach (['field_tax_image', 'field_image_tax'] as $field_name) {
     if ($node->hasField($field_name) && !$node->get($field_name)->isEmpty()) {
-      $image = cassiopeia_image_field_item_data($node->get($field_name)->first());
+      $image = cassiopeia_image_field_item_data($node->get($field_name)->first(), $image_style);
       if ($image) {
         return [
           'url' => $image['url'],
@@ -2294,17 +2296,17 @@ function cassiopeia_projects_tax_image(NodeInterface $node, string $title): arra
     'images/du-an-banner.jpg',
   ];
   foreach ($candidates as $relative) {
-    $uri = DRUPAL_ROOT . '/' . $theme_path . '/' . $relative;
-    if (is_file($uri)) {
+    $url = cassiopeia_theme_image_styled_url($relative, $image_style);
+    if ($url !== '') {
       return [
-        'url' => '/' . $theme_path . '/' . $relative,
+        'url' => $url,
         'alt' => (string) t('Tax incentives at @project', ['@project' => $title]),
       ];
     }
   }
 
   return [
-    'url' => '/' . $theme_path . '/images/thue.jpg',
+    'url' => cassiopeia_theme_image_styled_url('images/thue.jpg', $image_style),
     'alt' => (string) t('Tax incentives at @project', ['@project' => $title]),
   ];
 }

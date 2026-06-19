@@ -1,0 +1,6 @@
+# Schema for custom_cke5_legacy module configuration.
+
+ckeditor5.plugin.custom_cke5_legacy_legacy_features:
+  type: mapping
+  label: 'CKEditor 5 Legacy Features'
+  mapping: {}
